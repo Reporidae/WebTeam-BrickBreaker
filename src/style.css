@@ -1,26 +1,12 @@
 body {
-  margin: 0;
-  padding: 0;
+  text-align: center;
   background-color: #f0f0f0;
   font-family: sans-serif;
-  text-align: center;
 }
 
 canvas {
+  background-color: #eee;
   display: block;
-  margin: 20px auto;
-  border: 2px solid #333;
-  background-color: #222;
-  width: 1280px;
-  height: 720px;
+  margin: 0 auto;
+  border: 2px solid #555;
 }
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-
-

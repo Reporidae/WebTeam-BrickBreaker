@@ -1,105 +1,80 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let ballX, ballY, ballDX, ballDY;
-let paddleX, paddleWidth = 75;
-let bricks = [];
-let brickRowCount = 4;
-let brickColumnCount = 10;
-let brickWidth = 75;
-let brickHeight = 20;
-let brickPadding = 10;
-let brickOffsetTop = 40;
-let brickOffsetLeft = 20;
+// 공
+let x = canvas.width / 2;
+let y = canvas.height - 30;
+let dx = 2;
+let dy = -2;
+const ballRadius = 10;
 
+// 패들
+const paddleHeight = 10;
+const paddleWidth = 75;
+let paddleX = (canvas.width - paddleWidth) / 2;
 
+// 벽돌
+const brickRowCount = 3;
+const brickColumnCount = 5;
+const brickWidth = 75;
+const brickHeight = 20;
+const brickPadding = 10;
+const brickOffsetTop = 30;
+const brickOffsetLeft = 30;
+const bricks = [];
+
+for (let c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  for (let r = 0; r < brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0, visible: true };
+  }
+}
+
+// 컨트롤
 let rightPressed = false;
 let leftPressed = false;
-let gameRunning = false;
 
-document.getElementById("startBtn").addEventListener("click", startGame);
-document.addEventListener("keydown", keyDownHandler);
-document.addEventListener("keyup", keyUpHandler);
-
-function startGame() {
-  const difficulty = document.getElementById("difficulty").value;
-  switch (difficulty) {
-
-    case "easy":
-      ballDX = 2;
-      ballDY = -2;
-      break;
-    case "normal":
-      ballDX = 4;
-      ballDY = -4;
-      break;
-    case "hard":
-      ballDX = 6;
-      ballDY = -6;
-      break;
-  }
-
-  ballX = canvas.width / 2;
-  ballY = canvas.height - 30;
-  ballDX = 2;
-  ballDY = -2;
-  paddleX = (canvas.width - paddleWidth) / 2;
-  initBricks();
-  gameRunning = true;
-  draw();
-}
-
-function initBricks() {
-  bricks = [];
-  for (let c = 0; c < brickColumnCount; c++) {
-    bricks[c] = [];
-    for (let r = 0; r < brickRowCount; r++) {
-      bricks[c][r] = { x: 0, y: 0, status: 1 };
-    }
-  }
-}
-
-function keyDownHandler(e) {
+document.addEventListener("keydown", e => {
   if (e.key === "Right" || e.key === "ArrowRight") rightPressed = true;
-  else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = true;
-}
+  if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = true;
+});
 
-function keyUpHandler(e) {
+document.addEventListener("keyup", e => {
   if (e.key === "Right" || e.key === "ArrowRight") rightPressed = false;
-  else if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = false;
-}
+  if (e.key === "Left" || e.key === "ArrowLeft") leftPressed = false;
+});
 
+// 충돌 감지
 function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
       const b = bricks[c][r];
-      if (b.status === 1) {
+      if (b.visible) {
         if (
-          ballX > b.x &&
-          ballX < b.x + brickWidth &&
-          ballY > b.y &&
-          ballY < b.y + brickHeight
+          x > b.x && x < b.x + brickWidth &&
+          y > b.y && y < b.y + brickHeight
         ) {
-          ballDY = -ballDY;
-          b.status = 0;
+          dy = -dy;
+          b.visible = false;
         }
       }
     }
   }
 }
 
+// 그리기
 function drawBall() {
   ctx.beginPath();
-  ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
-  ctx.fillStyle = "#fdd835";
+  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+  ctx.fillStyle = "#0095DD";
   ctx.fill();
   ctx.closePath();
 }
 
 function drawPaddle() {
   ctx.beginPath();
-  ctx.rect(paddleX, canvas.height - 10, paddleWidth, 10);
-  ctx.fillStyle = "#00e676";
+  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+  ctx.fillStyle = "#0095DD";
   ctx.fill();
   ctx.closePath();
 }
@@ -107,14 +82,14 @@ function drawPaddle() {
 function drawBricks() {
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
-      if (bricks[c][r].status === 1) {
+      if (bricks[c][r].visible) {
         const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
         const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
         bricks[c][r].x = brickX;
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = "#ff7043";
+        ctx.fillStyle = "#ff6347";
         ctx.fill();
         ctx.closePath();
       }
@@ -123,34 +98,31 @@ function drawBricks() {
 }
 
 function draw() {
-  if (!gameRunning) return;
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
   drawBall();
   drawPaddle();
   collisionDetection();
 
-  if (
-    ballX + ballDX > canvas.width - 10 ||
-    ballX + ballDX < 10
-  ) ballDX = -ballDX;
-
-  if (ballY + ballDY < 10) ballDY = -ballDY;
-  else if (ballY + ballDY > canvas.height - 10) {
-    if (ballX > paddleX && ballX < paddleX + paddleWidth) {
-      ballDY = -ballDY;
+  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) dx = -dx;
+  if (y + dy < ballRadius) {
+    dy = -dy;
+  } else if (y + dy > canvas.height - ballRadius) {
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy;
     } else {
       alert("게임 오버!");
-      gameRunning = false;
-      return;
+      document.location.reload();
     }
   }
 
-  if (rightPressed && paddleX < canvas.width - paddleWidth) paddleX += 5;
-  else if (leftPressed && paddleX > 0) paddleX -= 5;
+  x += dx;
+  y += dy;
 
-  ballX += ballDX;
-  ballY += ballDY;
+  if (rightPressed && paddleX < canvas.width - paddleWidth) paddleX += 7;
+  if (leftPressed && paddleX > 0) paddleX -= 7;
+
   requestAnimationFrame(draw);
 }
+
+draw();
