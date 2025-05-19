@@ -17,7 +17,7 @@ header{
 .topBar{
     float: left;
     height: 40px;
-    background-color: blue;
+    background-color: rgb(255, 255, 255);
 }
 #levelBar, #lifeBar, #coinBar{
     width: 450px;
@@ -33,8 +33,8 @@ header{
     height: 40px;
     width: 40px;
     border-radius: 100px;
-    background-color: blanchedalmond;
 }/*실제로는 아이콘 이미지를 넣을 것*/
+
 /*header*/
 footer{
     overflow: hidden;
