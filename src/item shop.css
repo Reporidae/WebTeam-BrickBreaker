@@ -1,0 +1,152 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+body{
+	width: 100%;
+	margin: 0 auto;
+}
+/*기본 사항*/
+header{
+    overflow: hidden;
+    width: 100%;
+    height: 60px;
+    margin: 10px auto;
+    background-color: rgb(125, 192, 255);
+}
+.topBar{
+    float: left;
+    height: 40px;
+    background-color: blue;
+}
+#levelBar, #lifeBar, #coinBar{
+    width: 450px;
+    border-radius: 50px;
+    margin: 10px 45px;
+}
+#settingButton{
+    width: 40px;
+    border-radius: 100px;
+    margin: 10px 0;
+}
+.topBarIcon{
+    height: 40px;
+    width: 40px;
+    border-radius: 100px;
+    background-color: blanchedalmond;
+}/*실제로는 아이콘 이미지를 넣을 것*/
+/*header*/
+footer{
+    overflow: hidden;
+    width: 100%;
+    height: 80px;
+    margin: 10px auto;
+    background-color: rgb(238, 158, 145);
+}
+.bottomButton{
+    float: left;
+    width: 300px;
+    height: 60px;
+    background-color:brown;
+    border-radius: 50px;
+    margin: 10px 50px;
+    font-size: 50px;
+    text-align: center;
+    line-height: 60px;
+}
+#backVillageButton{
+    width: 450px;
+    height: 60px;
+}
+#backButton{
+    margin-left: 300px;
+    width: 300px;
+    height: 60px;
+}
+#startButton{
+    width: 300px;
+    height: 60px;
+}
+/*footer*/
+#itemShop{
+    font-size: 70px;
+    font-weight: bold;
+    text-align: center;
+    background-color: blanchedalmond;
+    width: 500px;
+    height: 100px;
+    margin: 0 auto;
+}
+#display{
+    width: 100%;
+    height: 700px;
+    background-color: aqua;
+    padding-left: 10%;
+    padding-top: 25px;
+}
+#leftDisplay, #rightDisplay{
+    float: left;
+    width: 40%;
+    height: 650px;
+    background-color: blue;
+    overflow: hidden;
+}
+.item{
+    width: 180px;
+    height: 180px;
+    background-color: beige;
+    border-radius: 10px;
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+}
+#item1, #item2, #item3{
+    margin-top: 100px;
+}
+#item1, #item4{
+    margin-left: 50px;
+}
+#itemImgView{
+    width: 180px;
+    height: 140px;
+    background-color: aqua;
+    border-radius: 10px 10px 0 0;
+}/*실제로는 아이콘 이미지를 넣을 것*/
+#itemNameView{
+    width: 180px;
+    height: 40px;
+    background-color: black;
+    border-radius: 0 0 10px 10px;
+}
+#leftUpperWrapper{
+    width: 100%;
+    height: 80%;
+    background-color: antiquewhite;
+}
+#buttonDisplay{
+    width: 100%;
+    height: 20%;
+    background-color: rgb(255, 145, 0);
+    padding: 40px 0 0 180px;
+}
+#purchaseButton{
+    text-align: center;
+    font-size: 40px;
+    width: 300px;
+    height: 50px;
+    background-color: brown;
+    border-radius: 30px;
+}
+#descriptionPopUp{
+    width: 75%;
+    height: 400px;
+    background-color:brown;
+    margin-left: 80px;
+    margin-top: 120px;
+}
+#main{
+    width: 100%;
+    height: 800px;
+    background-color: blueviolet;
+    overflow: hidden;
+}
