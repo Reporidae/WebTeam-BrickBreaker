@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href = "character shop.css">
+    <link type="text/css" rel="stylesheet" href = "village.css">
+    <link type="text/css" rel="stylesheet" href = "ability shop.css">
+    <link type="text/css" rel="stylesheet" href = "item shop.css">
+
+    <script src = "main.js"></script>
+</head>
+<body>
+    <header>
+        <div id="levelBar" class="topBar">
+            <div id = "levelIcon" class="topBarIcon"></div>
+        </div>
+        <div id = "lifeBar" class="topBar">
+            <div id = "lifeIcon" class="topBarIcon"></div>
+        </div>
+        <div id = "coinBar" class="topBar">
+            <div id = "coinIcon" class="topBarIcon"></div>
+        </div>
+        <div id = "settingButton" class="topBar"></div>
+    </header>
+    <div id = "main">
+        <!--------------------------- village --------------------------->
+        <div class="village">
+            <div id = "village">Village</div>
+            <div id = "display">
+                <div id="villageLeftDisplay"></div>
+                <div id="villageRightDisplay">
+                    <!-- <img class="character-image" src="img1.jpg" alt="캐릭터 이미지" /> -->
+                </div>
+            </div>
+        </div>
+        <!--------------------------- characterShop --------------------------->
+        <div class="characterShop" style="display: none;">
+            <div id = "characterShop">Character Shop</div>
+            <!-- 모달 창 -->
+            <div id="characterModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h2 id="modalCharacterName">캐릭터 이름</h2>
+                    <p id="modalStat1">스탯 정보 1</p>
+                    <p id="modalStat2">스탯 정보 2</p>
+                    <button id="modalActionButton">구매</button>
+                </div>
+            </div>
+            <!-- 모달 창 -->
+            <div id = "display">
+                <div id="leftDisplay">
+                    <div class="character-card">
+                        <img class="character-image" src="img1.jpg" alt="캐릭터 이미지" />
+                        <div class="now-character-name">캐릭터 이름</div>
+                        <div class="now-character-level">Lv. 10</div>
+                    </div>
+                </div>
+                <div id="rightDisplay">
+                    <div class="character-info">
+                        <img class="character-image-small" src="img2.jpg" alt="캐릭터 이미지" />
+                        <div class="character-stats">
+                            <div class="character-name">캐릭터 이름1</div>
+                            <div class="stat-line">스탯 정보 1</div>
+                            <div class="stat-line">스탯 정보 2</div>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <img class="character-image-small" src="img1.jpg" alt="캐릭터 이미지" />
+                        <div class="character-stats">
+                            <div class="character-name">캐릭터 이름2</div>
+                            <div class="stat-line">스탯 정보 1</div>
+                            <div class="stat-line">스탯 정보 2</div>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <img class="character-image-small" src="img1.jpg" alt="캐릭터 이미지" />
+                        <div class="character-stats">
+                            <div class="character-name">캐릭터 이름3</div>
+                            <div class="stat-line">스탯 정보 1</div>
+                            <div class="stat-line">스탯 정보 2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--------------------------- abilityShop --------------------------->
+        <div class="abilityShop" style="display: none;">
+            <div id = "abilityShop">Ability Shop</div>
+            <div id = "display">
+                <div id = "leftDisplay">
+                    <div id = "leftUpperWrapper">
+                        <div id = "characterDisplay">
+                            <div id = "characterView"></div>
+                            <div id = "characterLevel"></div>
+                        </div>
+                        <div id = "abilityDisplay">
+                            <div id = "ability1" class="abilityView"></div>
+                            <div id = "ability2" class="abilityView"></div>
+                            <div id = "ability3" class="abilityView"></div>
+                        </div>
+                    </div>
+                    <div id = "buttonDisplay">
+                        <div id = "levelupButton">Level UP</div>
+                        <div id = "characterButton">Character</div>
+                    </div>
+                </div>
+                <div id = "rightDisplay">
+                    <div id = "descriptionPopUp"></div>
+                </div>
+            </div>
+        </div>
+        <!--------------------------- itemShop --------------------------->
+        <div class="itemShop" style="display: none;">
+            <div id = "itemShop">Item Shop</div>
+            <div id = "display">
+                <div id = "leftDisplay">
+                    <div id = "leftUpperWrapper">
+                        <div id = "item1" class = "item">
+                            <div id  = "itemImgView"></div>
+                            <div id  = "itemNameView"></div>
+                        </div>
+                        <div id = "item2" class = "item">
+                            <div id  = "itemImgView"></div>
+                            <div id  = "itemNameView"></div>
+                        </div>
+                        <div id = "item3" class = "item">
+                            <div id  = "itemImgView"></div>
+                            <div id  = "itemNameView"></div>
+                        </div>
+                        <div id = "item4" class = "item">
+                            <div id  = "itemImgView"></div>
+                            <div id  = "itemNameView"></div>
+                        </div>
+                        <div id = "item5" class = "item">
+                            <div id  = "itemImgView"></div>
+                            <div id  = "itemNameView"></div>
+                        </div>
+                        <div id = "item6" class = "item">
+                            <div id  = "itemImgView"></div>
+                            <div id  = "itemNameView"></div>
+                        </div>
+                    </div>
+                    <div id = "buttonDisplay">
+                        <div id = "purchaseButton">purchase</div>
+                    </div>
+                </div>
+                <div id = "rightDisplay">
+                    <div id = "descriptionPopUp"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--------------------------- shopPopup --------------------------->
+        <div id="shopPopup" class="shop-popup" style="display:none;">
+            <div class="shop-popup-content">
+                <button id="characterBtn" class="shop-popup-btn">Character</button>
+                <button id="abilityBtn" class="shop-popup-btn">Ability</button>
+                <button id="itemBtn" class="shop-popup-btn">Item</button>
+                <button id="closeShopPopup" class="shop-popup-close">×</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div id = "backButton" class="bottomButton">Back</div>
+        <div id = "startButton" class="bottomButton">START</div>
+        <div id = "backVillageButton" class="bottomButton">Go to Shop</div>
+    </footer>
+</body>
+</html>

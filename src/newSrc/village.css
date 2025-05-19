@@ -1,0 +1,61 @@
+#village{
+	font-size: 70px;
+	font-weight: bold;
+	text-align: center;
+	background-color: blanchedalmond;
+	width: 700px;
+	height: 100px;
+	margin: 0 auto;
+}
+#villageLeftDisplay{
+    float: left;
+    width: 40%;
+    height: 650px;
+    background-color: blue;
+    overflow: hidden;
+}
+#villageRightDisplay {
+  float: left;
+    width: 40%;
+    height: 650px;
+    background-color: blue;
+    overflow: hidden;
+
+  flex-direction: column;
+  justify-content: flex-end; /* 아래쪽 정렬 */
+  align-items: flex-start;
+}
+
+.village-character-card {
+  border: 2px solid #aaa;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.shop-popup {
+	position: absolute;
+	top: 60px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: white;
+	border: 2px solid #ccc;
+	border-radius: 8px;
+	padding: 10px;
+	z-index: 1000;
+	box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.shop-button {
+	margin: 5px;
+	padding: 8px 12px;
+	cursor: pointer;
+	border: none;
+	background-color: #f0f0f0;
+	border-radius: 4px;
+}
+
+.shop-button:hover {
+	background-color: #ddd;
+}
+
