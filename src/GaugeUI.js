@@ -1,7 +1,20 @@
 // GaugeUI.js
 export function updateGaugeUI(player) {
+  if (!player) return;
+  
   const percent = (player.skillGauge / player.maxGauge) * 100;
-  document.getElementById("gauge-fill").style.height = percent + "%";
+  const gaugeElement = document.getElementById("gauge-fill");
+  
+  if (gaugeElement) {
+    gaugeElement.style.height = percent + "%";
+    
+    // 게이지가 가득 차면 색상 변경 (시각적 효과)
+    if (percent >= 100) {
+      gaugeElement.style.backgroundColor = "#ffcc00"; // 노란색 (준비됨)
+    } else {
+      gaugeElement.style.backgroundColor = "red"; // 기본 색상
+    }
+  }
 }
 
 /*

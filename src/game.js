@@ -1,8 +1,12 @@
+// 모듈 임포트 방식 수정
 import { Player } from './Player.js';
-const player = new Player();
 import { updateGaugeUI } from './GaugeUI.js';
 
-$(document).ready(function () {
+// 게임 초기화 함수
+document.addEventListener('DOMContentLoaded', function() {
+    // Player 인스턴스 생성
+    const player = new Player();
+    
     // 게임 상수
     const CANVAS_WIDTH = 1000;
     const CANVAS_HEIGHT = 700;
@@ -23,6 +27,9 @@ $(document).ready(function () {
     const ITEM_FALL_SPEED = 2;
     const MAGNET_DURATION = 5000; // 5초
     const POINTS_PER_LEVEL = 500; // 스테이지 증가에 필요한 점수
+
+    // 초기 게이지 업데이트
+    updateGaugeUI(player);
 
     // 상태 변수
     let gameStarted = false;
@@ -89,7 +96,7 @@ $(document).ready(function () {
     const itemTypes = ["heart", "coin", "magnet"];
 
     // 이벤트 리스너
-    $(document).keydown(function (e) {
+    document.addEventListener("keydown", function (e) {
         if (e.keyCode === 37) {
             leftPressed = true;
         } else if (e.keyCode === 39) {
@@ -97,7 +104,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).keyup(function (e) {
+    document.addEventListener("keyup", function (e) {
         if (e.keyCode === 37) {
             leftPressed = false;
         }
@@ -107,34 +114,37 @@ $(document).ready(function () {
         else if (e.keyCode === 27) { // ESC 키
             togglePause();
         }
-        else if (e.keyCode === 70) { // F 키 (필살기)
+        // F 키 (필살기)
+        else if (e.keyCode === 70) { 
             if (player.canUseSkill()) {
-                player.useSkill(bricks);
+                const gainedScore = player.useSkill(bricks);
+                score += gainedScore; // 획득한 점수 추가
                 updateUI(); // 점수, 코인 반영
             }
         }
     });
 
-    $("#pause-button").click(function () {
+    // 버튼 이벤트 리스너 (jQuery 대신 표준 DOM API 사용)
+    document.getElementById("pause-button").addEventListener("click", function () {
         togglePause();
     });
 
-    $("#start-button").click(function () {
+    document.getElementById("start-button").addEventListener("click", function () {
         startGame();
         // 시작하기와 나가기 버튼 숨기기
-        $("#start-button").css("display", "none");
-        $("#quit-button").css("display", "none");
+        document.getElementById("start-button").style.display = "none";
+        document.getElementById("quit-button").style.display = "none";
     });
 
-    $("#resume-button").click(function () {
+    document.getElementById("resume-button").addEventListener("click", function () {
         resumeGame();
     });
 
-    $("#restart-button").click(function () {
+    document.getElementById("restart-button").addEventListener("click", function () {
         restartGame();
     });
 
-    $("#quit-button").click(function () {
+    document.getElementById("quit-button").addEventListener("click", function () {
         quitGame();
     });
 
@@ -154,7 +164,7 @@ $(document).ready(function () {
         updateUI();
         initBricks();
         resetBall();
-        $("#game-menu").addClass("hidden");
+        document.getElementById("game-menu").classList.add("hidden");
         startNewRowTimer();
         requestAnimationFrame(gameLoop);
     }
@@ -184,7 +194,7 @@ $(document).ready(function () {
         if (!gameStarted || gameOver) return;
 
         gamePaused = false;
-        $("#game-menu").addClass("hidden");
+        document.getElementById("game-menu").classList.add("hidden");
         startNewRowTimer();
         requestAnimationFrame(gameLoop);
     }
@@ -202,24 +212,24 @@ $(document).ready(function () {
 
     // 메뉴 표시 함수
     function showMenu(message, isStart = false, isPaused = false) {
-        $("#menu-message").text(message);
-        $("#game-menu").removeClass("hidden");
+        document.getElementById("menu-message").textContent = message;
+        document.getElementById("game-menu").classList.remove("hidden");
 
         // 버튼 표시/숨김 처리
-        $("#start-button").css("display", isStart ? "block" : "none");
-        $("#resume-button").css("display", isPaused ? "block" : "none");
-        $("#restart-button").css("display", !isStart ? "block" : "none");
-        $("#quit-button").css("display", "block"); // 항상 표시
+        document.getElementById("start-button").style.display = isStart ? "block" : "none";
+        document.getElementById("resume-button").style.display = isPaused ? "block" : "none";
+        document.getElementById("restart-button").style.display = !isStart ? "block" : "none";
+        document.getElementById("quit-button").style.display = "block"; // 항상 표시
     }
 
     // UI 업데이트 함수
     function updateUI() {
-        $("#score").text(score);
-        $("#hearts").text(lives);
-        $("#coins").text(coins);
-        $("#stage").text(stage);
+        document.getElementById("score").textContent = score;
+        document.getElementById("hearts").textContent = lives;
+        document.getElementById("coins").textContent = coins;
+        document.getElementById("stage").textContent = stage;
 
-        // 필살기 게이지 비율 계산
+        // 필살기 게이지 업데이트
         updateGaugeUI(player);
     }
 
@@ -420,6 +430,7 @@ $(document).ready(function () {
 
                         // 벽돌 파괴 시 필살기 게이지 갱신
                         player.chargeGauge();
+                        updateGaugeUI(player);
                     }
 
                     // 한 번에 하나의 벽돌만 처리
@@ -700,5 +711,4 @@ $(document).ready(function () {
             paddle.x = relativeX - paddle.width / 2;
         }
     });
-
 });

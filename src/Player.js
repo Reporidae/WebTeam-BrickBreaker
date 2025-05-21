@@ -19,20 +19,27 @@ export class Player {
     return this.skillGauge >= this.maxGauge;
   }
 
-  useSkill(bricks, damage = 3) {
-    if (!this.canUseSkill()) return;
-
-    bricks.forEach(brick => {
-      if (!brick.visible) return;
-      brick.health -= damage;
-      if (brick.health <= 0) {
-        brick.visible = false;
-      }
-    });
-
-    this.skillGauge = 0;
-    this.skillReady = false;
-  }
+  // Player.js의 useSkill 함수 수정
+useSkill(bricks, damage = 3) {
+  if (!this.canUseSkill()) return;
+  
+  let scoreGained = 0;
+  
+  bricks.forEach(brick => {
+    if (!brick.visible) return;
+    brick.health -= damage;
+    if (brick.health <= 0) {
+      brick.visible = false;
+      // 파괴된 벽돌에 대한 점수 추가
+      scoreGained += brick.maxHealth * 10;
+    }
+  });
+  
+  this.skillGauge = 0;
+  this.skillReady = false;
+  
+  return scoreGained; // 획득한 점수 반환
+}
 
   drawSkillGauge(ctx, canvasWidth, canvasHeight) {
     const barHeight = 200;
