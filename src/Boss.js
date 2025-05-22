@@ -9,6 +9,7 @@ export class Boss {
     this.visible = true;
     this.phasePercent = phasePercent;
     this.phaseTriggerCount = 0;
+    this.projectiles = [];
   }
 
   draw(ctx) {
@@ -60,6 +61,19 @@ export class Boss {
       if (this.health <= 0) this.visible = false;
     }
   }
+
+  spawnProjectiles() {
+    for (let i = 0; i < 2; i++) {
+      const x = Math.random() * (this.width - 20);
+      this.projectiles.push({
+        x: x,
+        y: this.height,
+        width: 20,
+        height: 20
+      });
+    }
+  }
+
 }
 
       /*

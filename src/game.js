@@ -155,6 +155,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 게임 메뉴 표시
     showMenu("게임 시작", true);
 
+    let bossAttackTimer = null;
+
     // 게임 시작 함수
     function startGame() {
         gameStarted = true;
@@ -170,6 +172,14 @@ document.addEventListener('DOMContentLoaded', function() {
         resetBall();
         document.getElementById("game-menu").classList.add("hidden");
         //startNewRowTimer();
+
+        // 3초마다 보스가 투사체 2개 발사
+        bossAttackTimer = setInterval(() => {
+            if (boss.visible) {
+                boss.spawnProjectiles();
+            }
+        }, 3000); 
+        
         requestAnimationFrame(gameLoop);
     }
 
@@ -640,6 +650,29 @@ document.addEventListener('DOMContentLoaded', function() {
         checkItemCollision();
         boss.checkCollision(ball, addNewBrickRow); //보스 충돌
 
+        //보스 투사체 이동 및 충돌돌
+        boss.projectiles.forEach((proj, i) => {
+            proj.y += 4;
+
+            if (proj.y > CANVAS_HEIGHT) {
+                boss.projectiles.splice(i, 1);
+            }
+
+            if (
+                proj.y + proj.height >= paddle.y &&
+                proj.x < paddle.x + paddle.width &&
+                proj.x + proj.width > paddle.x
+            ) {
+                boss.projectiles.splice(i, 1);
+                lives = Math.max(0, lives - 1);
+                updateUI();
+                if (lives <= 0) {
+                    gameOver = true;
+                    showMenu("게임 오버", false);
+                }
+            }
+        });
+
         // 게임 오버 조건 체크
         checkGameOver();
     }
@@ -685,6 +718,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         //보스 그리기
         boss.draw(ctx);
+
+        //보스 투사체 그리기
+        boss.projectiles.forEach(proj => {
+            ctx.fillStyle = "#FFAA00";
+            ctx.fillRect(proj.x, proj.y, proj.width, proj.height);
+        });
+
     }
 
     // 게임 루프
