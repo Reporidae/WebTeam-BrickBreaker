@@ -34,7 +34,11 @@ header{
     width: 40px;
     border-radius: 100px;
 }/*실제로는 아이콘 이미지를 넣을 것*/
-
+#coinView{
+    font-size: 30px;
+    text-align: center;
+    line-height: 30px;
+}
 /*header*/
 footer{
     overflow: hidden;
@@ -68,6 +72,9 @@ footer{
     height: 60px;
 }
 /*footer*/
+#leftUpperWrapper{
+    overflow: hidden;
+}
 #itemShop{
     font-size: 70px;
     font-weight: bold;
@@ -112,18 +119,25 @@ footer{
     background-color: aqua;
     border-radius: 10px 10px 0 0;
 }/*실제로는 아이콘 이미지를 넣을 것*/
+#itemImg1, #itemImg2, #itemImg3, #itemImg4, #itemImg5, #itemImg6{
+    margin: 0 auto;
+    padding-top: 7px;
+    display: block;
+}
 #itemNameView{
     width: 180px;
     height: 40px;
-    background-color: black;
+    background-color: rgb(255, 255, 255);
     border-radius: 0 0 10px 10px;
+    font-size: 30px;
+    text-align: center;
 }
 #leftUpperWrapper{
     width: 100%;
     height: 80%;
     background-color: antiquewhite;
 }
-#buttonDisplay{
+.itemShop #buttonDisplay{
     width: 100%;
     height: 20%;
     background-color: rgb(255, 145, 0);
@@ -137,12 +151,15 @@ footer{
     background-color: brown;
     border-radius: 30px;
 }
-#descriptionPopUp{
+.itemShop #descriptionPopUp1,.itemShop #descriptionPopUp2,.itemShop #descriptionPopUp3,.itemShop #descriptionPopUp4,.itemShop #descriptionPopUp5,.itemShop #descriptionPopUp6 {
     width: 75%;
     height: 400px;
     background-color:brown;
     margin-left: 80px;
     margin-top: 120px;
+    display: none;
+    text-align: center;
+    line-height: 400px;
 }
 #main{
     width: 100%;

@@ -2,6 +2,8 @@ window.addEventListener('DOMContentLoaded', () => {
   setupCharacterModalEvents();
   setupShopPopupEvents();
   setupBackButtons();
+  hover();
+  itemPurchase();
 });
 
 function setupCharacterModalEvents() {
@@ -146,13 +148,87 @@ function setupBackButtons() {
     characterShop.style.display = 'block';
     backVillageBtn.textContent = "Back to the Village";
   });
-}
+} 
 //----------header
-
-var level = 0;
-
+var level = 1;
+var life = 5;
+var coin = 1000;
 function increaseLevel() {
     level++;
     const bar = document.getElementById("levelFill");
     bar.style.width = `${Math.min(level * 90, 450)}px`; // 최대 450px
+}
+function decreaseLife(){
+  let lifeIcon = document.getElementById(`lifeIcon_img${life}`);
+  lifeIcon.style.display = "none";
+  life--;
+}
+function increaseLife(){
+  let lifeIcon = document.getElementById(`lifeIcon_img${life}`);
+  lifeIcon.style.display = "block";
+  life++;
+}
+function decreaseCoin(decreCoin){
+  coin -= decreCoin;
+  document.write(`${coin}원`);
+}
+function increaseCoin(increCoin){
+  coin += increCoin;
+  document.write(`${coin}원`);
+}
+function hover(){
+  for (let i = 1; i <= 6; i++) {
+    let item = document.getElementById(`item${i}`);
+    let itemdescriptionPopUp = document.querySelector(`.itemShop #descriptionPopUp${i}`);
+
+    item.addEventListener("mouseenter", () => {
+      itemdescriptionPopUp.style.display = "block";
+    });
+  
+    item.addEventListener("mouseleave", () => {
+      itemdescriptionPopUp.style.display = "none";
+    });
+  }
+  for (let i = 1; i <= 3; i++) {
+    let ability = document.getElementById(`ability${i}`);
+    let abilitydescriptionPopUp = document.querySelector(`.abilityShop #descriptionPopUp${i}`);
+
+    ability.addEventListener("mouseenter", () => {
+      abilitydescriptionPopUp.style.display = "block";
+    });
+  
+    ability.addEventListener("mouseleave", () => {
+      abilitydescriptionPopUp.style.display = "none";
+    });
+  }
+}
+let itemPurchased = [false, false, false, false, false, false];
+let selectedIndex = null;
+function itemPurchase(){
+  let purchaseButton = document.querySelector(`#purchaseButton`);
+  for (let i = 1; i <= 6; i++) {
+    let item = document.getElementById(`item${i}`);
+
+    item.addEventListener("click", () => {
+      if (selectedIndex !== null) {
+        document.getElementById(`item${selectedIndex}`).style.border = "none";
+      }
+      item.style.border = "3px solid black";
+      selectedIndex = i;
+      
+      for(let j = 1; j<=6; j++){
+        let itemdescriptionPopUp = document.querySelector(`.itemShop #descriptionPopUp${j}`);
+        itemdescriptionPopUp.style.display = "none";
+      }
+      let itemdescriptionPopUp_select = document.querySelector(`.itemShop #descriptionPopUp${i}`);
+      if (itemdescriptionPopUp_select) itemdescriptionPopUp_select.style.display = "block";
+    });
+
+    purchaseButton.addEventListener("click", () => {
+      if (selectedIndex === i) {
+        itemPurchased[i - 1] = true;
+        alert(`아이템 ${i}번을 구매했습니다!`);
+      }
+    });
+  }
 }
