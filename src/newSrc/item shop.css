@@ -167,3 +167,21 @@ footer{
     background-color: blueviolet;
     overflow: hidden;
 }
+#character_popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 500px;
+    height: 500px;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+#popup-content {
+    background: white;
+    width: 300px;
+    margin: 150px auto;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}

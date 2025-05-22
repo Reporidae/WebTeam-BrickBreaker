@@ -31,7 +31,6 @@ function setupCharacterModalEvents() {
 
       actionBtn.textContent = purchasedCharacters[name] ? '적용' : '구매';
 
-
       actionBtn.onclick = () => {
         if (!purchasedCharacters[name]) {
           purchasedCharacters[name] = true;
@@ -68,7 +67,6 @@ function setupCharacterModalEvents() {
   }
 };
 
-
 modal.style.display = 'block';
 });
   });
@@ -83,7 +81,6 @@ modal.style.display = 'block';
     }
   });
 }
-
 
 function setupShopPopupEvents() {
   const shopPopup = document.getElementById('shopPopup');
@@ -232,3 +229,20 @@ function itemPurchase(){
     });
   }
 }
+const characterButton = document.getElementById("characterButton");
+const popup = document.getElementById("character_popup");
+const closeBtn = document.getElementById("closePopupBtn");
+const saveAndCloseBtn = document.getElementById("saveAndCloseBtn");
+
+characterButton.addEventListener("click", () => {
+  popup.style.display = "block";
+});
+
+closeBtn.addEventListener("click", () => {
+  popup.style.display = "none";
+});
+
+saveAndCloseBtn.addEventListener("click", () => {
+  alert("저장 완료!");
+  popup.style.display = "none";
+});
