@@ -18,6 +18,8 @@ header{
     float: left;
     height: 40px;
     background-color: blue;
+    display: inline-flex;
+    align-items: center;
 }
 #levelBar, #lifeBar, #coinBar{
     width: 450px;
@@ -35,8 +37,22 @@ header{
     border-radius: 100px;
     background-color: blanchedalmond;
 }/*실제로는 아이콘 이미지를 넣을 것*/
+.barView {
+    width: 400px;
+    height: 30px;
+    background-color: rgb(144, 27, 27);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+#levelFill{
+    height: 100%;
+    width: 90px;
+    background-color: #FFD700;
+    transition: width 0.3s ease;
+    border-radius: 20px 0 0 20px;
+}
 /*header*/
-
 footer{
     overflow: hidden;
     width: 100%;

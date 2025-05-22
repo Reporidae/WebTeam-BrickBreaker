@@ -147,3 +147,12 @@ function setupBackButtons() {
     backVillageBtn.textContent = "Back to the Village";
   });
 }
+//----------header
+
+var level = 0;
+
+function increaseLevel() {
+    level++;
+    const bar = document.getElementById("levelFill");
+    bar.style.width = `${Math.min(level * 90, 450)}px`; // 최대 450px
+}
