@@ -1,6 +1,7 @@
 // 모듈 임포트 방식 수정
 import { Player } from './Player.js';
 import { updateGaugeUI } from './GaugeUI.js';
+import { Boss } from './Boss.js';
 
 // 게임 초기화 함수
 document.addEventListener('DOMContentLoaded', function() {
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 초기 게이지 업데이트
     updateGaugeUI(player);
+
+    //보스 인스턴스생성
+    const boss = new Boss(CANVAS_WIDTH,10,20);
 
     // 상태 변수
     let gameStarted = false;
@@ -165,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initBricks();
         resetBall();
         document.getElementById("game-menu").classList.add("hidden");
-        startNewRowTimer();
+        //startNewRowTimer();
         requestAnimationFrame(gameLoop);
     }
 
@@ -195,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         gamePaused = false;
         document.getElementById("game-menu").classList.add("hidden");
-        startNewRowTimer();
+        //startNewRowTimer();
         requestAnimationFrame(gameLoop);
     }
 
@@ -274,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 새 벽돌 줄 추가 함수
     function addNewBrickRow() {
         // 모든 벽돌 한 줄 아래로 이동
+        console.log("보스 체력 줄었음 → 벽돌 한 줄 추가됨");
         bricks.forEach(brick => {
             if (brick.visible) {
                 brick.y += BRICK_HEIGHT + BRICK_PADDING;
@@ -295,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // 다음 타이머 설정
-        startNewRowTimer();
+        //startNewRowTimer();
     }
 
     // 아이템 생성 함수
@@ -633,6 +638,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkPaddleCollision();
         checkBrickCollision();
         checkItemCollision();
+        boss.checkCollision(ball, addNewBrickRow); //보스 충돌
 
         // 게임 오버 조건 체크
         checkGameOver();
@@ -676,6 +682,9 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.fillStyle = "#FF00FF";
             ctx.fillText("자석 활성화!", 10, 60);
         }
+
+        //보스 그리기
+        boss.draw(ctx);
     }
 
     // 게임 루프

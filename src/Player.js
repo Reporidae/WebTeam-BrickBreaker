@@ -1,6 +1,6 @@
 // Player.js
 export class Player {
-  constructor(maxGauge = 30) {
+  constructor(maxGauge = 3) {
     this.skillGauge = 0;
     this.maxGauge = maxGauge;
     this.skillReady = false;
