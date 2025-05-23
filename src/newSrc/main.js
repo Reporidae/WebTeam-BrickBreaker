@@ -181,7 +181,6 @@ function setupBackButtons() {
     }
   });
 }
-
 //----------header
 var level = 1;
 var life = 2;
@@ -223,7 +222,6 @@ function displayCoin(){
   document.getElementById('coinView').textContent = `${coin}원`;
 
 }
-
 let selectedIndex1 = null;
 function abilityHover() {
   for (let i = 1; i <= 3; i++) {
