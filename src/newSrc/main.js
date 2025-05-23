@@ -2,7 +2,6 @@ window.addEventListener('DOMContentLoaded', () => {
   setupCharacterModalEvents();
   setupShopPopupEvents();
   setupBackButtons();
-  hover();
   itemPurchase();
   abilityHover();
   itemPurchase();
