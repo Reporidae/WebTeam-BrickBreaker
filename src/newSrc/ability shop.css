@@ -54,6 +54,7 @@ header{
 }
 #lifeView img{
     margin-right: 30px;
+    display: inline;
 }
 #lifeIcon_img1{
     margin-left: 30px;
@@ -189,6 +190,67 @@ footer{
     display: none;
     text-align: center;
     line-height: 400px;
+}
+#character_popup {
+    display: none;
+    position: fixed;
+    top: 200px;
+    left: 600px;
+    width: 500px;
+    height: 600px;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+#popup_content {
+    margin: 20px auto 0 auto;
+    background: white;
+    width: 450px;
+    height: 450px;
+    border-radius: 10px;
+    text-align: center;
+    overflow: scroll;
+}
+#saveAndCloseBtn, #closePopupBtn{
+    position: fixed;
+    top: 700px;
+    width: 150px;
+    height: 50px;
+    background-color: aquamarine;
+    border-radius: 40px;
+    float: left;
+}
+#saveAndCloseBtn{
+    left: 650px;
+} 
+#closePopupBtn{
+    left: 900px;
+}
+#character_hold1{
+    position: fixed;
+    top: 220px;
+    left: 625px;
+    width: 450px;
+    height: 150px;
+    border-radius: 10px;
+    background-color: black;
+}
+#character_hold2{
+    position: fixed;
+    top: 370px;
+    left: 625px;
+    width: 450px;
+    height: 150px;
+    border-radius: 10px;
+    background-color: black;
+}
+#character_hold3{
+    position: fixed;
+    top: 520px;
+    left: 625px;
+    width: 450px;
+    height: 150px;
+    border-radius: 10px;
+    background-color: black;
 }
 #main{
     width: 100%;

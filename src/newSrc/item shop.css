@@ -12,7 +12,7 @@ header{
     width: 100%;
     height: 60px;
     margin: 10px auto;
-    background-color: rgb(125, 192, 255);
+    background-color: #85603F;
 }
 .topBar{
     float: left;
@@ -87,7 +87,7 @@ footer{
 #display{
     width: 100%;
     height: 700px;
-    background-color: aqua;
+    background-color: #BD9354;
     padding-left: 10%;
     padding-top: 25px;
 }
@@ -95,7 +95,7 @@ footer{
     float: left;
     width: 40%;
     height: 650px;
-    background-color: blue;
+    background-color:#E3D18A;
     overflow: hidden;
 }
 .item{
@@ -164,24 +164,6 @@ footer{
 #main{
     width: 100%;
     height: 800px;
-    background-color: blueviolet;
+    background-color:#9E7540;
     overflow: hidden;
-}
-#character_popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 500px;
-    height: 500px;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-#popup-content {
-    background: white;
-    width: 300px;
-    margin: 150px auto;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
 }
