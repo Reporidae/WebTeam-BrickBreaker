@@ -1,0 +1,262 @@
+* {
+margin: 0;
+padding: 0;
+}
+body{
+width: 100%;
+margin: 0 auto;
+}
+/*기본 사항*/
+header{
+overflow: hidden;
+width: 100%;
+height: 60px;
+margin: 10px auto;
+background-color: rgb(125, 192, 255);
+}
+.topBar{
+float: left;
+height: 40px;
+background-color: rgb(255, 255, 255);
+}
+#levelBar, #lifeBar, #coinBar{
+width: 450px;
+border-radius: 50px;
+margin: 10px 45px;
+}
+#settingButton{
+width: 40px;
+border-radius: 100px;
+margin: 10px 0;
+}
+.topBarIcon{
+height: 40px;
+width: 40px;
+border-radius: 100px;
+}/*실제로는 아이콘 이미지를 넣을 것*/
+
+/*header*/
+footer{
+overflow: hidden;
+width: 100%;
+height: 80px;
+margin: 10px auto;
+/*background-color: rgb(238, 158, 145);*/
+background-image: url("all_background.jpg");
+}
+.bottomButton{
+float: left;
+width: 300px;
+height: 60px;
+background-color:brown;
+border-radius: 50px;
+margin: 10px 50px;
+font-size: 50px;
+text-align: center;
+line-height: 60px;
+}
+#backVillageButton{
+width: 450px;
+height: 60px;
+}
+#backButton{
+margin-left: 300px;
+width: 300px;
+height: 60px;
+}
+#startButton{
+width: 300px;
+height: 60px;
+}
+/*footer*/
+#characterShop{
+font-size: 70px;
+font-weight: bold;
+text-align: center;
+background-color: blanchedalmond;
+width: 700px;
+height: 100px;
+margin: 0 auto;
+}
+#display{
+width: 100%;
+height: 700px;
+background-color: aqua;
+padding-left: 10%;
+padding-top: 25px;
+}
+#characterShopleftDisplay{
+float: left;
+width: 40%;
+height: 650px;
+background-color: blue;
+overflow: hidden;
+}
+#descriptionPopUp{
+width: 75%;
+height: 400px;
+background-color:brown;
+margin-left: 80px;
+margin-top: 120px;
+}
+#main{
+width: 100%;
+height: 800px;
+background-color: blueviolet;
+overflow: hidden;
+}
+
+/**********************character shop 추가 코드 **********************/
+#characterShoprightDisplay {
+float: left;
+width: 40%;
+height: 650px;
+background-color: blue;
+overflow-y: auto; /* 스크롤 적용 */
+padding-right: 10px; /* 스크롤 여유 공간 */
+}
+
+.character-card {
+width: 80%;
+height: 80%;
+margin: 5% auto;
+background-color: white;
+border-radius: 10px;
+padding: 20px;
+}
+
+.character-image {
+width: 100%;
+height: 70%;
+background-color: lightgray;
+margin-bottom: 10px;
+}
+
+.character-name {
+height: 20%;
+text-align: center;
+font-size: 24px;
+line-height: 50px;
+margin-bottom: 0px;
+}
+.now-character-name{
+    height: 20%;
+    text-align: center;
+    font-size: 30px;
+    line-height: 50px;
+    margin-bottom: 0px;
+}
+
+.now-character-level{
+    height: 20%;
+    text-align: center;
+    font-size: 30px;
+    line-height: 30px;
+}
+
+.character-info {
+display: flex;
+width: 90%;
+height: 200px;  /* 고정 높이 or auto로도 가능 */
+margin: 20px auto;
+background-color: white;
+border-radius: 10px;
+padding: 20px;
+}
+
+.character-image-small {
+width: 50%;
+height: 100%;
+background-color: lightgray;
+margin-right: 10px;
+}
+
+.character-stats {
+flex: 1;
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+}
+
+.stat-line {
+background-color: #eee;
+padding: 10px;
+margin-bottom: 10px;
+border-radius: 5px;
+text-align: center;
+}
+
+.description-box {
+width: 90%;
+height: 30%;
+margin: 0 auto;
+background-color: white;
+border-radius: 10px;
+padding: 20px;
+text-align: center;
+line-height: 30px;
+}
+
+/* 모달 전체 배경 */
+.modal {
+  display: none; /* 기본적으로 숨김 */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* 모달 콘텐츠 박스 */
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  width: 40%;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* 닫기 버튼 */
+.close-button {
+  float: right;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+
+/*팝업창*/
+.shop-popup {
+  position: fixed;
+  top: 50px; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  border: 2px solid #333;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.shop-popup-content {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.shop-popup-btn {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.shop-popup-close {
+  margin-left: auto;
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

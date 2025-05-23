@@ -1,0 +1,122 @@
+#village{
+	font-size: 70px;
+	font-weight: bold;
+	text-align: center;
+	background-color: blanchedalmond;
+	width: 700px;
+	height: 100px;
+	margin: 0 auto;
+}
+#villageDisplay{
+		width: 100%;
+    height: 700px;
+/*    background-color: rgb(184, 127, 55);*/
+/*background: radial-gradient(
+    circle, 
+    rgb(220, 170, 100) 0%,  
+    rgb(184, 127, 55) 70%,  
+    rgb(130, 90, 35) 100%  
+);*/
+background-image: url("all_background.jpg");
+    padding-left: 10%;
+    padding-top: 25px;
+}
+#villageLeftDisplay {
+    float: left;
+    width: 40%;
+    height: 650px;
+    background-color: blue;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* background.jpg를 절대 위치로 꽉 채움 */
+#villageLeftDisplay img.stage-image:first-child {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* 영역 꽉 채우면서 비율 유지 */
+    z-index: 1;
+}
+
+/* stage1.png는 원래 크기, 부모 중앙에 배치 */
+#villageLeftDisplay img.stage-image:last-child {
+    position: relative;  /* absolute 말고 relative */
+    z-index: 2;
+    max-width: 100% ;   /* 크기 제한 없음 */
+    max-height: 100%;
+}
+
+
+#villageRightDisplay {
+  float: left;
+    width: 40%;
+    height: 650px;
+    background-color: blue;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* background.jpg를 절대 위치로 꽉 채움 */
+#villageRightDisplay img.stage-image:first-child {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* 영역 꽉 채우면서 비율 유지 */
+    z-index: 1;
+}
+#villageRightDisplay img.stage-image:last-child {
+    position: relative;  /* absolute 말고 relative */
+    z-index: 2;
+    max-width: 100% ;   /* 크기 제한 없음 */
+    max-height: 100%;
+}
+
+#village-character {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 300px; /* 필요 시 크기 조정 */
+  height: 400px;
+}
+
+
+.village-character-card {
+  border: 2px solid #aaa;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.shop-popup {
+	position: absolute;
+	top: 60px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: white;
+	border: 2px solid #ccc;
+	border-radius: 8px;
+	padding: 10px;
+	z-index: 1000;
+	box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.shop-button {
+	margin: 5px;
+	padding: 8px 12px;
+	cursor: pointer;
+	border: none;
+	background-color: #f0f0f0;
+	border-radius: 4px;
+}
+
+.shop-button:hover {
+	background-color: #ddd;
+}
+
