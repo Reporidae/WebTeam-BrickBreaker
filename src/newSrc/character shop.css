@@ -1,41 +1,65 @@
-* {
-margin: 0;
-padding: 0;
+*{
+	margin: 0;
+	padding: 0;
 }
 body{
-width: 100%;
-margin: 0 auto;
+	width: 100%;
+	margin: 0 auto;
 }
 /*기본 사항*/
 header{
-overflow: hidden;
-width: 100%;
-height: 60px;
-margin: 10px auto;
-background-color: rgb(125, 192, 255);
+    overflow: hidden;
+    width: 100%;
+    height: 60px;
+    margin: 10px auto;
+    background-color: rgb(125, 192, 255);
 }
 .topBar{
-float: left;
-height: 40px;
-background-color: rgb(255, 255, 255);
+    float: left;
+    height: 40px;
+    background-color: blue;
+    display: inline-flex;
+    align-items: center;
 }
 #levelBar, #lifeBar, #coinBar{
-width: 450px;
-border-radius: 50px;
-margin: 10px 45px;
+    width: 450px;
+    border-radius: 50px;
+    margin: 10px 45px;
 }
 #settingButton{
-width: 40px;
-border-radius: 100px;
-margin: 10px 0;
+    width: 40px;
+    border-radius: 100px;
+    margin: 10px 0;
 }
 .topBarIcon{
-height: 40px;
-width: 40px;
-border-radius: 100px;
+    height: 40px;
+    width: 40px;
+    border-radius: 100px;
+    background-color: blanchedalmond;
 }/*실제로는 아이콘 이미지를 넣을 것*/
+.barView {
+    width: 400px;
+    height: 30px;
+    background-color: rgb(144, 27, 27);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+#levelFill{
+    height: 100%;
+    width: 90px;
+    background-color: #FFD700;
+    transition: width 0.3s ease;
+    border-radius: 20px 0 0 20px;
+}
+#lifeView img{
+    margin-right: 30px;
+    display: inline;
+}
+#lifeIcon_img1{
+    margin-left: 30px;
+}
 
-/*header*/
 footer{
 overflow: hidden;
 width: 100%;
