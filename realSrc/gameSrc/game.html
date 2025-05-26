@@ -1,0 +1,89 @@
+<!-- 게임을 위한 HTML 구조 -->
+<!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>벽돌 깨기 게임</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="game.css" />
+        <script src="game.js"></script>
+    </head>
+
+    <body>
+        <h1>벽돌 깨기 게임</h1>
+
+        <div class="game-info">
+            <div>점수: <span id="score">0</span></div>
+            <div>스테이지: <span id="stage">1</span></div>
+            <div>남은 생명: <span id="hearts">3</span></div>
+            <div>코인: <span id="coins">0</span></div>
+        </div>
+
+        <div class="game-container">
+            <canvas id="game-canvas" width="1000" height="700"></canvas>
+
+            <!-- 캐릭터 선택 메뉴 -->
+            <div id="character-select-menu">
+                <h2 class="menu-title">캐릭터 선택</h2>
+                <div class="character-grid">
+                    <button id="char1" class="character-button">공격형<br><small>공 데미지 +1</small></button>
+                    <button id="char2" class="character-button">속도형<br><small>이동속도 증가</small></button>
+                    <button id="char3" class="character-button">시간형<br><small>시간정지 (Q키)</small></button>
+                    <button id="char4" class="character-button">방어형<br><small>넓은 방어영역</small></button>
+                </div>
+                <button id="character-confirm" class="menu-button" style="margin-top: 20px;">선택 완료</button>
+            </div>
+
+            <!-- 게임 메뉴 -->
+            <div id="game-menu" class="hidden">
+                <h2 id="menu-message" class="menu-title">게임 시작</h2>
+                <button id="start-button" class="menu-button">시작하기</button>
+                <button id="resume-button" class="menu-button">계속하기</button>
+                <button id="restart-button" class="menu-button">다시 시작</button>
+                <button id="quit-button" class="menu-button">나가기</button>
+            </div>
+
+            <!-- 스테이지 클리어 메뉴 -->
+            <div id="stage-clear-menu" class="hidden">
+                <h2 id="stage-clear-message" class="menu-title">스테이지 클리어!</h2>
+                <div id="stage-clear-info" style="margin: 20px 0; font-size: 18px;"></div>
+                <button id="next-stage-button" class="menu-button">다음 스테이지</button>
+                <button id="quit-stage-button" class="menu-button">메인으로</button>
+            </div>
+
+            <!-- 필살기 게이지 -->
+            <div id="skill-gauge-wrapper">
+                <div id="skill-gauge">
+                    <div id="gauge-fill"></div>
+                </div>
+                <div id="gauge-label">필살기</div>
+            </div>
+
+            <!-- 시간정지 오버레이 -->
+            <div id="time-stop-overlay" class="hidden time-stop-overlay">
+                시간 정지!
+            </div>
+        </div>
+
+        <!-- 타이머 -->
+        <div id="timer-container">
+            <span id="stage-timer">1:00</span>
+        </div>
+
+        <!-- 캐릭터 능력 표시 -->
+        <div class="character-abilities">
+            <div id="character-info">캐릭터를 선택하세요</div>
+        </div>
+
+        <div>
+            <button id="pause-button" class="control-button">일시정지 (ESC)</button>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3>조작 방법</h3>
+            <p>← →: 좌우 이동 | ESC: 일시정지 | F: 필살기 사용</p>
+            <p>Q: 시간정지 (시간형 캐릭터만) | 마우스/터치: 패들 이동</p>
+        </div>
+    </body>
+</html>
