@@ -39,6 +39,12 @@ header{
     text-align: center;
     line-height: 30px;
 }
+#coinIcon_img1{
+    padding: 2px 0 0 3px;
+}
+#lifeIcon_img0{
+    padding: 3.7px 0 0 3px;
+}
 /*header*/
 footer{
     overflow: hidden;

@@ -343,6 +343,11 @@ function abilityShop_CharacterPopUp(){
   let character_hold1 = document.querySelector('#character_hold1');
   let character_hold2 = document.querySelector('#character_hold2');
   let character_hold3 = document.querySelector('#character_hold3');
+  let character_hold4 = document.querySelector('#character_hold4');
+  let leftUpperWrapper1 = document.querySelector('.abilityShop #leftUpperWrapper1');
+  let leftUpperWrapper2 = document.querySelector('.abilityShop #leftUpperWrapper2');
+  let leftUpperWrapper3 = document.querySelector('.abilityShop #leftUpperWrapper3');
+  let leftUpperWrapper4 = document.querySelector('.abilityShop #leftUpperWrapper4');
   characterButton.addEventListener("click", ()=>{
     characterPopUp.style.display = "block";
   })
@@ -358,15 +363,37 @@ function abilityShop_CharacterPopUp(){
   character_hold3.addEventListener("click", ()=>{
     selectedIndex=3;
   })
+  character_hold4.addEventListener("click", ()=>{
+    selectedIndex=4;
+  })
   saveAndCloseBtn.addEventListener("click", ()=>{
   if(selectedIndex===1){
-    characterView.src =`img1.jpg`;
+    for(let i=1; i<=4; i++){
+      let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
+      temp.style.display = "none";
+    }
+    leftUpperWrapper1.style.display = "block";
   }
   if(selectedIndex===2){
-    characterView.src =`img2.jpg`;
+    for(let i=1; i<=4; i++){
+      let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
+      temp.style.display = "none";
+    }
+    leftUpperWrapper2.style.display = "block";
   }
   if(selectedIndex===3){
-    characterView.src =`img3.jpg`;
+    for(let i=1; i<=4; i++){
+      let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
+      temp.style.display = "none";
+    }
+    leftUpperWrapper3.style.display = "block";
+  }
+  if(selectedIndex===4){
+    for(let i=1; i<=4; i++){
+      let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
+      temp.style.display = "none";
+    }
+    leftUpperWrapper4.style.display = "block";
   }
   characterPopUp.style.display = "none";
   });
@@ -374,11 +401,12 @@ function abilityShop_CharacterPopUp(){
 let character1_level = 1;
 let character2_level = 1;
 let character3_level = 1;
+let character4_level = 1;
 function characterLevelUp() {
   let characterLevel = document.getElementById('characterLevel');
   let characterImg = document.getElementById('characterImg');
   let levelupButton = document.getElementById('levelupButton');
-
+ 
   levelupButton.addEventListener("click", () => {
     let src = characterImg.src;
     let level, cost, name;
@@ -392,6 +420,9 @@ function characterLevelUp() {
     } else if (src.includes("img1.jpg")) {
       level = character3_level;
       name = "MMMMM";
+    } else if (src.includes("img3.jpg")) {
+      level = character4_level;
+      name = "NNNNN";
     } else {
       alert("캐릭터 이미지를 인식하지 못했습니다.");
       return;
@@ -410,11 +441,9 @@ function characterLevelUp() {
     }
 
     let yn = confirm(`Lv.${level} → Lv.${level + 1}로 레벨업 하시겠습니까? (${cost}원 소모)`);
-
     if (yn) {
       coin -= cost;
       level++;
-
       if (src.includes("character_img1.png")) character1_level = level;
       if (src.includes("img2.jpg")) character2_level = level;
       if (src.includes("img1.jpg")) character3_level = level;
