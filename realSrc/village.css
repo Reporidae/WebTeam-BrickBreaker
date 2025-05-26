@@ -6,6 +6,7 @@
 	width: 700px;
 	height: 100px;
 	margin: 0 auto;
+    line-height: 100px;
 }
 #villageDisplay{
 		width: 100%;

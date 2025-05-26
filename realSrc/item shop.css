@@ -72,9 +72,6 @@ footer{
     height: 60px;
 }
 /*footer*/
-#leftUpperWrapper{
-    overflow: hidden;
-}
 #itemShop{
     font-size: 70px;
     font-weight: bold;
@@ -83,6 +80,7 @@ footer{
     width: 500px;
     height: 100px;
     margin: 0 auto;
+    line-height: 100px;
 }
 #display{
     width: 100%;
@@ -104,16 +102,10 @@ footer{
     background-color: beige;
     border-radius: 10px;
     float: left;
-    margin-top: 25px;
-    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 25px;
 }
-#item1, #item2, #item3{
-    margin-top: 100px;
-}
-#item1, #item4{
-    margin-left: 50px;
-}
-#itemImgView{
+.itemImgView{
     width: 180px;
     height: 140px;
     background-color: aqua;
@@ -124,18 +116,32 @@ footer{
     padding-top: 7px;
     display: block;
 }
-#itemNameView{
+.itemNameView{
     width: 180px;
     height: 40px;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 0, 0);
     border-radius: 0 0 10px 10px;
     font-size: 30px;
     text-align: center;
 }
-#leftUpperWrapper{
+.itemShop #leftUpperWrapper{
     width: 100%;
-    height: 80%;
+    height: 70%;
     background-color: antiquewhite;
+    padding-left: 50px;
+    padding-top: 80px;
+    overflow: hidden;
+
+}
+#leftUpperWrapper1{
+    width: 100%;
+    height: 50%;
+    float: left;
+}
+#leftUpperWrapper2{
+    width: 100%;
+    height: 50%;
+    float: left;
 }
 .itemShop #buttonDisplay{
     width: 100%;
