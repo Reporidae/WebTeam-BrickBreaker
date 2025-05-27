@@ -339,7 +339,6 @@ function abilityShop_CharacterPopUp(){
   let characterButton = document.getElementById('characterButton');
   let closePopupBtn = document.getElementById('closePopupBtn');
   let saveAndCloseBtn = document.getElementById('saveAndCloseBtn');
-  let characterView = document.querySelector('#characterView img');
   let character_hold1 = document.querySelector('#character_hold1');
   let character_hold2 = document.querySelector('#character_hold2');
   let character_hold3 = document.querySelector('#character_hold3');
@@ -348,54 +347,93 @@ function abilityShop_CharacterPopUp(){
   let leftUpperWrapper2 = document.querySelector('.abilityShop #leftUpperWrapper2');
   let leftUpperWrapper3 = document.querySelector('.abilityShop #leftUpperWrapper3');
   let leftUpperWrapper4 = document.querySelector('.abilityShop #leftUpperWrapper4');
+  let selectedWrapper;
+
+  for (let i = 1; i <= 4; i++) {
+    let wrapper = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
+    if (wrapper.style.display === "block") {
+      selectedWrapper = wrapper;
+      break;
+    }
+  }
+
+  if (!selectedWrapper) {
+    alert("선택된 캐릭터가 없습니다.");
+    return;
+  }
+
+  let img = selectedWrapper.querySelector("img");
+  let src = img.src;
+  let pre;
+  if (src.includes("character_img1.png")) {
+    pre = 1;
+  } else if (src.includes("img2.jpg")) {
+    pre = 2;
+  } else if (src.includes("img1.jpg")) {
+    pre = 3;
+  } else if (src.includes("img3.jpg")) {
+    pre = 4;
+  }
   characterButton.addEventListener("click", ()=>{
     characterPopUp.style.display = "block";
-  })
+  });
   closePopupBtn.addEventListener("click", ()=>{
     characterPopUp.style.display = "none";
-  })
+  });
   character_hold1.addEventListener("click", ()=>{
     selectedIndex=1;
-  })
+  });
   character_hold2.addEventListener("click", ()=>{
     selectedIndex=2;
-  })
+  });
   character_hold3.addEventListener("click", ()=>{
     selectedIndex=3;
-  })
+  });
   character_hold4.addEventListener("click", ()=>{
     selectedIndex=4;
-  })
+  });
   saveAndCloseBtn.addEventListener("click", ()=>{
-  if(selectedIndex===1){
+    
     for(let i=1; i<=4; i++){
       let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
       temp.style.display = "none";
     }
-    leftUpperWrapper1.style.display = "block";
-  }
-  if(selectedIndex===2){
-    for(let i=1; i<=4; i++){
-      let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
-      temp.style.display = "none";
+    if (selectedIndex === null) {
+      alert("캐릭터를 선택해주세요!");
+      if(pre ==1){
+        leftUpperWrapper1.style.display = "block";
+      }
+      else if(pre==2){
+        leftUpperWrapper2.style.display = "block";
+      }
+      else if(pre==3){
+        leftUpperWrapper3.style.display = "block";
+      }
+      else if(pre==4){
+        leftUpperWrapper4.style.display = "block";
+      }
+      return;
     }
-    leftUpperWrapper2.style.display = "block";
-  }
-  if(selectedIndex===3){
-    for(let i=1; i<=4; i++){
-      let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
-      temp.style.display = "none";
+    if(selectedIndex===1){
+      leftUpperWrapper1.style.display = "block";
+      characterPopUp.style.display = "none";
+      return;
     }
-    leftUpperWrapper3.style.display = "block";
-  }
-  if(selectedIndex===4){
-    for(let i=1; i<=4; i++){
-      let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
-      temp.style.display = "none";
+    if(selectedIndex===2){
+      leftUpperWrapper2.style.display = "block";
+      characterPopUp.style.display = "none";
+      return
     }
-    leftUpperWrapper4.style.display = "block";
-  }
-  characterPopUp.style.display = "none";
+    if(selectedIndex===3){
+      leftUpperWrapper3.style.display = "block";
+      characterPopUp.style.display = "none";
+      return
+    }
+    if(selectedIndex===4){
+      leftUpperWrapper4.style.display = "block";
+      characterPopUp.style.display = "none";
+      return
+    }
   });
 }
 let character1_level = 1;
@@ -403,13 +441,26 @@ let character2_level = 1;
 let character3_level = 1;
 let character4_level = 1;
 function characterLevelUp() {
-  let characterLevel = document.getElementById('characterLevel');
-  let characterImg = document.getElementById('characterImg');
   let levelupButton = document.getElementById('levelupButton');
- 
   levelupButton.addEventListener("click", () => {
-    let src = characterImg.src;
-    let level, cost, name;
+    let selectedWrapper;
+
+    for (let i = 1; i <= 4; i++) {
+      let wrapper = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
+      if (wrapper.style.display === "block") {
+        selectedWrapper = wrapper;
+        break;
+      }
+    }
+
+    if (!selectedWrapper) {
+      alert("선택된 캐릭터가 없습니다.");
+      return;
+    }
+
+    let img = selectedWrapper.querySelector("img");
+    let src = img.src;
+    let level, name;
 
     if (src.includes("character_img1.png")) {
       level = character1_level;
@@ -433,7 +484,7 @@ function characterLevelUp() {
       return;
     }
 
-    cost = level * 10000;
+    let cost = level * 10000;
 
     if (coin < cost) {
       alert(`현재 남은 코인은 ${coin}원입니다. 코인 부족으로 레벨업이 불가합니다.`);
@@ -444,14 +495,19 @@ function characterLevelUp() {
     if (yn) {
       coin -= cost;
       level++;
-      if (src.includes("character_img1.png")) character1_level = level;
-      if (src.includes("img2.jpg")) character2_level = level;
-      if (src.includes("img1.jpg")) character3_level = level;
 
-      characterLevel.textContent = `${name} [Lv.${level}]`;
+      if (src.includes("character_img1.png")) character1_level = level;
+      else if (src.includes("img2.jpg")) character2_level = level;
+      else if (src.includes("img1.jpg")) character3_level = level;
+      else if (src.includes("img3.jpg")) character4_level = level;
+
+      const levelText = selectedWrapper.querySelector('#characterLevel');
+      levelText.innerText = `${name}[Lv.${level}]`;
     }
   });
 }
+
+
 let lifeTimer = null;
 
 function startLifeTimer() {
