@@ -154,13 +154,13 @@ class Player {
         this.maxGauge = maxGauge;
         this.skillReady = false;
         this.width = 160; // 패들 너비를 120에서 160으로 증가
-        this.height = 60; // 패들 높이를 40에서 60으로 증가
+        this.height = 70; // 패들 높이를 40에서 60으로 증가
         
         // 플레이어 애니메이션 관련
         this.animationFrames = [];
         this.currentFrame = 0;
         this.frameTimer = 0;
-        this.frameDelay = 3; // 3프레임마다 이미지 변경
+        this.frameDelay = 10; // 3프레임마다 이미지 변경
         this.isAnimating = false;
         this.animationDuration = 30; // 30프레임 동안 애니메이션
         this.animationTimer = 0;
@@ -170,7 +170,7 @@ class Player {
         this.defaultImage.src = 'player.png'; // 기본 이미지
         
         // 애니메이션 프레임 이미지들 (필요한 만큼 추가)
-        for (let i = 1; i <= 4; i++) {
+        for (let i = 1; i <= 2; i++) {
             const img = new Image();
             img.src = `player_anim_${i}.png`; // player_anim_1.png, player_anim_2.png 등
             this.animationFrames.push(img);
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const CANVAS_WIDTH = 1000;
     const CANVAS_HEIGHT = 700;
     const PADDLE_WIDTH = 160; // 120에서 160으로 증가
-    const PADDLE_HEIGHT = 60; // 40에서 60으로 증가
+    const PADDLE_HEIGHT = 70; // 40에서 60으로 증가
     const PADDLE_SPEED = 8; // 속도 줄임 (12 -> 8)
     const BALL_RADIUS = 10;
     const BRICK_ROWS = 5;
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         document.getElementById('character-select-menu').classList.add('hidden');
-        document.getElementById('game-menu').classList.remove('hidden');
+        document.getElementById('stage-select-menu').classList.remove('hidden'); // 스테이지 선택 메뉴 표시
         
         // 캐릭터 능력 적용
         const char = characterAbilities[selectedCharacter];
@@ -421,6 +421,37 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.getElementById('character-info').textContent = `${char.name}: ${char.description}`;
     });
+
+    document.querySelectorAll('.stage-select').forEach(button => {
+        button.addEventListener('click', function() {
+            stage = parseInt(this.getAttribute('data-stage'));
+            document.getElementById('stage-select-menu').classList.add('hidden');
+            
+            // 선택된 스테이지로 게임 시작
+            gameStarted = true;
+            gameOver = false;
+            gamePaused = false;
+            score = 0;
+            lives = MAX_LIVES;
+            coins = 0;
+            
+            setupBossForStage(stage);
+            initBricks();
+            resetBall();
+            setBallSpeedForStage(stage);
+            updateUI();
+            
+            startStageTimer();
+            
+            bossAttackTimer = setInterval(() => {
+                if (boss.visible && !timeStopActive && !gamePaused) {
+                    boss.spawnProjectiles(stage);
+                }
+            }, boss.attackInterval);
+            
+            requestAnimationFrame(gameLoop);
+        });
+    }); 
 
     // === 키보드 이벤트 ===
     document.addEventListener("keydown", function (e) {
@@ -556,15 +587,18 @@ document.addEventListener('DOMContentLoaded', function() {
         gameStarted = true;
         gameOver = false;
         gamePaused = false;
+        
+        // 스테이지가 이미 선택되어 있지 않으면 기본값 1로 설정
+        if (!stage) stage = 1;
+        
         score = 0;
         lives = MAX_LIVES;
         coins = 0;
-        stage = 1;
         
         setupBossForStage(stage);
         initBricks();
         resetBall();
-        setBallSpeedForStage(stage); // 스테이지별 공 속도 설정
+        setBallSpeedForStage(stage);
         updateUI();
         
         document.getElementById("game-menu").classList.add("hidden");
@@ -595,7 +629,6 @@ document.addEventListener('DOMContentLoaded', function() {
         gamePaused = false;
         setBallSpeedForStage(stage); // 게임 재개 시 공 속도 재설정
         document.getElementById("game-menu").classList.add("hidden");
-        requestAnimationFrame(gameLoop);
     }
 
     function restartGame() {
@@ -1082,43 +1115,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // === 그리기 ===
     function draw() {
-        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-        // 배경
+        // 배경 색상으로 먼저 클리어
         ctx.fillStyle = "#222";
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-        // 게임 요소들
+    
+        // 배경 이미지 그리기 (선택사항)
+        const bgImage = new Image();
+        bgImage.src = `background_stage_${stage}.jpg`;
+        
+        // 이미지가 로드되었으면 배경으로 사용, 아니면 기본 배경색 유지
+        if (bgImage.complete && bgImage.naturalWidth > 0) {
+            ctx.drawImage(bgImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        }
+    
+        // 게임 요소들 그리기
         drawBricks();
         drawPaddle();
         drawBall();
         drawItems();
         boss.draw(ctx);
         drawBossProjectiles();
-
+    
         // 필살기 이펙트
         phoenixEffect.draw(ctx);
-
+    
         // UI 정보
         ctx.font = "20px Arial";
         ctx.fillStyle = "#FFF";
         ctx.textAlign = "left";
         ctx.fillText(`점수: ${score}`, 10, 30);
-
+    
         ctx.textAlign = "center";
         ctx.fillText(`스테이지: ${stage}`, CANVAS_WIDTH / 2, 30);
-
+    
         ctx.textAlign = "right";
         ctx.fillText(`생명: ${lives}`, CANVAS_WIDTH - 10, 30);
         ctx.fillText(`코인: ${coins}`, CANVAS_WIDTH - 10, 60);
-
+    
         // 자석 활성화 표시
         if (hasMagnet) {
             ctx.textAlign = "left";
             ctx.fillStyle = "#FF00FF";
             ctx.fillText("자석 활성화!", 10, 60);
         }
-
+    
         // 시간정지 쿨다운 표시
         if (selectedCharacter === 'char3' && timeStopCooldown > 0) {
             ctx.textAlign = "left";
@@ -1148,24 +1188,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 스테이지 클리어 메뉴
     document.getElementById("next-stage-button").addEventListener("click", function() {
-        document.getElementById("stage-clear-menu").classList.add("hidden");
-        stage++;
-        setupBossForStage(stage);
-        resetBall();
-        setBallSpeedForStage(stage); // 다음 스테이지로 넘어갈 때 공 속도 설정
-        initBricks();
-        updateUI();
-        startStageTimer();
-        gamePaused = false;
-        
-        bossAttackTimer = setInterval(() => {
-            if (boss.visible && !timeStopActive && !gamePaused) {
-                boss.spawnProjectiles(stage);
-            }
-        }, boss.attackInterval);
-        
-        requestAnimationFrame(gameLoop);
+        quitGame(); // 다음 스테이지로 넘어가지 않고 게임 종료 처리
     });
+
 
     document.getElementById("quit-stage-button").addEventListener("click", quitGame);
 
