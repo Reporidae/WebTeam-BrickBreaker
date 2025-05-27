@@ -1,3 +1,15 @@
+// 사운드 객체 생성
+const sounds = {
+    paddleHit: new Audio("sounds/paddle_hit.mp3"),
+    brickHit: new Audio("sounds/brick_hit.mp3"),
+    bossHit: new Audio("sounds/boss_hit.mp3"),
+    skill: new Audio("sounds/skill_activate.mp3"),
+    bgm1: new Audio("sounds/bgm1.mp3")
+};
+sounds.bgm1.loop = true;
+
+
+
 class Boss {
     constructor(canvasWidth, health = 10, phasePercent = 20) {
         this.x = 0;
@@ -42,6 +54,7 @@ class Boss {
             
             ball.dy = Math.abs(ball.dy);
             this.health -= ball.power;
+            sounds.bossHit.play();
 
             const percentLost = 1 - (this.health / this.maxHealth);
             const expectedTriggers = Math.floor((percentLost + 0.000001) * (100 / this.phasePercent));
@@ -474,6 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function useSkill() {
         if (player.canUseSkill()) {
+            sounds.skill.plau();
             phoenixEffect.activate();
             const gainedScore = player.useSkill(bricks);
             score += gainedScore;
@@ -482,6 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startGame() {
+        sounds.bgm1.play();
         if (!selectedCharacter) return;
         
         gameStarted = true;
@@ -658,11 +673,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         createItem(brick.x + brick.width / 2, brick.y + brick.height / 2);
                         player.chargeGauge();
                         updateGaugeUI();
+
+                        sounds.brickHit.play();
                     }
                     break;
                 }
             }
         }
+        
     }
 
     function checkPaddleCollision() {
@@ -678,6 +696,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ball.dx = speed * Math.cos(angle);
             ball.dy = -Math.abs(speed * Math.sin(angle));
         }
+        sounds.paddleHit.play();
     }
 
     function checkItemCollision() {

@@ -1,3 +1,13 @@
+const sounds = {
+    paddleHit: new Audio("../../assets/sounds/paddle_hit.mp3"),
+    brickHit: new Audio("../../assets/sounds/brick_hit.mp3"),
+    bossHit: new Audio("../../assets/sounds/boss_hit.mp3"),
+    skill1: new Audio("../../assets/sounds/skill1.mp3"),
+    bgm1: new Audio("../../assets/music/bgm1.mp3")
+};
+sounds.bgm1.loop = true;
+
+
 class Boss {
     constructor(canvasWidth, health = 10, phasePercent = 20) {
         this.x = 0;
@@ -71,6 +81,7 @@ class Boss {
             
             ball.dy = Math.abs(ball.dy);
             this.health -= ball.power;
+            sounds.bossHit.play();
 
             const percentLost = 1 - (this.health / this.maxHealth);
             const expectedTriggers = Math.floor((percentLost + 0.000001) * (100 / this.phasePercent));
@@ -578,10 +589,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const gainedScore = player.useSkill(bricks);
             score += gainedScore;
             updateUI();
+            sounds.skill1.play();
         }
     }
 
     function startGame() {
+        sounds.bgm1.play();
+
         if (!selectedCharacter) return;
         
         gameStarted = true;
@@ -763,6 +777,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         createItem(brick.x + brick.width / 2, brick.y + brick.height / 2);
                         player.chargeGauge();
                         updateGaugeUI();
+                        sounds.brickHit.play();
                     }
                     break;
                 }
@@ -778,6 +793,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 플레이어 애니메이션 시작
             player.startAnimation();
+            sounds.paddleHit.play();
             
             const hitPos = (ball.x - paddle.x) / paddle.width;
             const angle = hitPos * Math.PI - Math.PI / 2;
@@ -786,7 +802,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             ball.dx = targetSpeed * Math.cos(angle);
             ball.dy = -Math.abs(targetSpeed * Math.sin(angle));
+            
         }
+        
     }
 
     function checkItemCollision() {
