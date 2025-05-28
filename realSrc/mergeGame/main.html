@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href = "character shop.css">
+    <link type="text/css" rel="stylesheet" href = "village.css">
+    <link type="text/css" rel="stylesheet" href = "ability shop.css">
+    <link type="text/css" rel="stylesheet" href = "item shop.css">
+    <script src = "main.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="game.css" />
+</head>
+<body>
+    <header>
+        <div id="levelBar" class="topBar">
+            <div id = "levelIcon" class="topBarIcon"></div>
+            <div id = "levelView" class = "barView">
+                <div id="levelFill" class="barFill"></div>
+            </div>
+        </div>
+        <div id = "lifeBar" class="topBar">
+            <div id = "lifeIcon" class="topBarIcon">
+                <img id = "lifeIcon_img0" src = "lifeIcon1_img.png" width="35" height="35">
+            </div>
+            <div id = "lifeView" class = "barView">
+                <img id = "lifeIcon_img1" src = "lifeIcon1_img.png" width="35" height="35">
+                <img id = "lifeIcon_img2" src = "lifeIcon1_img.png" width="35" height="35">
+                <img id = "lifeIcon_img3" src = "lifeIcon1_img.png" width="35" height="35">
+                <img id = "lifeIcon_img4" src = "lifeIcon1_img.png" width="35" height="35">
+                <img id = "lifeIcon_img5" src = "lifeIcon1_img.png" width="35" height="35">
+            </div>
+        </div>
+        <div id = "coinBar" class="topBar">
+            <div id = "coinIcon" class="topBarIcon">
+                <img id = "coinIcon_img1" src = "coinIcon1_img.png" width="35" height="35">
+            </div>
+            <div id = "coinView" class = "barView"></div>
+        </div>
+        <div id = "settingButton" class="topBar"></div>
+    </header>
+    <div id = "main">
+        <!--------------------------- game --------------------------->
+        <div class="main-game" style="display: none;">
+            <div class="game-info">
+                <div>점수: <span id="score">0</span></div>
+                <div>스테이지: <span id="stage">1</span></div>
+                <div>남은 생명: <span id="hearts">3</span></div>
+                <div>코인: <span id="coins">0</span></div>
+            </div>
+    
+            <div class="game-container">
+                <canvas id="game-canvas" width="1000" height="700"></canvas>
+    
+                <!-- 캐릭터 선택 메뉴 -->
+                <div id="character-select-menu">
+                    <h2 class="menu-title">캐릭터 선택</h2>
+                    <div class="character-grid">
+                        <button id="char1" class="character-button">공격형<br><small>공 데미지 +1</small></button>
+                        <button id="char2" class="character-button">속도형<br><small>이동속도 증가</small></button>
+                        <button id="char3" class="character-button">시간형<br><small>시간정지 (Q키)</small></button>
+                        <button id="char4" class="character-button">방어형<br><small>넓은 방어영역</small></button>
+                    </div>
+                    <button id="character-confirm" class="menu-button" style="margin-top: 20px;">선택 완료</button>
+                </div>
+    
+                            <!-- 스테이지 선택 메뉴 -->
+                <div id="stage-select-menu" class="hidden">
+                    <h2 class="menu-title">스테이지 선택</h2>
+                    <div>
+                        <button class="menu-button stage-select" data-stage="1">스테이지 1</button>
+                        <button class="menu-button stage-select" data-stage="2">스테이지 2</button>
+                        <button class="menu-button stage-select" data-stage="3">스테이지 3</button>
+                        <button class="menu-button stage-select" data-stage="4">스테이지 4</button>
+                    </div>
+                </div>
+      
+    
+                <!-- 게임 메뉴 -->
+                <div id="game-menu" class="hidden">
+                    <h2 id="menu-message" class="menu-title">게임 시작</h2>
+                    <button id="start-button" class="menu-button">시작하기</button>
+                    <button id="resume-button" class="menu-button">계속하기</button>
+                    <button id="restart-button" class="menu-button">다시 시작</button>
+                    <button id="quit-button" class="menu-button">나가기</button>
+                </div>
+    
+                <!-- 스테이지 클리어 메뉴 -->
+                <div id="stage-clear-menu" class="hidden">
+                    <h2 id="stage-clear-message" class="menu-title">스테이지 클리어!</h2>
+                    <div id="stage-clear-info" style="margin: 20px 0; font-size: 18px;"></div>
+                    <button id="next-stage-button" class="menu-button">다음 스테이지</button>
+                    <button id="quit-stage-button" class="menu-button">메인으로</button>
+                </div>
+    
+                <!-- 필살기 게이지 -->
+                <div id="skill-gauge-wrapper">
+                    <div id="skill-gauge">
+                        <div id="gauge-fill"></div>
+                    </div>
+                    <div id="gauge-label">필살기</div>
+                </div>
+    
+                <!-- 시간정지 오버레이 -->
+                <div id="time-stop-overlay" class="hidden time-stop-overlay">
+                    시간 정지!
+                </div>
+            </div>
+    
+            <!-- 타이머 -->
+            <div id="timer-container">
+                <span id="stage-timer">1:00</span>
+            </div>
+    
+            <!-- 캐릭터 능력 표시 -->
+            <div class="character-abilities">
+                <div id="character-info">캐릭터를 선택하세요</div>
+            </div>
+    
+            <div>
+                <button id="pause-button" class="control-button">일시정지 (ESC)</button>
+            </div>
+    
+            <div style="margin-top: 20px;">
+                <h3>조작 방법</h3>
+                <p>← →: 좌우 이동 | ESC: 일시정지 | F: 필살기 사용</p>
+                <p>Q: 시간정지 (시간형 캐릭터만) | 마우스/터치: 패들 이동</p>
+            </div>
+        </div>
+
+        <!--------------------------- village --------------------------->
+        <div class="village">
+            <div id = "village">Village</div>
+            <div id = "villageDisplay">
+                <div id="villageLeftDisplay">
+                    <img class="stage-image" src="background.jpg"/>
+                    <img class="stage-image" src="stage1.png"/>
+                </div>
+                <div id="villageRightDisplay">
+                    <img class="stage-image" src="qrslhupr.png"/>
+                    <img id="village-character" src="real_character1.png" alt="캐릭터 이미지" />
+                </div>
+            </div>
+        </div>
+        <!--------------------------- characterShop --------------------------->
+        <div class="characterShop" style="display: none;">
+            <div id = "characterShop">Character Shop</div>
+            <!-- 모달 창 -->
+            <div id="characterModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h2 id="modalCharacterName">캐릭터 이름</h2>
+                    <p id="modalStat1">스탯 정보 1</p>
+                    <p id="modalStat2">스탯 정보 2</p>
+                    <button id="modalActionButton">구매</button>
+                </div>
+            </div>
+            <!-- 모달 창 -->
+            <div id = "display">
+                <div id="characterShopleftDisplay">
+                    <div class="character-card">
+                        <img class="character-image" src="real_character1.png" alt="캐릭터 이미지" />
+                        <div class="now-character-name">캐릭터 이름</div>
+                        <div class="now-character-level">공격력 증가</div>
+                    </div>
+                </div>
+                <div id="characterShoprightDisplay">
+                    <div class="character-info">
+                        <img class="character-image-small" src="real_character2.png" alt="캐릭터 이미지" />
+                        <div class="character-stats">
+                            <div class="character-name">엘로이</div>
+                            <div class="stat-line">[Lv1] 패들 크기 5 증가</div>
+                            <div class="stat-line">[Lv2] 패들 크기 10 증가</div>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <img class="character-image-small" src="real_character3.png" alt="캐릭터 이미지" />
+                        <div class="character-stats">
+                            <div class="character-name">바일</div>
+                            <div class="stat-line">[Lv1] 시간 멈추기 3초</div>
+                            <div class="stat-line">[Lv2] 시간 멈추기 5초</div>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <img class="character-image-small" src="real_character4.png" alt="캐릭터 이미지" />
+                        <div class="character-stats">
+                            <div class="character-name">캐릭터 이름3</div>
+                            <div class="stat-line">[Lv1] 속도 3 증가</div>
+                            <div class="stat-line">[Lv2] 속도 5 증가</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--------------------------- abilityShop --------------------------->
+        <div class="abilityShop" style="display: none;">
+            <div id = "abilityShop">Ability Shop</div>
+            <div id = "display">
+                <div id = "leftDisplay">
+                    <div id = "leftUpperWrapper1">
+                        <div class = "characterDisplay">
+                            <div class = "characterView">
+                                <img id = "characterImg1" src = "character_img1.png" width="300" height="400">
+                            </div>
+                            <div class = "characterLevel">OOOOO[Lv.1]</div>
+                        </div>
+                        <div class = "abilityDisplay">
+                            <div class="abilityView">OOOOO</div>
+                            <div class="abilityView">OOOOO</div>
+                            <div class="abilityView">OOOOO</div>
+                        </div>
+                    </div>
+                    <div id = "leftUpperWrapper2">
+                        <div class = "characterDisplay">
+                            <div class = "characterView">
+                                <img id = "characterImg2" src = "img2.jpg" width="300" height="400">
+                            </div>
+                            <div class = "characterLevel">OOPOO[Lv.1]</div>
+                        </div>
+                        <div class = "abilityDisplay">
+                            <div class="abilityView">OOPOO</div>
+                            <div class="abilityView">OOOOO</div>
+                            <div class="abilityView">OOOOO</div>
+                        </div>
+                    </div>
+                    <div id = "leftUpperWrapper3">
+                        <div class = "characterDisplay">
+                            <div class = "characterView">
+                                <img id = "characterImg3" src = "img1.jpg" width="300" height="400">
+                            </div>
+                            <div class = "characterLevel">OPOOO[Lv.1]</div>
+                        </div>
+                        <div class = "abilityDisplay">
+                            <div class="abilityView">OPOOO</div>
+                            <div class="abilityView">OOOOO</div>
+                            <div class="abilityView">OOOOO</div>
+                        </div>
+                    </div>
+                    <div id = "leftUpperWrapper4">
+                        <div class = "characterDisplay">
+                            <div class = "characterView">
+                                <img id = "characterImg4" src = "img3.jpg" width="300" height="400">
+                            </div>
+                            <div class = "characterLevel">POOOO[Lv.1]</div>
+                        </div>
+                        <div class = "abilityDisplay">
+                            <div class="abilityView">POOOO</div>
+                            <div class="abilityView">OOOOO</div>
+                            <div class="abilityView">OOOOO</div>
+                        </div>
+                    </div>
+                    <div id = "buttonDisplay">
+                        <div id = "levelupButton">Level UP</div>
+                        <div id = "characterButton">Character</div>
+                    </div>
+                </div>
+                <div id = "rightDisplay">
+                    <div id = "descriptionPopUp1">1</div>
+                    <div id = "descriptionPopUp2">2</div>
+                    <div id = "descriptionPopUp3">3</div>
+                </div>
+                <div id = "character_popup">
+                    <div id="popup_content">
+                        <div id = "character_hold1" class = "character_hold">
+                            <div id = "character_hold1_view"></div>
+                            <div id = "character_hold1_name"></div>
+                        </div>
+                        <div id = "character_hold2" class = "character_hold">
+                            <div id = "character_hold2_view"></div>
+                            <div id = "character_hold2_name"></div>
+                        </div>
+                        <div id = "character_hold3" class = "character_hold">
+                            <div id = "character_hold3_view"></div>
+                            <div id = "character_hold3_name"></div>
+                        </div>
+                        <div id = "character_hold4" class = "character_hold">
+                            <div id = "character_hold4_view"></div>
+                            <div id = "character_hold4_name"></div>
+                        </div>
+                    </div>
+                    <button id="saveAndCloseBtn">저장하고 닫기</button>
+                    <button id="closePopupBtn">닫기</button>
+                </div>
+            </div>
+        </div>
+        <!--------------------------- itemShop --------------------------->
+        <div class="itemShop" style="display: none;">
+            <div id = "itemShop">Item Shop</div>
+            <div id = "display">
+                <div id = "leftDisplay">
+                    <div id = "leftUpperWrapper">
+                        <div id = "leftUpperWrapper1">
+                            <div id = "item1" class = "item">
+                                <div class  = "itemImgView">
+                                    <img id = "itemImg1" src = "itemIcon_img1.png" width="130" height="130">
+                                </div>
+                                <div class = "itemNameView">OOOOO</div>
+                            </div>
+                            <div id = "item2" class = "item">
+                                <div class = "itemImgView">
+                                    <img id = "itemImg2" src = "itemIcon_img2.png" width="130" height="130">
+                                </div>
+                                <div class = "itemNameView">OOOOO</div>
+                            </div>
+                            <div id = "item3" class = "item">
+                                <div class = "itemImgView">
+                                    <img id = "itemImg3" src = "itemIcon_img3.png" width="130" height="130">
+                                </div>
+                                <div class = "itemNameView">OOOOO</div>
+                            </div>
+                        </div>
+                        <div id = "leftUpperWrapper2">
+                            <div id = "item4" class = "item">
+                                <div class = "itemImgView">
+                                    <img id = "itemImg4" src = "itemIcon_img4.png" width="130" height="130">
+                                </div>
+                                <div class = "itemNameView">OOOOO</div>
+                            </div>
+                            <div id = "item5" class = "item">
+                                <div class  = "itemImgView">
+                                    <img id = "itemImg5" src = "itemIcon_img5.png" width="130" height="130">
+                                </div>
+                                <div class = "itemNameView">OOOOO</div>
+                            </div>
+                            <div id = "item6" class = "item">
+                                <div class  = "itemImgView">
+                                    <img id = "itemImg6" src = "itemIcon_img6.png" width="130" height="130">
+                                </div>
+                                <div class = "itemNameView">OOOOO</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id = "buttonDisplay">
+                        <div id = "purchaseButton">purchase</div>
+                    </div>
+                </div>
+                <div id = "rightDisplay">
+                    <div id = "descriptionPopUp1">1</div>
+                    <div id = "descriptionPopUp2">2</div>
+                    <div id = "descriptionPopUp3">3</div>
+                    <div id = "descriptionPopUp4">4</div>
+                    <div id = "descriptionPopUp5">5</div>
+                    <div id = "descriptionPopUp6">6</div>
+                </div>
+            </div>
+        </div>
+        <!--------------------------- shopPopup --------------------------->
+        <div id="shopPopup" class="shop-popup" style="display:none;">
+            <div class="shop-popup-content">
+                <button id="characterBtn" class="shop-popup-btn">Character</button>
+                <button id="abilityBtn" class="shop-popup-btn">Ability</button>
+                <button id="itemBtn" class="shop-popup-btn">Item</button>
+                <button id="closeShopPopup" class="shop-popup-close">×</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div id = "backButton" class="bottomButton">Back</div>
+        <div id = "startButton" class="bottomButton">START</div>
+        <div id = "backVillageButton" class="bottomButton">Go to Shop</div>
+    </footer>
+</body>
+</html>
