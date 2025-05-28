@@ -836,8 +836,8 @@ class PhoenixEffect {
 // === 게임 초기화 ===
 document.addEventListener('DOMContentLoaded', function() {
   // 게임 상수
-  const CANVAS_WIDTH = 1000;
-  const CANVAS_HEIGHT = 700;
+  const CANVAS_WIDTH = 800;
+  const CANVAS_HEIGHT = 500;
   const PADDLE_WIDTH = 160; // 120에서 160으로 증가
   const PADDLE_HEIGHT = 70; // 40에서 60으로 증가
   const PADDLE_SPEED = 8; // 속도 줄임 (12 -> 8)
@@ -851,7 +851,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const BRICK_OFFSET_LEFT = 15;
   const MAX_LIVES = 3;
   const ITEM_FALL_SPEED = 2;
-  const MAGNET_DURATION = 5000;
 
   // 스테이지별 공 속도 설정 (전체적으로 속도 줄임)
   const BASE_BALL_SPEED = { dx: 2.5, dy: 2.5 }; // 기본 속도 줄임 (3.5 -> 2.5)
@@ -902,8 +901,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // 입력 상태
   let leftPressed = false;
   let rightPressed = false;
-  let hasMagnet = false;
-  let magnetTimer = null;
 
   // 패들 설정
   const paddle = {
@@ -931,7 +928,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 벽돌과 아이템 배열
   let bricks = [];
   let items = [];
-  const itemTypes = ["heart", "coin", "magnet"];
+  const itemTypes = ["heart", "coin"]; // 자석 아이템 제거
 
   // === 캐릭터 선택 이벤트 ===
   document.querySelectorAll('.character-button').forEach(button => {
@@ -1241,22 +1238,8 @@ document.addEventListener('DOMContentLoaded', function() {
               coins++;
               score += 10;
               break;
-          case "magnet":
-              activateMagnet();
-              break;
       }
       updateUI();
-  }
-
-  function activateMagnet() {
-      hasMagnet = true;
-      if (magnetTimer) clearTimeout(magnetTimer);
-      paddle.color = "#FF00FF";
-      
-      magnetTimer = setTimeout(() => {
-          hasMagnet = false;
-          paddle.color = "#4CAF50";
-      }, MAGNET_DURATION);
   }
 
   function addNewBrickRow() {
@@ -1333,9 +1316,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           ball.dx = targetSpeed * Math.cos(angle);
           ball.dy = -Math.abs(targetSpeed * Math.sin(angle));
-          
       }
-      
   }
 
   function checkItemCollision() {
@@ -1507,9 +1488,6 @@ document.addEventListener('DOMContentLoaded', function() {
               case "coin":
                   ctx.fillStyle = "#FFD700";
                   break;
-              case "magnet":
-                  ctx.fillStyle = "#FF00FF";
-                  break;
           }
 
           ctx.arc(item.x, item.y, 10, 0, Math.PI * 2);
@@ -1523,7 +1501,6 @@ document.addEventListener('DOMContentLoaded', function() {
           switch (item.type) {
               case "heart": symbol = "♥"; break;
               case "coin": symbol = "$"; break;
-              case "magnet": symbol = "M"; break;
           }
 
           ctx.fillText(symbol, item.x, item.y + 3);
@@ -1560,9 +1537,8 @@ document.addEventListener('DOMContentLoaded', function() {
           if (timeStopDuration <= 0) {
               timeStopActive = false;
               document.getElementById('time-stop-overlay').classList.add('hidden');
-          } else {
-              return; // 시간정지 중에는 다른 업데이트 안함
           }
+          // 시간정지 중에도 캐릭터와 공은 움직임
       }
 
       // 시간정지 쿨다운
@@ -1587,21 +1563,11 @@ document.addEventListener('DOMContentLoaded', function() {
       ball.x += ball.dx;
       ball.y += ball.dy;
 
-      // 아이템 이동
-      items.forEach(item => {
-          item.y += ITEM_FALL_SPEED;
-      });
-
-      // 자석 효과
-      if (hasMagnet) {
-          const itemsToRemove = [];
-          items.forEach((item, index) => {
-              collectItem(item);
-              itemsToRemove.push(index);
+      // 아이템 이동 (시간정지 중에는 멈춤)
+      if (!timeStopActive) {
+          items.forEach(item => {
+              item.y += ITEM_FALL_SPEED;
           });
-          for (let i = itemsToRemove.length - 1; i >= 0; i--) {
-              items.splice(itemsToRemove[i], 1);
-          }
       }
 
       // 벽 충돌
@@ -1630,7 +1596,11 @@ document.addEventListener('DOMContentLoaded', function() {
       checkPaddleCollision();
       checkBrickCollision();
       checkItemCollision();
-      updateBossProjectiles();
+      
+      // 보스 투사체 업데이트 (시간정지 중에는 멈춤)
+      if (!timeStopActive) {
+          updateBossProjectiles();
+      }
 
       // 보스 충돌 체크
       if (boss.checkCollision(ball, addNewBrickRow)) {
@@ -1701,18 +1671,11 @@ document.addEventListener('DOMContentLoaded', function() {
       ctx.fillText(`생명: ${lives}`, CANVAS_WIDTH - 10, 30);
       ctx.fillText(`코인: ${coins}`, CANVAS_WIDTH - 10, 60);
   
-      // 자석 활성화 표시
-      if (hasMagnet) {
-          ctx.textAlign = "left";
-          ctx.fillStyle = "#FF00FF";
-          ctx.fillText("자석 활성화!", 10, 60);
-      }
-  
       // 시간정지 쿨다운 표시
       if (selectedCharacter === 'char3' && timeStopCooldown > 0) {
           ctx.textAlign = "left";
           ctx.fillStyle = "#00FFFF";
-          ctx.fillText(`시간정지 쿨다운: ${Math.ceil(timeStopCooldown / 60)}초`, 10, 90);
+          ctx.fillText(`시간정지 쿨다운: ${Math.ceil(timeStopCooldown / 60)}초`, 10, 60);
       }
   }
 
@@ -1740,31 +1703,7 @@ document.addEventListener('DOMContentLoaded', function() {
       quitGame(); // 다음 스테이지로 넘어가지 않고 게임 종료 처리
   });
 
-
   document.getElementById("quit-stage-button").addEventListener("click", quitGame);
-
-  // 마우스/터치 이벤트
-  canvas.addEventListener("mousemove", function (e) {
-      const rect = canvas.getBoundingClientRect();
-      const relativeX = e.clientX - rect.left;
-
-      if (relativeX > 0 && relativeX < CANVAS_WIDTH) {
-          paddle.x = relativeX - paddle.width / 2;
-          paddle.x = Math.max(0, Math.min(paddle.x, CANVAS_WIDTH - paddle.width));
-      }
-  });
-
-  canvas.addEventListener("touchmove", function (e) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      const relativeX = touch.clientX - rect.left;
-
-      if (relativeX > 0 && relativeX < CANVAS_WIDTH) {
-          paddle.x = relativeX - paddle.width / 2;
-          paddle.x = Math.max(0, Math.min(paddle.x, CANVAS_WIDTH - paddle.width));
-      }
-  });
 
   // 초기화
   updateGaugeUI();
