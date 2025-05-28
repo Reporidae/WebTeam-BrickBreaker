@@ -252,6 +252,7 @@ function abilityHover() {
     let ability = document.getElementById(`ability${i}`);
     let abilitydescriptionPopUp = document.querySelector(`.abilityShop #descriptionPopUp${i}`);
 
+    
     // Hover 시 설명 표시 (단, 고정된 게 없을 때만)
     ability.addEventListener("mouseenter", () => {
       if (selectedIndex1 === null) {
@@ -259,6 +260,8 @@ function abilityHover() {
         if (popup) popup.style.display = "block";
       }
     });
+
+
 
     ability.addEventListener("mouseleave", () => {
       if (selectedIndex1 === null) {
@@ -945,6 +948,14 @@ document.addEventListener('DOMContentLoaded', function() {
           return;
       }
       
+      hideTimeStopOverlay();
+
+      //시간 정지 상태 초기화
+      document.getElementById('time-stop-overlay').classList.add('hidden');
+      timeStopActive = false;
+      timeStopCooldown = 0;
+      timeStopDuration = 0;
+
       document.getElementById('character-select-menu').classList.add('hidden');
       document.getElementById('stage-select-menu').classList.remove('hidden'); // 스테이지 선택 메뉴 표시
       
@@ -963,6 +974,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.querySelectorAll('.stage-select').forEach(button => {
       button.addEventListener('click', function() {
+          hideTimeStopOverlay();
+          document.getElementById('time-stop-overlay').classList.add('hidden');
+          timeStopActive = false;
+          timeStopDuration = 0;
+          timeStopCooldown = 0;
+        
           stage = parseInt(this.getAttribute('data-stage'));
           document.getElementById('stage-select-menu').classList.add('hidden');
           
@@ -1123,7 +1140,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function startGame() {
       sounds.bgm1.play();
-
+      hideTimeStopOverlay();
       if (!selectedCharacter) return;
       
       gameStarted = true;
@@ -1143,6 +1160,13 @@ document.addEventListener('DOMContentLoaded', function() {
       setBallSpeedForStage(stage);
       updateUI();
       
+      // ✅ 시작 시 오버레이 초기화 (이중 안전장치)
+      document.getElementById('time-stop-overlay').classList.add('hidden');
+      timeStopActive = false;
+      timeStopCooldown = 0;
+      timeStopDuration = 0;
+
+
       document.getElementById("game-menu").classList.add("hidden");
       startStageTimer();
       
@@ -1380,6 +1404,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       lives = Math.max(0, lives - 1);
                       updateUI();
                       if (lives <= 0) {
+                        forceEndTimeStop();
                           gameOver = true;
                           showMenu("게임 오버", false);
                       }
@@ -1397,6 +1422,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   lives = Math.max(0, lives - 1);
                   updateUI();
                   if (lives <= 0) {
+                      forceEndTimeStop();
                       gameOver = true;
                       showMenu("게임 오버", false);
                   }
@@ -1409,6 +1435,27 @@ document.addEventListener('DOMContentLoaded', function() {
           boss.projectiles.splice(projectilesToRemove[i], 1);
       }
   }
+
+  //공통 시간 정지 해제 함수
+  function forceEndTimeStop() {
+    if (timeStopActive) {
+        timeStopActive = false;
+        document.getElementById('time-stop-overlay').classList.add('hidden');
+    }
+  }
+
+  //공통 시간 정지 해제 함수2
+  function hideTimeStopOverlay() {
+    const overlay = document.getElementById('time-stop-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+    timeStopActive = false;
+    timeStopCooldown = 0;
+    timeStopDuration = 0;
+  }
+
+
 
   // === 그리기 함수들 ===
   function drawPaddle() {
@@ -1534,7 +1581,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // 시간정지 처리
       if (timeStopActive) {
           timeStopDuration--;
+          console.log("⏳ 남은 시간정지 프레임:", timeStopDuration);
+
           if (timeStopDuration <= 0) {
+            console.log("🟩 시간 정지 종료");
               timeStopActive = false;
               document.getElementById('time-stop-overlay').classList.add('hidden');
           }
@@ -1607,6 +1657,7 @@ document.addEventListener('DOMContentLoaded', function() {
           // 보스 처치됨
           clearInterval(stageTimerInterval);
           clearInterval(bossAttackTimer);
+          forceEndTimeStop(); // 보스 처치 시간 정지 해제
           gamePaused = true;
           
           if (stage >= 4) {
@@ -1625,6 +1676,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // 벽돌이 너무 아래로 내려오면 게임 오버
       for (let i = 0; i < bricks.length; i++) {
           if (bricks[i].visible && bricks[i].y + bricks[i].height >= CANVAS_HEIGHT - PADDLE_HEIGHT - 20) {
+              forceEndTimeStop();
               gameOver = true;
               showMenu("게임 오버", false);
               break;
