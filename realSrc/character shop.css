@@ -91,6 +91,7 @@ float: left;
 width: 40%;
 height: 650px;
 background-color: blue;
+color: black;
 overflow: hidden;
 }
 #descriptionPopUp{
@@ -113,6 +114,7 @@ float: left;
 width: 40%;
 height: 650px;
 background-color: blue;
+color: black;
 overflow-y: auto; /* 스크롤 적용 */
 padding-right: 10px; /* 스크롤 여유 공간 */
 }
@@ -209,6 +211,7 @@ line-height: 30px;
   height: 100%;
   overflow: auto;
   background-color: rgba(0,0,0,0.5);
+  color: black;
 }
 
 /* 모달 콘텐츠 박스 */
