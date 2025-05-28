@@ -57,34 +57,41 @@ background-image: url("all_background.jpg");
   float: left;
     width: 40%;
     height: 650px;
-    background-color: blue;
+    /* background-color: blue; */
+    background-image: url("qrslhupr.png");
     position: relative;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* display: flex; */
+    /* align-items: center;
+    justify-content: center; */
 }
 /* background.jpg를 절대 위치로 꽉 채움 */
 #villageRightDisplay img.stage-image:first-child {
     position: absolute;
     width: 100%;
     height: 100%;
-    object-fit: cover;  /* 영역 꽉 채우면서 비율 유지 */
+    object-fit: cover;
     z-index: 1;
 }
-#villageRightDisplay img.stage-image:last-child {
-    position: relative;  /* absolute 말고 relative */
+/* #villageRightDisplay img.stage-image:last-child {
+    position: relative;  
     z-index: 2;
-    max-width: 100% ;   /* 크기 제한 없음 */
-    max-height: 100%;
+    max-width: 100% ;  
 }
-
 #village-character {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 300px; /* 필요 시 크기 조정 */
-  height: 400px;
+  width: 200px;
+  height: 300px;
+} */
+#village-character {
+  position: absolute !important;
+  bottom: 0;
+  left: 0;
+  width: 200px;
+  height: 300px;
+  z-index: 2;
 }
 
 

@@ -82,14 +82,14 @@ function setupCharacterModalEvents() {
           // 기존 캐릭터 이미지 제거 (필요하다면 먼저 이 작업 진행)
           const rightDisplay = document.getElementById('villageRightDisplay');
 
-          const existingImage = rightDisplay.querySelector('.village-character');
+          const existingImage = rightDisplay.querySelector('#village-character');
           if (existingImage) {
             rightDisplay.removeChild(existingImage);
         }
 
         // 새로운 이미지 엘리먼트 생성
         const newImage = document.createElement('img');
-        newImage.className = 'stage-image';
+        newImage.id = 'village-character';
         newImage.src = imgEl;
         newImage.alt = '캐릭터 이미지';
         newImage.style.marginTop = 'auto'; // 하단 정렬 (필요시)
