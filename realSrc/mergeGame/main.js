@@ -13,8 +13,11 @@ window.addEventListener('DOMContentLoaded', () => {
   displayLife();
 
 });
-
 let previousScreen = null;  // 이전에 보였던 화면 저장
+var life = 2; //남은 생명 개수
+var coin = 100000;//코인
+let itemPurchased = [false, false, false, false, false, false];//선택된 아이템 - 변경 예정
+let lifeTimer = null; //시간 측정 변수 - 생명을 5분에 한 번씩 생성하기 위해 필요한 변수임
 
 function showScreen(screenId) {
   // 화면 목록
@@ -206,9 +209,7 @@ function setsupStartButtons(){
   });
 }
 //----------header
-var level = 1;
-var life = 2;
-var coin = 100000;
+
 function increaseLevel() {
     level++;
     const bar = document.getElementById("levelFill");
@@ -261,8 +262,6 @@ function abilityHover() {
       }
     });
 
-
-
     ability.addEventListener("mouseleave", () => {
       if (selectedIndex1 === null) {
         let popup = document.querySelector(`.abilityShop #descriptionPopUp${i}`);
@@ -287,7 +286,6 @@ function abilityHover() {
   }
 }
 let selectedIndex2 = null;
-let itemPurchased = [false, false, false, false, false, false];
 
 function itemPurchase() {
   let purchaseButton = document.querySelector(`#purchaseButton`);
@@ -509,10 +507,6 @@ function characterLevelUp() {
     }
   });
 }
-
-
-let lifeTimer = null;
-
 function startLifeTimer() {
   // 이미 타이머 돌고 있거나 최대치면 시작 안 함
   if (lifeTimer || life >= 5) return;
