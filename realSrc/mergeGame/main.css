@@ -14,7 +14,7 @@ body {
 header {
     overflow: hidden;
     width: 100%;
-    height: 8vh;
+    height: 7vh;
     margin: 1vh auto;
     background-color: rgb(125, 192, 255);
 }
@@ -22,20 +22,13 @@ header {
 /* 상태 바 */
 .topBar {
     float: left;
-    height: 80%;
-    width: 28%;
-    background-color: blue;
-    display: inline-flex;
-    align-items: center;
-    margin: 1vh 1%;
-}
-
-/* 각각의 바 (level, life, coin) */
-#levelBar, #lifeBar, #coinBar {
-    width: 100%;
+    height: 65%;
+    width: 25%;
     max-width: 450px;
+    background-color: rgb(163, 114, 0);
+    align-items: center;
+    margin: 1.5vh 0 0 10vh;
     border-radius: 50px;
-    margin: 0 auto;
 }
 
 /* 설정 버튼 */
@@ -63,15 +56,6 @@ header {
     position: relative;
     margin-left: 5%;
 }
-
-#levelFill {
-    height: 100%;
-    width: 20%;
-    background-color: #FFD700;
-    transition: width 0.3s ease;
-    border-radius: 20px 0 0 20px;
-}
-
 /* 아이콘 관련 여백 */
 #lifeView img {
     margin-right: 30px;
@@ -96,7 +80,7 @@ header {
 footer {
     overflow: hidden;
     width: 100%;
-    height: 10vh;
+    height: 7vh;
     margin: 1vh auto;
     background-image: url("all_background.jpg");
 }
@@ -104,20 +88,13 @@ footer {
 /* 버튼 공통 */
 .bottomButton {
     float: left;
-    width: 20%;
+    width: 25%;
     min-width: 150px;
-    height: 80%;
-    background-color: brown;
+    height: 60%;
+    background-color: rgb(105, 42, 0);
     border-radius: 50px;
-    margin: 1vh 2%;
+    margin: 1.5vh 0 0 12vh;
     font-size: 2vw;
     text-align: center;
-    line-height: 60px;
-}
-
-/* 각 버튼 ID 별 설정 (같은 클래스 사용 중이면 굳이 따로 안 줘도 됨) */
-#backVillageButton,
-#backButton,
-#startButton {
-    height: 60px;
+    line-height:  60px;
 }

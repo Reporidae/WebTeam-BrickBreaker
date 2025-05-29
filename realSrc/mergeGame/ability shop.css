@@ -1,66 +1,69 @@
-#abilityShop{
-    font-size: 70px;
+#abilityShop {
+    font-size: 4vw;
     font-weight: bold;
     text-align: center;
     background-color: blanchedalmond;
-    width: 500px;
+    width: 90%;
+    max-width: 500px;
     height: 100px;
     margin: 0 auto;
     line-height: 100px;
 }
-#display{
+#display {
     width: 100%;
-    height: 700px;
-    background-color: aqua;
-    padding-left: 10%;
+    padding-left: 5%;
     padding-top: 25px;
-}
-#leftDisplay, #rightDisplay{
-    float: left;
-    width: 40%;
-    height: 650px;
-    background-color: blue;
     overflow: hidden;
-    position: relative;
 }
-.characterDisplay{
-    width: 50%;
-    height: 550px;
-    background-color: rgb(0, 255, 170);
+#leftDisplay, #rightDisplay {
+    float: left;
+    width: 45%;
+    margin-right: 5%;
+    min-height: 600px;
+    overflow: hidden;
+}
+#rightDisplay {
+    margin-right: 0;
+}
+.characterDisplay {
+    width: 100%;
+    height: auto;
+    background-color: rgb(255, 183, 0);
     float: left;
 }
-.characterView{
-    margin-top: 20px;
-    margin-left: 22px;
-    width: 300px;
-    height: 400px;
-    background-color: rgb(0, 108, 72);
+.characterView {
+    margin: 20px auto 0 auto;
+    width: 90%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    background-color: rgb(138, 122, 0);
 }
 .characterLevel{
     margin-left: 22px;
     width: 300px;
     height: 100px;
-    background-color: aquamarine;
+    background-color: rgb(154, 121, 0);
     font-size: 35px;
     text-align: center;
     line-height: 100px;
 }
-.abilityDisplay{
-    width: 50%;
-    height: 550px;
-    background-color: rgb(0, 186, 124);
+.abilityDisplay {
+    width: 100%;
+    background-color: rgb(186, 99, 0);
     float: left;
 }
 .abilityView {
-    margin-top: 40px;
-    margin-left: 22px;
-    width: 300px;
+    margin: 40px auto 0 auto;
+    width: 90%;
+    max-width: 300px;
     height: 100px;
     background-color: beige;
-    font-size: 20px;
+    font-size: 1.5vw;
     text-align: center;
     line-height: 100px;
 }
+
 .abilityShop #leftUpperWrapper1, .abilityShop #leftUpperWrapper2,.abilityShop #leftUpperWrapper3, .abilityShop #leftUpperWrapper4{
     width: 100%;
     height: 550px;
@@ -69,49 +72,55 @@
 .abilityShop #leftUpperWrapper1{
     display: block;
 }
-.abilityShop #buttonDisplay{
+.abilityShop #buttonDisplay {
     width: 100%;
-    height: 100px;
-    margin-top: 550px;
-    padding-left: 50px;
-    padding-top: 40px;
+    height: auto;
+    padding: 20px 0;
     text-align: center;
     background-color: rgb(255, 0, 0);
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    position: relative;
 }
-#levelupButton, #characterButton{
-    width: 300px;
+#levelupButton, #characterButton {
+    width: 45%;
+    min-width: 140px;
     height: 60px;
-    font-size: 50px;
+    font-size: 2vw;
     float: left;
     background-color: brown;
+    color: white;
     text-align: center;
     line-height: 60px;
 }
-#levelupButton{
+#levelupButton {
     border-radius: 30px 0 0 30px;
+    margin-right: 10%;
 }
-#characterButton{
-    border-radius:0 30px 30px 0;
+#characterButton {
+    border-radius: 0 30px 30px 0;
 }
-.abilityShop #descriptionPopUp1,  .abilityShop #descriptionPopUp2,  .abilityShop #descriptionPopUp3{
-    width: 75%;
-    height: 400px;
-    background-color:brown;
-    margin-left: 80px;
-    margin-top: 120px;
+.abilityShop #descriptionPopUp1,
+.abilityShop #descriptionPopUp2,
+.abilityShop #descriptionPopUp3 {
+    width: 90%;
+    max-width: 600px;
+    height: auto;
+    min-height: 300px;
+    background-color: brown;
+    margin: 60px auto;
     display: none;
     text-align: center;
-    line-height: 400px;
+    padding: 40px;
+    font-size: 1.3vw;
+    line-height: 1.5;
 }
 #character_popup {
     display: none;
     position: fixed;
-    top: 200px;
-    left: 600px;
-    width: 500px;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
     height: 600px;
     background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
@@ -119,30 +128,36 @@
 #popup_content {
     margin: 20px auto 0 auto;
     background: white;
-    width: 465px;
+    width: 90%;
+    max-width: 465px;
     height: 450px;
     border-radius: 10px;
     text-align: center;
-    overflow: scroll;
+    overflow: auto;
 }
-#saveAndCloseBtn, #closePopupBtn{
+#saveAndCloseBtn, #closePopupBtn {
     position: fixed;
-    top: 700px;
+    top: 85%;
     width: 150px;
     height: 50px;
     background-color: aquamarine;
     border-radius: 40px;
-    float: left;
 }
-#saveAndCloseBtn{
-    left: 650px;
-} 
-#closePopupBtn{
-    left: 900px;
+#saveAndCloseBtn {
+    left: 50%;
+    transform: translateX(-120%);
 }
-.character_hold{
-    left: 625px;
-    width: 450px;
+#closePopupBtn {
+    left: 50%;
+    transform: translateX(20%);
+}
+
+.character_hold {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
     height: 150px;
     border-radius: 10px;
     background-color: black;
@@ -158,10 +173,4 @@
 }
 #character_hold4{
     top: 670px;
-}
-#main{
-    width: 100%;
-    height: 800px;
-    background-color: blueviolet;
-    overflow: hidden;
 }
