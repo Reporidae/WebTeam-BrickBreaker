@@ -543,16 +543,14 @@ sounds.bgm1.loop = true;
 
 
 class Boss {
-  constructor(canvasWidth, health = 10, phasePercent = 20) {
+  constructor(canvasWidth, health = 10) {
       this.x = 0;
       this.y = 0;
       this.width = canvasWidth;
-      this.height = 80; // 높이를 40에서 80으로 증가
+      this.height = 80;
       this.health = health;
       this.maxHealth = health;
       this.visible = true;
-      this.phasePercent = phasePercent;
-      this.phaseTriggerCount = 0;
       this.projectiles = [];
       this.attackInterval = 3000;
       this.pattern = "straight";
@@ -565,40 +563,28 @@ class Boss {
       if (!this.visible) return;
       const ratio = this.health / this.maxHealth;
 
-      // 보스 이미지가 로드되었으면 이미지로, 아니면 기존 방식으로
-      if (this.image.complete && this.image.naturalWidth > 0) {
-          // 이미지를 상단 중앙에 배치하되, 상단 부분이 잘 보이도록 조정
-          const imageWidth = this.width * 0.3; // 보스 영역의 30% 크기
-          const imageHeight = this.height * 1.8; // 세로는 더 크게 (상단 부분 유지)
-          const imageX = this.x + (this.width - imageWidth) / 2; // 중앙 정렬
-          const imageY = this.y - this.height * 0.4; // 위쪽으로 올려서 상단 부분 강조
+      // 이미지를 상단 중앙에 배치하되, 상단 부분이 잘 보이도록 조정
+      const imageWidth = this.width * 0.3; // 보스 영역의 30% 크기
+      const imageHeight = this.height * 1.8; // 세로는 더 크게 (상단 부분 유지)
+      const imageX = this.x + (this.width - imageWidth) / 2; // 중앙 정렬
+      const imageY = this.y - this.height * 0.4; // 위쪽으로 올려서 상단 부분 강조
           
-          // 불투명하게 그리기
-          ctx.save();
-          ctx.globalAlpha = 1.0; // 완전 불투명
-          ctx.drawImage(this.image, imageX, imageY, imageWidth, imageHeight);
-          ctx.restore();
+      // 불투명하게 그리기
+      ctx.save();
+      ctx.globalAlpha = 1.0; // 완전 불투명
+      ctx.drawImage(this.image, imageX, imageY, imageWidth, imageHeight);        
+      ctx.restore();
           
-          // 체력바를 이미지 아래에 오버레이
-          ctx.fillStyle = "rgba(85, 0, 0, 0.8)";
-          ctx.fillRect(this.x, this.y + this.height - 20, this.width, 20);
+      // 체력바를 이미지 아래에 오버레이
+      ctx.fillStyle = "rgba(85, 0, 0, 0.8)";
+      ctx.fillRect(this.x, this.y + this.height - 20, this.width, 20);
 
-          ctx.fillStyle = "#FF3333";
-          ctx.fillRect(this.x, this.y + this.height - 20, this.width * ratio, 20);
+      ctx.fillStyle = "#FF3333";
+      ctx.fillRect(this.x, this.y + this.height - 20, this.width * ratio, 20);
 
-          ctx.strokeStyle = "#FFF";
-          ctx.strokeRect(this.x, this.y + this.height - 20, this.width, 20);
-      } else {
-          // 기존 방식 (이미지 로드 실패 시)
-          ctx.fillStyle = "#550000";
-          ctx.fillRect(this.x, this.y, this.width, this.height);
-
-          ctx.fillStyle = "#FF3333";
-          ctx.fillRect(this.x, this.y, this.width * ratio, this.height);
-
-          ctx.strokeStyle = "#FFF";
-          ctx.strokeRect(this.x, this.y, this.width, this.height);
-      }
+      ctx.strokeStyle = "#FFF";
+      ctx.strokeRect(this.x, this.y + this.height - 20, this.width, 20);
+     
 
       ctx.font = "16px Arial";
       ctx.fillStyle = "#FFF";
@@ -606,7 +592,7 @@ class Boss {
       ctx.fillText(`BOSS HP: ${this.health}`, this.width / 2, this.y + this.height - 5);
   }
 
-  checkCollision(ball, onPhaseDown) {
+  checkCollision(ball) {
       if (!this.visible) return false;
 
       if (ball.y - ball.radius < this.y + this.height &&
@@ -617,16 +603,6 @@ class Boss {
           this.health -= ball.power;
           sounds.bossHit.play();
 
-          const percentLost = 1 - (this.health / this.maxHealth);
-          const expectedTriggers = Math.floor((percentLost + 0.000001) * (100 / this.phasePercent));
-
-          while (this.phaseTriggerCount < expectedTriggers) {
-              this.phaseTriggerCount++;
-              if (this.health > 0 && typeof onPhaseDown === "function") {
-                  onPhaseDown();
-              }
-          }
-
           if (this.health <= 0) {
               this.visible = false;
               return true; // 보스 처치됨
@@ -635,7 +611,7 @@ class Boss {
       return false;
   }
 
-  spawnProjectiles(stage = 1) {
+  spawnProjectiles() {
       if (this.pattern === "straight") {
           for (let i = 0; i < 2; i++) {
               const x = Math.random() * (this.width - 20);
@@ -705,9 +681,9 @@ class Player {
       this.animationFrames = [];
       this.currentFrame = 0;
       this.frameTimer = 0;
-      this.frameDelay = 10; // 3프레임마다 이미지 변경
+      this.frameDelay = 15; // 3프레임마다 이미지 변경
       this.isAnimating = false;
-      this.animationDuration = 30; // 30프레임 동안 애니메이션
+      this.animationDuration = 45; // 30프레임 동안 애니메이션
       this.animationTimer = 0;
       
       // 기본 플레이어 이미지와 애니메이션 이미지들 로딩
@@ -731,12 +707,8 @@ class Player {
       }
   }
 
-  canUseSkill() {
-      return this.skillGauge >= this.maxGauge;
-  }
-
   useSkill(bricks, damage = 3) {
-      if (!this.canUseSkill()) return 0;
+      if (!this.skillReady) return 0;
       let scoreGained = 0;
       bricks.forEach(brick => {
           if (!brick.visible) return;
@@ -794,7 +766,7 @@ class PhoenixEffect {
       this.canvasWidth = canvasWidth;
       this.canvasHeight = canvasHeight;
       this.active = false;
-      this.duration = 60; // 1초 (60fps 기준)
+      this.duration = 45 // 1초 (60fps 기준)
       this.currentFrame = 0;
       
       // 필살기 이펙트 이미지 로딩
@@ -872,7 +844,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 게임 객체들
   const player = new Player();
-  const boss = new Boss(CANVAS_WIDTH, 10, 20);
+  const boss = new Boss(CANVAS_WIDTH, 10);
   const phoenixEffect = new PhoenixEffect(CANVAS_WIDTH, CANVAS_HEIGHT);
 
   // 게임 상태
@@ -886,6 +858,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let stageTimer = 60;
   let stageTimerInterval = null;
   let bossAttackTimer = null;
+  let brickRowTimer = null; // 벽돌 줄 추가 타이머
 
   // 캐릭터 선택
   let selectedCharacter = null;
@@ -911,7 +884,6 @@ document.addEventListener('DOMContentLoaded', function() {
       height: PADDLE_HEIGHT,
       x: (CANVAS_WIDTH - PADDLE_WIDTH) / 2,
       y: CANVAS_HEIGHT - PADDLE_HEIGHT - 10,
-      color: "#4CAF50",
       speed: PADDLE_SPEED,
       shieldWidth: PADDLE_WIDTH,
       shieldHeight: PADDLE_HEIGHT
@@ -965,7 +937,7 @@ document.addEventListener('DOMContentLoaded', function() {
       paddle.speed = char.speed;
       
       if (char.shield) {
-          paddle.shieldWidth = PADDLE_WIDTH + 40;
+          paddle.shieldWidth = PADDLE_WIDTH + 150;
           paddle.shieldHeight = PADDLE_HEIGHT + 10;
       }
       
@@ -998,6 +970,7 @@ document.addEventListener('DOMContentLoaded', function() {
           updateUI();
           
           startStageTimer();
+          startBrickRowTimer(); // 벽돌 줄 추가 타이머 시작
           
           bossAttackTimer = setInterval(() => {
               if (boss.visible && !timeStopActive && !gamePaused) {
@@ -1071,7 +1044,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       boss.visible = true;
-      boss.phaseTriggerCount = 0;
       boss.projectiles = [];
   }
 
@@ -1105,6 +1077,17 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 1000);
   }
 
+  // 15초마다 새로운 벽돌 줄 추가 타이머
+  function startBrickRowTimer() {
+      clearInterval(brickRowTimer);
+      
+      brickRowTimer = setInterval(() => {
+          if (!timeStopActive && !gamePaused && gameStarted && !gameOver) {
+              addNewBrickRow();
+          }
+      }, 15000); // 15초마다 실행
+  }
+
   function updateTimerDisplay() {
       const minutes = Math.floor(stageTimer / 60);
       const seconds = stageTimer % 60;
@@ -1129,7 +1112,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function useSkill() {
-      if (player.canUseSkill()) {
+      if (player.skillReady) {
           phoenixEffect.activate();
           const gainedScore = player.useSkill(bricks);
           score += gainedScore;
@@ -1169,6 +1152,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       document.getElementById("game-menu").classList.add("hidden");
       startStageTimer();
+      startBrickRowTimer(); // 벽돌 줄 추가 타이머 시작
       
       bossAttackTimer = setInterval(() => {
           if (boss.visible && !timeStopActive && !gamePaused) {
@@ -1200,6 +1184,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function restartGame() {
       clearInterval(stageTimerInterval);
       clearInterval(bossAttackTimer);
+      clearInterval(brickRowTimer); // 벽돌 줄 추가 타이머 정리
       startGame();
   }
 
@@ -1209,6 +1194,7 @@ document.addEventListener('DOMContentLoaded', function() {
       gameOver = false;
       clearInterval(stageTimerInterval);
       clearInterval(bossAttackTimer);
+      clearInterval(brickRowTimer); // 벽돌 줄 추가 타이머 정리
       document.getElementById('character-select-menu').classList.remove('hidden');
       document.getElementById('game-menu').classList.add('hidden');
       document.getElementById('stage-clear-menu').classList.add('hidden');
@@ -1324,6 +1310,37 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function checkPaddleCollision() {
+      // 방어형 캐릭터의 경우 방어 영역도 체크
+      if (selectedCharacter === 'char4') {
+          const shieldLeft = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
+          const shieldRight = shieldLeft + paddle.shieldWidth;
+          const shieldTop = paddle.y - (paddle.shieldHeight - paddle.height) / 2;
+          const shieldBottom = shieldTop + paddle.shieldHeight;
+          
+          // 방어 영역과 충돌 체크
+          if (ball.y + ball.radius > shieldTop &&
+              ball.y - ball.radius < shieldBottom &&
+              ball.x + ball.radius > shieldLeft &&
+              ball.x - ball.radius < shieldRight) {
+              
+              // 플레이어 애니메이션 시작
+              player.startAnimation();
+              sounds.paddleHit.play();
+              
+              // 방어 영역에서의 반사 계산
+              const hitPos = (ball.x - shieldLeft) / paddle.shieldWidth;
+              const angle = hitPos * Math.PI - Math.PI / 2;
+              const speeds = getStageSpeed(stage);
+              const targetSpeed = Math.sqrt(speeds.dx * speeds.dx + speeds.dy * speeds.dy);
+              
+              ball.dx = targetSpeed * Math.cos(angle);
+              ball.dy = -Math.abs(targetSpeed * Math.sin(angle));
+              
+              return; // 방어 영역에서 처리했으므로 일반 패들 충돌은 체크하지 않음
+          }
+      }
+      
+      // 일반 패들 충돌 (모든 캐릭터 공통)
       if (ball.y + ball.radius > paddle.y &&
           ball.y + ball.radius < paddle.y + paddle.height &&
           ball.x > paddle.x &&
@@ -1454,8 +1471,6 @@ document.addEventListener('DOMContentLoaded', function() {
     timeStopCooldown = 0;
     timeStopDuration = 0;
   }
-
-
 
   // === 그리기 함수들 ===
   function drawPaddle() {
@@ -1653,10 +1668,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       // 보스 충돌 체크
-      if (boss.checkCollision(ball, addNewBrickRow)) {
+      if (boss.checkCollision(ball)) {
           // 보스 처치됨
           clearInterval(stageTimerInterval);
           clearInterval(bossAttackTimer);
+          clearInterval(brickRowTimer); // 벽돌 줄 추가 타이머 정리
           forceEndTimeStop(); // 보스 처치 시간 정지 해제
           gamePaused = true;
           
