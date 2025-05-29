@@ -1,108 +1,123 @@
-*{
-	margin: 0;
-	padding: 0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-body{
-	width: 100%;
-	margin: 0 auto;
+body {
+    width: 100%;
+    margin: 0 auto;
 }
-/*기본 사항*/
 
-/*header*/
-header{
+/* 기본 사항 */
+
+/* header */
+header {
     overflow: hidden;
     width: 100%;
-    height: 60px;
-    margin: 10px auto;
+    height: 8vh;
+    margin: 1vh auto;
     background-color: rgb(125, 192, 255);
 }
-.topBar{
+
+/* 상태 바 */
+.topBar {
     float: left;
-    height: 40px;
+    height: 80%;
+    width: 28%;
     background-color: blue;
     display: inline-flex;
     align-items: center;
+    margin: 1vh 1%;
 }
-#levelBar, #lifeBar, #coinBar{
-    width: 450px;
+
+/* 각각의 바 (level, life, coin) */
+#levelBar, #lifeBar, #coinBar {
+    width: 100%;
+    max-width: 450px;
     border-radius: 50px;
-    margin: 10px 45px;
+    margin: 0 auto;
 }
-#settingButton{
+
+/* 설정 버튼 */
+#settingButton {
     width: 40px;
     border-radius: 100px;
-    margin: 10px 0;
+    margin: 10px auto;
+    display: block;
 }
-.topBarIcon{
+
+/* 아이콘 */
+.topBarIcon {
     height: 40px;
     width: 40px;
     border-radius: 100px;
     background-color: blanchedalmond;
-}/*실제로는 아이콘 이미지를 넣을 것*/
+}
+
 .barView {
-    width: 400px;
+    width: 85%;
     height: 30px;
     background-color: rgb(144, 27, 27);
     border-radius: 20px;
     overflow: hidden;
     position: relative;
+    margin-left: 5%;
 }
-#levelFill{
+
+#levelFill {
     height: 100%;
-    width: 90px;
+    width: 20%;
     background-color: #FFD700;
     transition: width 0.3s ease;
     border-radius: 20px 0 0 20px;
 }
-#lifeView img{
+
+/* 아이콘 관련 여백 */
+#lifeView img {
     margin-right: 30px;
     display: inline;
 }
-#lifeIcon_img1{
+#lifeIcon_img1 {
     margin-left: 30px;
 }
-#coinView{
-    font-size: 30px;
+#coinView {
+    font-size: 1.5vw;
     text-align: center;
     line-height: 30px;
 }
-#coinIcon_img1{
+#coinIcon_img1 {
     padding: 2px 0 0 3px;
 }
-#lifeIcon_img0{
+#lifeIcon_img0 {
     padding: 3.7px 0 0 3px;
 }
-/*footer*/
-footer{
-overflow: hidden;
-width: 100%;
-height: 80px;
-margin: 10px auto;
-/*background-color: rgb(238, 158, 145);*/
-background-image: url("all_background.jpg");
+
+/* footer */
+footer {
+    overflow: hidden;
+    width: 100%;
+    height: 10vh;
+    margin: 1vh auto;
+    background-image: url("all_background.jpg");
 }
-.bottomButton{
-float: left;
-width: 300px;
-height: 60px;
-background-color:brown;
-border-radius: 50px;
-margin: 10px 50px;
-font-size: 50px;
-text-align: center;
-line-height: 60px;
+
+/* 버튼 공통 */
+.bottomButton {
+    float: left;
+    width: 20%;
+    min-width: 150px;
+    height: 80%;
+    background-color: brown;
+    border-radius: 50px;
+    margin: 1vh 2%;
+    font-size: 2vw;
+    text-align: center;
+    line-height: 60px;
 }
-#backVillageButton{
-width: 450px;
-height: 60px;
+
+/* 각 버튼 ID 별 설정 (같은 클래스 사용 중이면 굳이 따로 안 줘도 됨) */
+#backVillageButton,
+#backButton,
+#startButton {
+    height: 60px;
 }
-#backButton{
-margin-left: 300px;
-width: 300px;
-height: 60px;
-}
-#startButton{
-width: 300px;
-height: 60px;
-}
-/*footer*/
