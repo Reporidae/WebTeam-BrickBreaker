@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
   setupBackButtons();
   setsupStartButtons();
   itemPurchase();
-  abilityHover();
+  abilityHoverForVisibleCharacter();
   itemPurchase();
   displayCoin();
   startLifeTimer();
@@ -235,12 +235,6 @@ function setsupStartButtons(){
   });
 }
 //----------header
-
-function increaseLevel() {
-    level++;
-    const bar = document.getElementById("levelFill");
-    bar.style.width = `${Math.min(level * 90, 450)}px`; // 최대 450px
-}
 function displayLife(){
   for(let i = 1; i<=5; i++){
     document.getElementById(`lifeIcon_img${i}`).style.display ="none";
@@ -274,21 +268,25 @@ function displayCoin(){
 
 }
 let selectedIndex1 = null;
+/*
 function abilityHover() {
-  for (let i = 1; i <= 3; i++) {
-    let ability = document.querySelector(`.abilityShop .abilityView${i}`);
-    
+  let abilities = document.querySelectorAll(`.abilityShop .abilityDisplay .abilityView1, 
+    .abilityShop .abilityDisplay .abilityView2, 
+    .abilityShop .abilityDisplay .abilityView3`);
+  for (let i = 0; i < abilities.length; i++) {
+    let index = i+1;
+    let ability = abilities[i];
     // Hover 시 설명 표시 (단, 고정된 게 없을 때만)
     ability.addEventListener("mouseenter", () => {
       if (selectedIndex1 === null) {
-        let popup = document.querySelector(`.abilityShop #descriptionPopUp${i}`);
+        let popup = document.querySelector(`.abilityShop #descriptionPopUp${index}`);
         if (popup) popup.style.display = "block";
       }
     });
 
     ability.addEventListener("mouseleave", () => {
       if (selectedIndex1 === null) {
-        let popup = document.querySelector(`.abilityShop #descriptionPopUp${i}`);
+        let popup = document.querySelector(`.abilityShop #descriptionPopUp${index}`);
         if (popup) popup.style.display = "none";
       }
     });
@@ -303,12 +301,66 @@ function abilityHover() {
       }
 
       ability.style.border = "3px solid black";
-      let popup = document.querySelector(`.abilityShop #descriptionPopUp${i}`);
+      let popup = document.querySelector(`.abilityShop #descriptionPopUp${index}`);
       if (popup) popup.style.display = "block";
-      selectedIndex1 = i;
+      selectedIndex1 = index;
     });
   }
 }
+*/
+function abilityHoverForVisibleCharacter() {
+  let visibleWrapper = null;
+  for (let i = 1; i <= 4; i++) {
+    const wrapper = document.querySelector(`#leftUpperWrapper${i}`);
+    if (wrapper.style.display !== "none") {
+      visibleWrapper = wrapper;
+      break;
+    }
+  }
+
+  if (!visibleWrapper) return;
+
+  const abilities = visibleWrapper.querySelectorAll('.abilityView1, .abilityView2, .abilityView3');
+  const popups = document.querySelectorAll('.abilityShop #descriptionPopUp1, .abilityShop #descriptionPopUp2, .abilityShop #descriptionPopUp3');
+
+  // 전부 숨김
+  popups.forEach(p => p.style.display = "none");
+  abilities.forEach(a => a.style.border = "none");
+
+  selectedIndex1 = null;
+
+  abilities.forEach((ability, index) => {
+    const popup = document.querySelector(`#descriptionPopUp${index + 1}`);
+
+    ability.addEventListener("mouseenter", () => {
+      if (selectedIndex1 === null && popup) {
+        popup.style.display = "block";
+      }
+    });
+
+    ability.addEventListener("mouseleave", () => {
+      if (selectedIndex1 === null && popup) {
+        popup.style.display = "none";
+      }
+    });
+
+    ability.addEventListener("click", () => {
+      // 기존 선택 해제
+      if (selectedIndex1 !== null) {
+        const prevAbility = abilities[selectedIndex1];
+        prevAbility.style.border = "none";
+        const prevPopup = document.querySelector(`#descriptionPopUp${selectedIndex1 + 1}`);
+        if (prevPopup) prevPopup.style.display = "none";
+      }
+
+      ability.style.border = "3px solid black";
+      if (popup) popup.style.display = "block";
+      selectedIndex1 = index;
+    });
+  });
+}
+
+
 let selectedIndex2 = null;
 function itemPurchase() {
   let purchaseButton = document.querySelector(`#purchaseButton`);
@@ -482,6 +534,7 @@ function abilityShop_CharacterPopUp(){
       leftUpperWrapper4.style.display = "block";
       characterPopUp.style.display = "none";
     }
+    abilityHoverForVisibleCharacter();
     return;
   });
 }
