@@ -141,3 +141,20 @@ footer {
     height: 800px;
     background-color:#9E7540;
 }
+#leftDisplay, #rightDisplay {
+    float: left;
+    width: 45%;
+    min-height: 600px;
+    overflow: hidden;
+    background-color: blue;
+}
+#rightDisplay {
+    margin-right: 0;
+}
+#display{
+    width: 100%;
+    height: 700px;
+    background-color: #BD9354;
+    padding-left: 10%;
+    padding-top: 25px;
+}

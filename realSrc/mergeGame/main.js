@@ -43,8 +43,6 @@ function showScreen(screenId) {
     backVillageBtn.textContent = "village";
   }
 }
-
-
 function setupCharacterModalEvents() {
   const infos = document.querySelectorAll('.character-info');
   const modal = document.getElementById('characterModal');
@@ -290,7 +288,7 @@ let selectedIndex2 = null;
 function itemPurchase() {
   let purchaseButton = document.querySelector(`#purchaseButton`);
 
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 4; i++) {
     let item = document.getElementById(`item${i}`);
 
     // Hover 시 설명 표시 (단, 고정된 게 없을 때만)
@@ -318,7 +316,7 @@ function itemPurchase() {
       }
 
       // 현재 선택 표시
-      item.style.border = "3px solid black";
+      item.style.border = "0.3vw solid black";
       let popup = document.querySelector(`.itemShop #descriptionPopUp${i}`);
       if (popup) popup.style.display = "block";
       selectedIndex2 = i;
