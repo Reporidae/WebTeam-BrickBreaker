@@ -30,19 +30,23 @@ window.addEventListener('DOMContentLoaded', () => {
   itemPurchase();
   abilityHover();
   itemPurchase();
-  abilityShop_CharacterPopUp();
-  characterLevelUp();
   displayCoin();
   startLifeTimer();
   displayLife();
-
+  initDefaultCharacterSelection();
+  initDefaultPopupSelection();
+  abilityShop_CharacterPopUp();
+  characterLevelUp();
 });
 let previousScreen = null;  // 이전에 보였던 화면 저장
 var life = 2; //남은 생명 개수
 var coin = 100000;//코인
-let itemPurchased = [false, false, false, false, false, false];//선택된 아이템 - 변경 예정
+let itemPurchased = [0, 0, 0, 0];//선택된 아이템
 let lifeTimer = null; //시간 측정 변수 - 생명을 5분에 한 번씩 생성하기 위해 필요한 변수임
-
+let character1_level = 1;
+let character2_level = 1;
+let character3_level = 1;
+let character4_level = 1; //캐릭터 4명의 레벨 정보 -> 레벨이 0이라는 건 캐릭터를 사지 않았다는 말. 구매 후 바로 1레벨로 변경하기
 function showScreen(screenId) {
   // 화면 목록
   const screens = ['village', 'characterShop', 'abilityShop', 'itemShop', 'shopPopup'];
@@ -272,9 +276,7 @@ function displayCoin(){
 let selectedIndex1 = null;
 function abilityHover() {
   for (let i = 1; i <= 3; i++) {
-    let ability = document.getElementById(`ability${i}`);
-    let abilitydescriptionPopUp = document.querySelector(`.abilityShop #descriptionPopUp${i}`);
-
+    let ability = document.querySelector(`.abilityShop .abilityView${i}`);
     
     // Hover 시 설명 표시 (단, 고정된 게 없을 때만)
     ability.addEventListener("mouseenter", () => {
@@ -295,7 +297,7 @@ function abilityHover() {
     ability.addEventListener("click", () => {
       // 이전 선택 해제
       if (selectedIndex1 !== null) {
-        document.getElementById(`ability${selectedIndex1}`).style.border = "none";
+        document.querySelector(`.abilityShop .abilityView${selectedIndex1}`).style.border = "none";
         let prevPopup = document.querySelector(`.abilityShop #descriptionPopUp${selectedIndex1}`);
         if (prevPopup) prevPopup.style.display = "none";
       }
@@ -308,7 +310,6 @@ function abilityHover() {
   }
 }
 let selectedIndex2 = null;
-
 function itemPurchase() {
   let purchaseButton = document.querySelector(`#purchaseButton`);
 
@@ -356,6 +357,33 @@ function itemPurchase() {
     }
   });
 }
+// 초기 캐릭터 설정 함수
+function initDefaultCharacterSelection() {
+  // 모든 캐릭터 감춤
+  for (let i = 1; i <= 4; i++) {
+    document.querySelector(`.abilityShop #leftUpperWrapper${i}`).style.display = "none";
+  }
+  // 기본으로 캐릭터 1 표시
+  document.querySelector(`.abilityShop #leftUpperWrapper1`).style.display = "block";
+}
+function initDefaultPopupSelection() {
+  document.querySelector(`#character_popup`).style.display = "none";
+  for (let i = 1; i <= 4; i++) {
+    document.querySelector(`.abilityShop #character_hold${i}`).style.display = "none";
+  }
+  if(character1_level!=0){
+    document.querySelector(`.abilityShop  #character_hold1`).style.display = "block";
+  }
+  if(character2_level!=0){
+    document.querySelector(`.abilityShop  #character_hold2`).style.display = "block";
+  }
+  if(character3_level!=0){
+    document.querySelector(`.abilityShop  #character_hold3`).style.display = "block";
+  }
+  if(character4_level!=0){
+    document.querySelector(`.abilityShop  #character_hold4`).style.display = "block";
+  }
+}
 function abilityShop_CharacterPopUp(){
   let selectedIndex=null;
   let characterPopUp = document.getElementById('character_popup');
@@ -372,31 +400,6 @@ function abilityShop_CharacterPopUp(){
   let leftUpperWrapper4 = document.querySelector('.abilityShop #leftUpperWrapper4');
   let selectedWrapper;
 
-  for (let i = 1; i <= 4; i++) {
-    let wrapper = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
-    if (wrapper.style.display === "block") {
-      selectedWrapper = wrapper;
-      break;
-    }
-  }
-
-  if (!selectedWrapper) {
-    alert("선택된 캐릭터가 없습니다.");
-    return;
-  }
-
-  let img = selectedWrapper.querySelector("img");
-  let src = img.src;
-  let pre;
-  if (src.includes("character_img1.png")) {
-    pre = 1;
-  } else if (src.includes("img2.jpg")) {
-    pre = 2;
-  } else if (src.includes("img1.jpg")) {
-    pre = 3;
-  } else if (src.includes("img3.jpg")) {
-    pre = 4;
-  }
   characterButton.addEventListener("click", ()=>{
     characterPopUp.style.display = "block";
   });
@@ -416,12 +419,38 @@ function abilityShop_CharacterPopUp(){
     selectedIndex=4;
   });
   saveAndCloseBtn.addEventListener("click", ()=>{
-    
+  
+    for (let i = 1; i <= 4; i++) {
+      let wrapper = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
+      if (wrapper.style.display == "block") {
+        selectedWrapper = wrapper;
+        break;
+      }
+    }
+  
+    if (!selectedWrapper) {
+      alert("선택된 캐릭터가 없습니다.");
+      return;
+    }
+
+    let img = selectedWrapper.querySelector("img");
+    let src = img.src;
+    let pre;
+    if (src.includes("player.png")) {
+      pre = 1;
+    } else if (src.includes("player_speed.png")) {
+      pre = 2;
+    } else if (src.includes("player_time.png")) {
+      pre = 3;
+    } else if (src.includes("player_shield.png")) {
+      pre = 4;
+    }
+
     for(let i=1; i<=4; i++){
       let temp = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
       temp.style.display = "none";
     }
-    if (selectedIndex === null) {
+    if (selectedIndex == null) {
       alert("캐릭터를 선택해주세요!");
       if(pre ==1){
         leftUpperWrapper1.style.display = "block";
@@ -437,32 +466,25 @@ function abilityShop_CharacterPopUp(){
       }
       return;
     }
-    if(selectedIndex===1){
+    if(selectedIndex==1){
       leftUpperWrapper1.style.display = "block";
       characterPopUp.style.display = "none";
-      return;
     }
-    if(selectedIndex===2){
+    if(selectedIndex==2){
       leftUpperWrapper2.style.display = "block";
       characterPopUp.style.display = "none";
-      return
     }
-    if(selectedIndex===3){
+    if(selectedIndex==3){
       leftUpperWrapper3.style.display = "block";
       characterPopUp.style.display = "none";
-      return
     }
-    if(selectedIndex===4){
+    if(selectedIndex==4){
       leftUpperWrapper4.style.display = "block";
       characterPopUp.style.display = "none";
-      return
     }
+    return;
   });
 }
-let character1_level = 1;
-let character2_level = 1;
-let character3_level = 1;
-let character4_level = 1;
 function characterLevelUp() {
   let levelupButton = document.getElementById('levelupButton');
   levelupButton.addEventListener("click", () => {
@@ -470,7 +492,7 @@ function characterLevelUp() {
 
     for (let i = 1; i <= 4; i++) {
       let wrapper = document.querySelector(`.abilityShop #leftUpperWrapper${i}`);
-      if (wrapper.style.display === "block") {
+      if (wrapper.style.display == "block") {
         selectedWrapper = wrapper;
         break;
       }
@@ -485,16 +507,16 @@ function characterLevelUp() {
     let src = img.src;
     let level, name;
 
-    if (src.includes("character_img1.png")) {
+    if (src.includes("player.png")) {
       level = character1_level;
       name = "OOOOO";
-    } else if (src.includes("img2.jpg")) {
+    } else if (src.includes("player_speed.png")) {
       level = character2_level;
       name = "PPPPP";
-    } else if (src.includes("img1.jpg")) {
+    } else if (src.includes("player_time.png")) {
       level = character3_level;
       name = "MMMMM";
-    } else if (src.includes("img3.jpg")) {
+    } else if (src.includes("player_shield.png")) {
       level = character4_level;
       name = "NNNNN";
     } else {
@@ -519,12 +541,12 @@ function characterLevelUp() {
       coin -= cost;
       level++;
 
-      if (src.includes("character_img1.png")) character1_level = level;
-      else if (src.includes("img2.jpg")) character2_level = level;
-      else if (src.includes("img1.jpg")) character3_level = level;
-      else if (src.includes("img3.jpg")) character4_level = level;
+      if (src.includes("player.png")) character1_level = level;
+      else if (src.includes("player_speed.png")) character2_level = level;
+      else if (src.includes("player_time.png")) character3_level = level;
+      else if (src.includes("player_shield.png")) character4_level = level;
 
-      const levelText = selectedWrapper.querySelector('#characterLevel');
+      const levelText = selectedWrapper.querySelector('.characterLevel');
       levelText.innerText = `${name}[Lv.${level}]`;
     }
   });
@@ -542,7 +564,7 @@ function startLifeTimer() {
         lifeTimer = null;
       }
     }
-  }, 1 * 60 * 1000); // 5분
+  }, 5 * 60 * 1000); // 5분
 }
 
 // GAME.JS 합치기-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

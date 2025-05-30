@@ -44,7 +44,7 @@
     background-color: rgb(186, 99, 0);
     float: left;
 }
-.abilityView {
+.abilityView1,.abilityView2,.abilityView3 {
     margin: 7% auto;
     width: 90%;
     max-width: 300px;
@@ -54,43 +54,47 @@
     text-align: center;
     line-height: 7.5vw;
 }
-.abilityShop #leftUpperWrapper1, .abilityShop #leftUpperWrapper2,.abilityShop #leftUpperWrapper3, .abilityShop #leftUpperWrapper4{
+.abilityShop #leftUpperWrapper2,.abilityShop #leftUpperWrapper3, .abilityShop #leftUpperWrapper4{
     width: 100%;
     height: auto;
     display: none;
 }
 .abilityShop #leftUpperWrapper1{
+    width: 100%;
+    height: auto;
     display: block;
 }
 .abilityShop #buttonDisplay {
-    height: 20%;
     width: 100%;
-    max-width: 300px;
     display: flex;
-    justify-content: center;  /* 가로 중앙 정렬 */
+    justify-content: center;
+    margin-top: auto;
+    padding-top: 0.7vw;
 }
 #levelupButton, #characterButton {
-    width:100%;
+    width: 15vw;
+    max-width: 150px;
     height: 3.5vw;
-    font-size: 1.7vw;
+    font-size: 1.6vw;
     background-color: brown;
     color: white;
-    border-radius: 25px;
-    line-height: 3.5vw;
     text-align: center;
+    line-height: 3.5vw;
 }
+
 #levelupButton {
     border-radius: 30px 0 0 30px;
 }
+
 #characterButton {
     border-radius: 0 30px 30px 0;
 }
+
 .abilityShop #descriptionPopUp1,
 .abilityShop #descriptionPopUp2,
 .abilityShop #descriptionPopUp3 {
-    width: 90%;
-    max-width: 600px;
-    height: auto;
+    width: 80%;
+    height: 20vw;
     min-height: 300px;
     background-color: brown;
     margin: 60px auto;
@@ -98,7 +102,7 @@
     text-align: center;
     padding: 40px;
     font-size: 1.3vw;
-    line-height: 1.5;
+    line-height: 2vw;
 }
 #character_popup {
     display: none;
@@ -108,7 +112,7 @@
     transform: translateX(-50%);
     width: 90%;
     max-width: 500px;
-    height: 600px;
+    height: 690px;
     background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
@@ -117,14 +121,13 @@
     background: white;
     width: 90%;
     max-width: 465px;
-    height: 450px;
+    height: 600px;
     border-radius: 10px;
     text-align: center;
-    overflow: auto;
 }
 #saveAndCloseBtn, #closePopupBtn {
     position: fixed;
-    top: 85%;
+    top: 630px;
     width: 150px;
     height: 50px;
     background-color: aquamarine;
@@ -138,7 +141,6 @@
     left: 50%;
     transform: translateX(20%);
 }
-
 .character_hold {
     position: absolute;
     left: 50%;
@@ -148,16 +150,17 @@
     height: 150px;
     border-radius: 10px;
     background-color: black;
+    border-top: 0.0001px solid white;
 }
 #character_hold1{
-    top: 220px;
+    top: 20px;
 }
 #character_hold2{
-    top: 370px;
+    top: 170px;
 }
 #character_hold3{
-    top: 520px;
+    top: 320px;
 }
 #character_hold4{
-    top: 670px;
+    top: 470px;
 }
