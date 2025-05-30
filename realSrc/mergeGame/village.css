@@ -24,7 +24,7 @@ background-image: url("all_background.jpg");
 }
 #villageLeftDisplay {
     float: left;
-    width: 40%;
+    width: 45%;
     height: 650px;
     background-color: blue;
     position: relative;
@@ -55,7 +55,7 @@ background-image: url("all_background.jpg");
 
 #villageRightDisplay {
   float: left;
-    width: 40%;
+    width: 45%;
     height: 650px;
     /* background-color: blue; */
     background-image: url("qrslhupr.png");
