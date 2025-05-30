@@ -1,3 +1,27 @@
+/*일단 전역 변수로 저장 하기 전에 해당 값들로 사용한다는걸 알려드리려고 주석으로 저장합니다다
+let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
+let selectedCharacter = 'char1';  // 변경 가능 ('char2', 'char3', 'char4') 4개의 캐릭터중 어떤걸로 선택됐는지지
+let characterLevels = {
+    char1: 1, char2: 1, char3: 1, char4: 1  // 각각 변경 가능
+};
+ex)
+characterLevels.char1 = 3;  // 공격형을 레벨 3으로
+characterLevels.char2 = 2;  // 속도형을 레벨 2로
+characterLevels.char3 = 1;  // 시간형은 레벨 1 유지
+characterLevels.char4 = 2;  // 방어형을 레벨 2로
+변경 후 현재 캐릭터가 해당되면 능력치 재적용
+if (selectedCharacter === 'char1') {
+    applyCharacterAbilities();
+}
+
+let maxLives = 3;  // 변경 가능 게임 내에서 최대 체력력
+let coins = 0;  // 
+주의사항:
+
+1. 설정 후 적용 필요: 변수 변경 후 반드시 player.setCharacter()와 applyCharacterAbilities() 호출
+2. UI 업데이트: updateUI() 호출로 화면에 반영
+3. 게임 시작 전 설정: startGame() 호출 전에 설정해야 함 */
+
 window.addEventListener('DOMContentLoaded', () => {
   setupCharacterModalEvents();
   setupShopPopupEvents();
@@ -523,7 +547,6 @@ function startLifeTimer() {
 
 // GAME.JS 합치기-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
 const sounds = {
   paddleHit: new Audio("../../assets/sounds/paddle_hit.mp3"),
   brickHit: new Audio("../../assets/sounds/brick_hit.mp3"),
@@ -877,7 +900,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const BRICK_PADDING = 5;
   const BRICK_OFFSET_TOP = 100; // 60에서 100으로 증가 (보스 높이 증가로 인해)
   const BRICK_OFFSET_LEFT = 15;
-  const MAX_LIVES = 3;
+  let maxLives = 1; // const에서 let으로 변경
   const ITEM_FALL_SPEED = 2;
 
   // 스테이지별 공 속도 설정 (전체적으로 속도 줄임)
@@ -904,18 +927,18 @@ document.addEventListener('DOMContentLoaded', function() {
   let gameStarted = false;
   let gameOver = false;
   let score = 0;
-  let lives = MAX_LIVES;
+  let lives = maxLives;
   let coins = 0;
-  let stage = 1;
+  let stage = 3;
   let stageTimer = 60;
   let stageTimerInterval = null;
   let bossAttackTimer = null;
   let brickRowTimer = null; // 벽돌 줄 추가 타이머
 
   // 캐릭터 선택 및 레벨 시스템
-  let selectedCharacter = null;
+  let selectedCharacter = 'char1'; // 기본값 설정
   let characterLevels = {
-      char1: 1, // 공격형 레벨
+      char1: 3, // 공격형 레벨
       char2: 1, // 속도형 레벨
       char3: 1, // 시간형 레벨
       char4: 1  // 방어형 레벨
@@ -965,22 +988,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   };
   
-  // 캐릭터 레벨업 함수
-  function levelUpCharacter(charType) {
-      if (characterLevels[charType] < 3) {
-          characterLevels[charType]++;
-          updateCharacterButtons();
-          
-          // 현재 선택된 캐릭터라면 능력치 재적용
-          if (selectedCharacter === charType) {
-              applyCharacterAbilities();
-          }
-          
-          return true;
-      }
-      return false;
-  }
-  
   // 캐릭터 능력치 적용 함수
   function applyCharacterAbilities() {
       if (!selectedCharacter) return;
@@ -1005,20 +1012,6 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // UI 업데이트
       document.getElementById('character-info').textContent = `${char.name}: ${stats.description}`;
-  }
-  
-  // 캐릭터 버튼 업데이트 함수
-  function updateCharacterButtons() {
-      Object.keys(characterAbilities).forEach(charType => {
-          const button = document.getElementById(charType);
-          const char = characterAbilities[charType];
-          const level = characterLevels[charType];
-          const stats = char.getLevelStats(level);
-          
-          if (button) {
-              button.innerHTML = `${char.name} (Lv.${level})<br><small>${stats.description}</small>`;
-          }
-      });
   }
 
   // 시간정지 관련
@@ -1055,77 +1048,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 벽돌과 아이템 배열
   let bricks = [];
   let items = [];
-  const itemTypes = ["heart", "coin"]; // 자석 아이템 제거
-
-  // === 캐릭터 선택 이벤트 ===
-  document.querySelectorAll('.character-button').forEach(button => {
-      button.addEventListener('click', function() {
-          document.querySelectorAll('.character-button').forEach(b => b.classList.remove('selected'));
-          this.classList.add('selected');
-          selectedCharacter = this.id;
-      });
-  });
-
-  document.getElementById('character-confirm').addEventListener('click', function() {
-      if (!selectedCharacter) {
-          alert('캐릭터를 선택해주세요!');
-          return;
-      }
-      
-      hideTimeStopOverlay();
-
-      //시간 정지 상태 초기화
-      document.getElementById('time-stop-overlay').classList.add('hidden');
-      timeStopActive = false;
-      timeStopCooldown = 0;
-      timeStopDuration = 0;
-
-      document.getElementById('character-select-menu').classList.add('hidden');
-      document.getElementById('stage-select-menu').classList.remove('hidden'); // 스테이지 선택 메뉴 표시
-      
-      // 선택된 캐릭터 이미지 설정
-      player.setCharacter(selectedCharacter);
-      
-      // 캐릭터 능력 적용
-      applyCharacterAbilities();
-  });
-
-  document.querySelectorAll('.stage-select').forEach(button => {
-      button.addEventListener('click', function() {
-          hideTimeStopOverlay();
-          document.getElementById('time-stop-overlay').classList.add('hidden');
-          timeStopActive = false;
-          timeStopDuration = 0;
-          timeStopCooldown = 0;
-        
-          stage = parseInt(this.getAttribute('data-stage'));
-          document.getElementById('stage-select-menu').classList.add('hidden');
-          
-          // 선택된 스테이지로 게임 시작
-          gameStarted = true;
-          gameOver = false;
-          score = 0;
-          lives = MAX_LIVES;
-          coins = 0;
-          
-          setupBossForStage(stage);
-          initBricks();
-          resetBall();
-          setBallSpeedForStage(stage);
-          updateUI();
-          
-          startStageTimer();
-          startBrickRowTimer(); // 벽돌 줄 추가 타이머 시작
-          
-          bossAttackTimer = setInterval(() => {
-              if (boss.visible && !timeStopActive) {
-                  boss.spawnProjectiles(stage);
-              }
-          }, boss.attackInterval);
-          
-          requestAnimationFrame(gameLoop);
-      });
-  }); 
+  const itemTypes = ["heart", "coin"];
 
   // === 키보드 이벤트 ===
   document.addEventListener("keydown", function (e) {
@@ -1138,19 +1061,6 @@ document.addEventListener('DOMContentLoaded', function() {
       else if (e.keyCode === 39) rightPressed = false;
       else if (e.keyCode === 70) useSkill(); // F키
       else if (e.keyCode === 81) useTimeStop(); // Q키
-      else if (e.keyCode === 76) { // L키 - 레벨업
-          if (selectedCharacter && coins >= 10) {
-              if (levelUpCharacter(selectedCharacter)) {
-                  coins -= 10; // 레벨업 비용
-                  updateUI();
-                  alert(`${characterAbilities[selectedCharacter].name} 레벨업! (Lv.${characterLevels[selectedCharacter]})`);
-              } else {
-                  alert('이미 최대 레벨입니다! (Lv.3)');
-              }
-          } else if (coins < 10) {
-              alert('레벨업에 필요한 코인이 부족합니다! (10코인 필요)');
-          }
-      }
   });
 
   // === 게임 함수들 ===
@@ -1228,7 +1138,7 @@ document.addEventListener('DOMContentLoaded', function() {
               if (stageTimer <= 0) {
                   clearInterval(stageTimerInterval);
                   gameOver = true;
-                  showMenu("시간 초과! 게임 오버", false);
+                  showMenu("시간 초과! 게임 오버", false, true); // 점수 표시 추가
               }
           }
       }, 1000);
@@ -1285,7 +1195,6 @@ document.addEventListener('DOMContentLoaded', function() {
   function startGame() {
       sounds.bgm1.play();
       hideTimeStopOverlay();
-      if (!selectedCharacter) return;
       
       gameStarted = true;
       gameOver = false;
@@ -1294,7 +1203,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!stage) stage = 1;
       
       score = 0;
-      lives = MAX_LIVES;
+      lives = maxLives;
       coins = 0;
       
       setupBossForStage(stage);
@@ -1308,7 +1217,6 @@ document.addEventListener('DOMContentLoaded', function() {
       timeStopActive = false;
       timeStopCooldown = 0;
       timeStopDuration = 0;
-
 
       document.getElementById("game-menu").classList.add("hidden");
       startStageTimer();
@@ -1336,17 +1244,21 @@ document.addEventListener('DOMContentLoaded', function() {
       clearInterval(stageTimerInterval);
       clearInterval(bossAttackTimer);
       clearInterval(brickRowTimer); // 벽돌 줄 추가 타이머 정리
-      document.getElementById('character-select-menu').classList.remove('hidden');
-      document.getElementById('game-menu').classList.add('hidden');
-      document.getElementById('stage-clear-menu').classList.add('hidden');
+      
+      // 게임 메뉴를 다시 표시
+      showMenu("게임 시작", true);
   }
 
-  function showMenu(message, isStart = false) {
-      document.getElementById("menu-message").textContent = message;
+  function showMenu(message, isStart = false, showScore = false) {
+      let menuMessage = message;
+      if (showScore) {
+          menuMessage += `\n최종 점수: ${score}`;
+      }
+      
+      document.getElementById("menu-message").textContent = menuMessage;
       document.getElementById("game-menu").classList.remove("hidden");
 
       document.getElementById("start-button").style.display = isStart ? "block" : "none";
-      document.getElementById("resume-button").style.display = "none";
       document.getElementById("restart-button").style.display = !isStart ? "block" : "none";
       document.getElementById("quit-button").style.display = "block";
   }
@@ -1357,7 +1269,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // 스테이지 4를 초과하면 게임 완료
       if (stage > 4) {
           gameOver = true;
-          showMenu("모든 스테이지 완료!", false);
+          showMenu("모든 스테이지 완료!", false, true); // 점수 표시 추가
           return;
       }
       
@@ -1413,7 +1325,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function collectItem(item) {
       switch (item.type) {
           case "heart":
-              lives = Math.min(lives + 1, MAX_LIVES);
+              lives = Math.min(lives + 1, maxLives);
               break;
           case "coin":
               coins++;
@@ -1594,7 +1506,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       if (lives <= 0) {
                         forceEndTimeStop();
                           gameOver = true;
-                          showMenu("게임 오버", false);
+                          showMenu("게임 오버", false, true); // 점수 표시 추가
                       }
                   }
                   // 어느 영역이든 투사체는 제거
@@ -1612,7 +1524,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   if (lives <= 0) {
                       forceEndTimeStop();
                       gameOver = true;
-                      showMenu("게임 오버", false);
+                      showMenu("게임 오버", false, true); // 점수 표시 추가
                   }
               }
           }
@@ -1829,7 +1741,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           if (lives <= 0) {
               gameOver = true;
-              showMenu("게임 오버", false);
+              showMenu("게임 오버", false, true); // 점수 표시 추가
           } else {
               resetBall();
           }
@@ -1864,7 +1776,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (bricks[i].visible && bricks[i].y + bricks[i].height >= CANVAS_HEIGHT - PADDLE_HEIGHT - 20) {
               forceEndTimeStop();
               gameOver = true;
-              showMenu("게임 오버", false);
+              showMenu("게임 오버", false, true); // 점수 표시 추가
               break;
           }
       }
@@ -1916,13 +1828,6 @@ document.addEventListener('DOMContentLoaded', function() {
           const cooldownSeconds = Math.ceil(timeStopCooldown / 60);
           ctx.fillText(`시간정지 쿨다운: ${cooldownSeconds}초`, 10, 60);
       }
-      
-      // 레벨업 가능 표시
-      if (selectedCharacter && characterLevels[selectedCharacter] < 3) {
-          ctx.textAlign = "right";
-          ctx.fillStyle = "#FFD700";
-          ctx.fillText(`레벨업 가능! (L키)`, CANVAS_WIDTH - 10, 90);
-      }
   }
 
   // === 게임 루프 ===
@@ -1940,11 +1845,14 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById("restart-button").addEventListener("click", restartGame);
   document.getElementById("quit-button").addEventListener("click", quitGame);
 
-  // 스테이지 클리어 메뉴 (제거됨 - 자동 진행)
-  // document.getElementById("next-stage-button").addEventListener("click", nextStage);
-  // document.getElementById("quit-stage-button").addEventListener("click", quitGame);
-
   // 초기화
   updateGaugeUI();
-  updateCharacterButtons(); // 캐릭터 버튼 초기화
+
+  // 기본 캐릭터 설정 및 UI 초기화
+  player.setCharacter(selectedCharacter);
+  applyCharacterAbilities();
+  updateUI();
+  
+  // 게임 시작 메뉴 표시
+  showMenu("게임 시작", true);
 });
