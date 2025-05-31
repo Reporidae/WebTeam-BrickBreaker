@@ -1,3 +1,7 @@
+
+let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
+
+
 /*일단 전역 변수로 저장 하기 전에 해당 값들로 사용한다는걸 알려드리려고 주석으로 저장합니다다
 let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
 let selectedCharacter = 'char1';  // 변경 가능 ('char2', 'char3', 'char4') 4개의 캐릭터중 어떤걸로 선택됐는지지
@@ -37,6 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initDefaultPopupSelection();
   abilityShop_CharacterPopUp();
   characterLevelUp();
+  chageStageNum();
 });
 let previousScreen = null;  // 이전에 보였던 화면 저장
 var life = 2; //남은 생명 개수
@@ -47,6 +52,22 @@ let character1_level = 1;
 let character2_level = 1;
 let character3_level = 1;
 let character4_level = 1; //캐릭터 4명의 레벨 정보 -> 레벨이 0이라는 건 캐릭터를 사지 않았다는 말. 구매 후 바로 1레벨로 변경하기
+
+function chageStageNum() {
+  const hotspots = document.querySelectorAll('.hotspot');
+
+  hotspots.forEach(hotspot => {
+    hotspot.addEventListener('click', () => {
+      const selectedStage = parseInt(hotspot.dataset.stage);
+      if (!isNaN(selectedStage)) {
+        stage = selectedStage;
+        console.log("현재 선택된 stage:", stage);
+      }
+    });
+  });
+}
+
+
 function showScreen(screenId) {
   // 화면 목록
   const screens = ['village', 'characterShop', 'abilityShop', 'itemShop', 'shopPopup'];
