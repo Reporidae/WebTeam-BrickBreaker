@@ -227,6 +227,7 @@ function setupShopPopupEvents() {
 function setupBackButtons() {
   const backVillageBtn = document.getElementById("backVillageButton");
   const village = document.querySelector('.village');
+  const gameDiv = document.querySelector(".main-game");
 
   backVillageBtn.addEventListener("click", () => {
     previousScreen = null;  // 마을로 이동하므로 이전 화면 초기화
@@ -245,6 +246,8 @@ function setupBackButtons() {
       // 이전 화면 없으면 기본 동작: 마을 보여주기
       showScreen('village');
       village.style.display = 'block';
+      gameDiv.style.display = 'none';
+
     }
   });
 }
@@ -258,6 +261,9 @@ function setsupStartButtons(){
   const itemShop = document.querySelector('.itemShop');
   const village = document.querySelector('.village');
 
+  const shopPopup = document.getElementById("shopPopup");
+  const backVillageBtn = document.getElementById("backVillageButton");
+
   startButton.addEventListener("click", function () {
     gameDiv.style.display = "block"; // 게임 화면 보이기
     characterShop.style.display = 'none';
@@ -265,6 +271,17 @@ function setsupStartButtons(){
     if(itemShop) itemShop.style.display = 'none';
     village.style.display = 'none';
     shopPopup.style.display = 'none';
+  });
+
+  backVillageBtn.addEventListener("click", function () {
+    if (gameDiv.style.display === "block") {
+      gameDiv.style.display = 'none';
+      characterShop.style.display = 'none';
+      abilityShop.style.display = 'none';
+      if (itemShop) itemShop.style.display = 'none';
+      shopPopup.style.display = 'none';
+      village.style.display = 'block';
+    }
   });
 }
 
