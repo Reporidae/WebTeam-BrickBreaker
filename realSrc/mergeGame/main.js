@@ -1331,9 +1331,21 @@ function initializeGame() {
 let shieldAvailable = false; // 보호막 아이템 상태 저장
 let vacuumReady = false; // 청소기 아이템 사용 여부
 
+//아이템 아이콘 표시 함수 추가
+  function updateVacuumIconDisplay() {
+    const icon = document.getElementById("vacuum-icon");
+    if (vacuumReady) {
+      icon.src = "itemIcon_img2.png"; // 실제 청소기 아이콘 경로로 교체
+      icon.style.display = "block";
+    } else {
+      icon.style.display = "none";
+    }
+  }
+
+
   function startGame() {
     // ✅ 게임 초기화 후 아이콘 표시
-    renderItemIcons();
+    //renderItemIcons();
 
     sounds.bgm1.play();
     hideTimeStopOverlay();
@@ -1399,14 +1411,7 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     }
     if (itemPurchased[1]) {
       vacuumReady = true; // 청소기 아이템 준비됨
-      /*
-      let maxY = Math.max(...bricks.map(b => b.y));
-      bricks.forEach(b => {
-        if (b.y === maxY && b.visible) {
-          b.visible = false;
-        }
-      });*/
-
+      updateVacuumIconDisplay(); // ✅ 아이콘 표시 갱신
     }
     if (itemPurchased[2]) {
       shieldAvailable = true;
@@ -1430,11 +1435,13 @@ document.addEventListener("keyup", function (e) {
         }
       });
       vacuumReady = false;
-      itemPurchased[3] = false; // 아이템 사용 완료 처리
-      renderItemIcons(); // 아이콘 갱신
+      //itemPurchased[3] = false; // 아이템 사용 완료 처리
+      //renderItemIcons(); // 아이콘 갱신
+      updateVacuumIconDisplay(); // ✅ 아이콘 제거
     }
   }
 });
+/*
 // ✅ 아이템 아이콘 표시 함수
   function renderItemIcons() {
     const iconContainer = document.getElementById("item-icons");
@@ -1462,7 +1469,7 @@ document.addEventListener("keyup", function (e) {
       }
     });
   }
-  
+*/
   function quitGame() {
     gameStarted = false;
     gameOver = false;
