@@ -1,5 +1,5 @@
-
 let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
+let maxHeart = 2;
 
 
 /*일단 전역 변수로 저장 하기 전에 해당 값들로 사용한다는걸 알려드리려고 주석으로 저장합니다다
@@ -42,7 +42,11 @@ window.addEventListener('DOMContentLoaded', () => {
   abilityShop_CharacterPopUp();
   characterLevelUp();
   chageStageNum();
+  
+  // 게임 초기화 함수들 추가
+  initializeGame();
 });
+
 let previousScreen = null;  // 이전에 보였던 화면 저장
 var life = 2; //남은 생명 개수
 var coin = 100000;//코인
@@ -62,11 +66,14 @@ function chageStageNum() {
       if (!isNaN(selectedStage)) {
         stage = selectedStage;
         console.log("현재 선택된 stage:", stage);
+        
+        // 선택된 스테이지를 시각적으로 표시 (선택사항)
+        document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('selected'));
+        hotspot.classList.add('selected');
       }
     });
   });
 }
-
 
 function showScreen(screenId) {
   // 화면 목록
@@ -92,6 +99,7 @@ function showScreen(screenId) {
     backVillageBtn.textContent = "village";
   }
 }
+
 function setupCharacterModalEvents() {
   const infos = document.querySelectorAll('.character-info');
   const modal = document.getElementById('characterModal');
@@ -146,7 +154,6 @@ function setupCharacterModalEvents() {
 
         // 이미지만 추가
         rightDisplay.appendChild(newImage);
-
 
         modal.style.display = 'none';
       }
@@ -255,6 +262,7 @@ function setsupStartButtons(){
     shopPopup.style.display = 'none';
   });
 }
+
 //----------header
 function displayLife(){
   for(let i = 1; i<=5; i++){
@@ -277,17 +285,15 @@ function increaseLife(){
 function decreaseCoin(decreCoin){
   coin -= decreCoin;
   document.getElementById('coinView').textContent = `${coin}원`;
-
 }
 function increaseCoin(increCoin){
   coin += increCoin;
   document.getElementById('coinView').textContent = `${coin}원`;
-
 }
 function displayCoin(){
   document.getElementById('coinView').textContent = `${coin}원`;
-
 }
+
 let selectedIndex1 = null;
 /*
 function abilityHover() {
@@ -381,7 +387,6 @@ function abilityHoverForVisibleCharacter() {
   });
 }
 
-
 let selectedIndex2 = null;
 function itemPurchase() {
   let purchaseButton = document.querySelector(`#purchaseButton`);
@@ -430,6 +435,7 @@ function itemPurchase() {
     }
   });
 }
+
 // 초기 캐릭터 설정 함수
 function initDefaultCharacterSelection() {
   // 모든 캐릭터 감춤
@@ -439,6 +445,7 @@ function initDefaultCharacterSelection() {
   // 기본으로 캐릭터 1 표시
   document.querySelector(`.abilityShop #leftUpperWrapper1`).style.display = "block";
 }
+
 function initDefaultPopupSelection() {
   document.querySelector(`#character_popup`).style.display = "none";
   for (let i = 1; i <= 4; i++) {
@@ -457,6 +464,7 @@ function initDefaultPopupSelection() {
     document.querySelector(`.abilityShop  #character_hold4`).style.display = "block";
   }
 }
+
 function abilityShop_CharacterPopUp(){
   let selectedIndex=null;
   let characterPopUp = document.getElementById('character_popup');
@@ -559,6 +567,7 @@ function abilityShop_CharacterPopUp(){
     return;
   });
 }
+
 function characterLevelUp() {
   let levelupButton = document.getElementById('levelupButton');
   levelupButton.addEventListener("click", () => {
@@ -625,6 +634,7 @@ function characterLevelUp() {
     }
   });
 }
+
 function startLifeTimer() {
   // 이미 타이머 돌고 있거나 최대치면 시작 안 함
   if (lifeTimer || life >= 5) return;
@@ -651,7 +661,6 @@ const sounds = {
   bgm1: new Audio("../../assets/music/bgm1.mp3")
 };
 sounds.bgm1.loop = true;
-
 
 class Boss {
   constructor(canvasWidth, health = 10) {
@@ -696,7 +705,6 @@ class Boss {
       ctx.strokeStyle = "#FFF";
       ctx.strokeRect(this.x, this.y + this.height - 20, this.width, 20);
      
-
       ctx.font = "16px Arial";
       ctx.fillStyle = "#FFF";
       ctx.textAlign = "center";
@@ -980,8 +988,8 @@ class PhoenixEffect {
   }
 }
 
-// === 게임 초기화 ===
-document.addEventListener('DOMContentLoaded', function() {
+// === 게임 초기화 함수 ===
+function initializeGame() {
   // 게임 상수
   const CANVAS_WIDTH = 800;
   const CANVAS_HEIGHT = 500;
@@ -996,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const BRICK_PADDING = 5;
   const BRICK_OFFSET_TOP = 100; // 60에서 100으로 증가 (보스 높이 증가로 인해)
   const BRICK_OFFSET_LEFT = 15;
-  let maxLives = 1; // const에서 let으로 변경
+  let maxLives = maxHeart; // const에서 let으로 변경
   const ITEM_FALL_SPEED = 2;
 
   // 스테이지별 공 속도 설정 (전체적으로 속도 줄임)
@@ -1025,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let score = 0;
   let lives = maxLives;
   let coins = 0;
-  let stage = 3;
+  let gameStage = stage; // 전역 stage 변수와 구분하기 위해 gameStage 사용
   let stageTimer = 60;
   let stageTimerInterval = null;
   let bossAttackTimer = null;
@@ -1107,7 +1115,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       // UI 업데이트
-      document.getElementById('character-info').textContent = `${char.name}: ${stats.description}`;
+      const characterInfoEl = document.getElementById('character-info');
+      if (characterInfoEl) {
+          characterInfoEl.textContent = `${char.name}: ${stats.description}`;
+      }
   }
 
   // 시간정지 관련
@@ -1234,13 +1245,12 @@ document.addEventListener('DOMContentLoaded', function() {
               if (stageTimer <= 0) {
                   clearInterval(stageTimerInterval);
                   gameOver = true;
-                  showMenu("시간 초과! 게임 오버", false, true); // 점수 표시 추가
+                  showMenu("시간 초과! 게임 오버", false, true);
               }
           }
       }, 1000);
   }
 
-  // 15초마다 새로운 벽돌 줄 추가 타이머
   function startBrickRowTimer() {
       clearInterval(brickRowTimer);
       
@@ -1248,7 +1258,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (!timeStopActive && gameStarted && !gameOver) {
               addNewBrickRow();
           }
-      }, 15000); // 15초마다 실행
+      }, 15000);
   }
 
   function updateTimerDisplay() {
@@ -1269,13 +1279,15 @@ document.addEventListener('DOMContentLoaded', function() {
       const stats = char.getLevelStats(level);
       
       timeStopActive = true;
-      timeStopDuration = stats.timeStopDuration; // 레벨에 따른 지속시간
-      timeStopCooldown = stats.timeStopCooldown; // 레벨에 따른 쿨다운
+      timeStopDuration = stats.timeStopDuration;
+      timeStopCooldown = stats.timeStopCooldown;
       
-      // 모든 보스 투사체 제거
       boss.projectiles = [];
       
-      document.getElementById('time-stop-overlay').classList.remove('hidden');
+      const overlay = document.getElementById('time-stop-overlay');
+      if (overlay) {
+          overlay.classList.remove('hidden');
+      }
   }
 
   function useSkill() {
@@ -1289,118 +1301,174 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function startGame() {
-      sounds.bgm1.play();
-      hideTimeStopOverlay();
-      
-      gameStarted = true;
-      gameOver = false;
-      
-      // 스테이지가 이미 선택되어 있지 않으면 기본값 1로 설정
-      if (!stage) stage = 1;
-      
-      score = 0;
-      lives = maxLives;
-      coins = 0;
-      
-      setupBossForStage(stage);
-      initBricks();
-      resetBall();
-      setBallSpeedForStage(stage);
-      updateUI();
-      
-      // ✅ 시작 시 오버레이 초기화 (이중 안전장치)
-      document.getElementById('time-stop-overlay').classList.add('hidden');
-      timeStopActive = false;
-      timeStopCooldown = 0;
-      timeStopDuration = 0;
+    sounds.bgm1.play();
+    hideTimeStopOverlay();
+    
+    gameStarted = true;
+    gameOver = false;
+    
+    // 전역 stage 변수에서 gameStage로 설정 (village에서 선택한 스테이지 적용)
+    gameStage = stage;
+    console.log("게임 시작 - 선택된 스테이지:", gameStage);
+    
+    score = 0;
+    lives = maxLives;
+    // 게임 내 코인은 0부터 시작
+    coins = 0;
+    
+    setupBossForStage(gameStage);
+    initBricks();
+    resetBall();
+    setBallSpeedForStage(gameStage);
+    updateUI();
+    
+    const overlay = document.getElementById('time-stop-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+    }
+    timeStopActive = false;
+    timeStopCooldown = 0;
+    timeStopDuration = 0;
 
-      document.getElementById("game-menu").classList.add("hidden");
-      startStageTimer();
-      startBrickRowTimer(); // 벽돌 줄 추가 타이머 시작
-      
-      bossAttackTimer = setInterval(() => {
-          if (boss.visible && !timeStopActive) {
-              boss.spawnProjectiles(stage);
-          }
-      }, boss.attackInterval);
-      
-      requestAnimationFrame(gameLoop);
-  }
-
-  function restartGame() {
-      clearInterval(stageTimerInterval);
-      clearInterval(bossAttackTimer);
-      clearInterval(brickRowTimer); // 벽돌 줄 추가 타이머 정리
-      startGame();
-  }
+    const gameMenu = document.getElementById("game-menu");
+    if (gameMenu) {
+        gameMenu.classList.add("hidden");
+    }
+    startStageTimer();
+    startBrickRowTimer();
+    
+    bossAttackTimer = setInterval(() => {
+        if (boss.visible && !timeStopActive) {
+            boss.spawnProjectiles(gameStage);
+        }
+    }, boss.attackInterval);
+    
+    requestAnimationFrame(gameLoop);
+}
 
   function quitGame() {
-      gameStarted = false;
-      gameOver = false;
-      clearInterval(stageTimerInterval);
-      clearInterval(bossAttackTimer);
-      clearInterval(brickRowTimer); // 벽돌 줄 추가 타이머 정리
-      
-      // 게임 메뉴를 다시 표시
-      showMenu("게임 시작", true);
-  }
+    gameStarted = false;
+    gameOver = false;
+    clearInterval(stageTimerInterval);
+    clearInterval(bossAttackTimer);
+    clearInterval(brickRowTimer);
+    
+    // 게임에서 모은 코인을 전역 coin에 누적 저장
+    coin += coins; // 게임 내에서 얻은 코인을 전역 코인에 더하기
+    displayCoin(); // 헤더 코인 표시 업데이트
+    
+    // 게임 화면 숨기기
+    const gameDiv = document.querySelector(".main-game");
+    if (gameDiv) {
+        gameDiv.style.display = "none";
+    }
+    
+    // 마을 화면 보이기
+    const village = document.querySelector('.village');
+    if (village) {
+        village.style.display = 'block';
+    }
+    
+    // 다른 상점 화면들 숨기기
+    const characterShop = document.querySelector('.characterShop');
+    const abilityShop = document.querySelector('.abilityShop');
+    const itemShop = document.querySelector('.itemShop');
+    const shopPopup = document.getElementById('shopPopup');
+    
+    if (characterShop) characterShop.style.display = 'none';
+    if (abilityShop) abilityShop.style.display = 'none';
+    if (itemShop) itemShop.style.display = 'none';
+    if (shopPopup) shopPopup.style.display = 'none';
+    
+    // 시간정지 오버레이 숨기기
+    hideTimeStopOverlay();
+    
+    // BGM 정지
+    if (sounds && sounds.bgm1) {
+        sounds.bgm1.pause();
+        sounds.bgm1.currentTime = 0;
+    }
+    
+    // 게임 메뉴를 초기 상태로 되돌리기 (게임 시작 메뉴 표시)
+    showMenu("게임 시작", true);
+}
 
-  function showMenu(message, isStart = false, showScore = false) {
-      let menuMessage = message;
-      if (showScore) {
-          menuMessage += `\n최종 점수: ${score}`;
+function showMenu(message, isStart = false, showScore = false) {
+  // 게임 오버 시 코인을 전역 변수에 누적 저장
+  if (showScore && !isStart) {
+      coin += coins; // 게임에서 모은 코인을 전역 coin에 더하기
+      displayCoin(); // 헤더 코인 표시 업데이트
+  }
+  
+  let menuMessage = message;
+  if (showScore) {
+      menuMessage += `\n최종 점수: ${score}`;
+      menuMessage += `\n획득 코인: ${coins}`;
+  }
+  
+  const menuMessageEl = document.getElementById("menu-message");
+  const gameMenuEl = document.getElementById("game-menu");
+  const startBtnEl = document.getElementById("start-button");
+  const quitBtnEl = document.getElementById("quit-button");
+  
+  if (menuMessageEl) menuMessageEl.textContent = menuMessage;
+  if (gameMenuEl) gameMenuEl.classList.remove("hidden");
+  if (startBtnEl) startBtnEl.style.display = isStart ? "block" : "none";
+  if (quitBtnEl) quitBtnEl.style.display = "block";
+}
+
+function nextStage() {
+  gameStage++;
+  
+  if (gameStage > 4) {
+      // 모든 스테이지 완료 시 코인 누적 저장
+      coin += coins;
+      displayCoin();
+      gameOver = true;
+      showMenu("모든 스테이지 완료!", false, true);
+      return;
+  }
+  
+  // 스테이지 클리어 시마다 코인 누적 저장 (중간 저장)
+  coin += coins;
+  displayCoin();
+  // 다음 스테이지를 위해 게임 내 코인은 다시 0으로 리셋
+  coins = 0;
+  
+  setupBossForStage(gameStage);
+  initBricks();
+  resetBall();
+  setBallSpeedForStage(gameStage);
+  updateUI();
+  
+  startStageTimer();
+  startBrickRowTimer();
+  
+  clearInterval(bossAttackTimer);
+  bossAttackTimer = setInterval(() => {
+      if (boss.visible && !timeStopActive) {
+          boss.spawnProjectiles(gameStage);
       }
-      
-      document.getElementById("menu-message").textContent = menuMessage;
-      document.getElementById("game-menu").classList.remove("hidden");
-
-      document.getElementById("start-button").style.display = isStart ? "block" : "none";
-      document.getElementById("restart-button").style.display = !isStart ? "block" : "none";
-      document.getElementById("quit-button").style.display = "block";
-  }
-
-  function nextStage() {
-      stage++;
-      
-      // 스테이지 4를 초과하면 게임 완료
-      if (stage > 4) {
-          gameOver = true;
-          showMenu("모든 스테이지 완료!", false, true); // 점수 표시 추가
-          return;
-      }
-      
-      // 다음 스테이지 설정
-      setupBossForStage(stage);
-      initBricks();
-      resetBall();
-      setBallSpeedForStage(stage);
-      updateUI();
-      
-      // 타이머들 재시작
-      startStageTimer();
-      startBrickRowTimer();
-      
-      // 보스 공격 타이머 재설정
-      clearInterval(bossAttackTimer);
-      bossAttackTimer = setInterval(() => {
-          if (boss.visible && !timeStopActive) {
-              boss.spawnProjectiles(stage);
-          }
-      }, boss.attackInterval);
-  }
+  }, boss.attackInterval);
+}
 
   function updateUI() {
-      document.getElementById("score").textContent = score;
-      document.getElementById("hearts").textContent = lives;
-      document.getElementById("coins").textContent = coins;
-      document.getElementById("stage").textContent = stage;
+      const scoreEl = document.getElementById("score");
+      const heartsEl = document.getElementById("hearts");
+      const coinsEl = document.getElementById("coins");
+      const stageEl = document.getElementById("stage");
+      
+      if (scoreEl) scoreEl.textContent = score;
+      if (heartsEl) heartsEl.textContent = lives;
+      if (coinsEl) coinsEl.textContent = coins;
+      if (stageEl) stageEl.textContent = gameStage;
       updateGaugeUI();
   }
 
   function resetBall() {
       ball.x = paddle.x + paddle.width / 2;
       ball.y = CANVAS_HEIGHT - PADDLE_HEIGHT - BALL_RADIUS - 10;
-      const speeds = getStageSpeed(stage);
+      const speeds = getStageSpeed(gameStage);
       ball.dx = Math.random() > 0.5 ? speeds.dx : -speeds.dx;
       ball.dy = -speeds.dy;
   }
@@ -1419,17 +1487,18 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function collectItem(item) {
-      switch (item.type) {
-          case "heart":
-              lives = Math.min(lives + 1, maxLives);
-              break;
-          case "coin":
-              coins++;
-              score += 10;
-              break;
-      }
-      updateUI();
-  }
+    switch (item.type) {
+        case "heart":
+            lives = Math.min(lives + 1, maxLives);
+            break;
+        case "coin":
+            coins++; // 게임 내 코인 증가 (0부터 시작)
+            // 전역 코인은 실시간으로 증가시키지 않고, 게임 종료/나가기/스테이지 클리어 시에만 누적
+            score += 10;
+            break;
+    }
+    updateUI();
+}
 
   function addNewBrickRow() {
       bricks.forEach(brick => {
@@ -1452,7 +1521,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
 
-  // === 충돌 감지 함수들 ===
   function checkBrickCollision() {
       for (let i = 0; i < bricks.length; i++) {
           const brick = bricks[i];
@@ -1489,49 +1557,43 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function checkPaddleCollision() {
-      // 방어형 캐릭터의 경우 방어 영역도 체크
       if (selectedCharacter === 'char4') {
           const shieldLeft = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
           const shieldRight = shieldLeft + paddle.shieldWidth;
           const shieldTop = paddle.y - (paddle.shieldHeight - paddle.height) / 2;
           const shieldBottom = shieldTop + paddle.shieldHeight;
           
-          // 방어 영역과 충돌 체크
           if (ball.y + ball.radius > shieldTop &&
               ball.y - ball.radius < shieldBottom &&
               ball.x + ball.radius > shieldLeft &&
               ball.x - ball.radius < shieldRight) {
               
-              // 플레이어 애니메이션 시작
               player.startAnimation();
               sounds.paddleHit.play();
               
-              // 방어 영역에서의 반사 계산
               const hitPos = (ball.x - shieldLeft) / paddle.shieldWidth;
               const angle = hitPos * Math.PI - Math.PI / 2;
-              const speeds = getStageSpeed(stage);
+              const speeds = getStageSpeed(gameStage);
               const targetSpeed = Math.sqrt(speeds.dx * speeds.dx + speeds.dy * speeds.dy);
               
               ball.dx = targetSpeed * Math.cos(angle);
               ball.dy = -Math.abs(targetSpeed * Math.sin(angle));
               
-              return; // 방어 영역에서 처리했으므로 일반 패들 충돌은 체크하지 않음
+              return;
           }
       }
       
-      // 일반 패들 충돌 (모든 캐릭터 공통)
       if (ball.y + ball.radius > paddle.y &&
           ball.y + ball.radius < paddle.y + paddle.height &&
           ball.x > paddle.x &&
           ball.x < paddle.x + paddle.width) {
           
-          // 플레이어 애니메이션 시작
           player.startAnimation();
           sounds.paddleHit.play();
           
           const hitPos = (ball.x - paddle.x) / paddle.width;
           const angle = hitPos * Math.PI - Math.PI / 2;
-          const speeds = getStageSpeed(stage);
+          const speeds = getStageSpeed(gameStage);
           const targetSpeed = Math.sqrt(speeds.dx * speeds.dx + speeds.dy * speeds.dy);
           
           ball.dx = targetSpeed * Math.cos(angle);
@@ -1577,15 +1639,12 @@ document.addEventListener('DOMContentLoaded', function() {
               proj.dy += proj.accel;
           }
 
-          // 화면 밖으로 나간 투사체 제거
           if (proj.y > CANVAS_HEIGHT || proj.x < 0 || proj.x > CANVAS_WIDTH) {
               projectilesToRemove.push(i);
               return;
           }
 
-          // 패들과 충돌 체크
           if (selectedCharacter === 'char4') {
-              // 방어형 캐릭터: 방어 영역과 데미지 영역 구분
               const shieldLeft = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
               const shieldRight = shieldLeft + paddle.shieldWidth;
               const damageLeft = paddle.x;
@@ -1595,21 +1654,18 @@ document.addEventListener('DOMContentLoaded', function() {
                   proj.x < shieldRight &&
                   proj.x + proj.width > shieldLeft) {
                   
-                  // 데미지 영역에 맞으면 생명 감소
                   if (proj.x < damageRight && proj.x + proj.width > damageLeft) {
                       lives = Math.max(0, lives - 1);
                       updateUI();
                       if (lives <= 0) {
                         forceEndTimeStop();
                           gameOver = true;
-                          showMenu("게임 오버", false, true); // 점수 표시 추가
+                          showMenu("게임 오버", false, true);
                       }
                   }
-                  // 어느 영역이든 투사체는 제거
                   projectilesToRemove.push(i);
               }
           } else {
-              // 일반 충돌
               if (proj.y + proj.height >= paddle.y &&
                   proj.x < paddle.x + paddle.width &&
                   proj.x + proj.width > paddle.x) {
@@ -1620,27 +1676,27 @@ document.addEventListener('DOMContentLoaded', function() {
                   if (lives <= 0) {
                       forceEndTimeStop();
                       gameOver = true;
-                      showMenu("게임 오버", false, true); // 점수 표시 추가
+                      showMenu("게임 오버", false, true);
                   }
               }
           }
       });
 
-      // 제거할 투사체들 처리
       for (let i = projectilesToRemove.length - 1; i >= 0; i--) {
           boss.projectiles.splice(projectilesToRemove[i], 1);
       }
   }
 
-  //공통 시간 정지 해제 함수
   function forceEndTimeStop() {
     if (timeStopActive) {
         timeStopActive = false;
-        document.getElementById('time-stop-overlay').classList.add('hidden');
+        const overlay = document.getElementById('time-stop-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+        }
     }
   }
 
-  //공통 시간 정지 해제 함수2
   function hideTimeStopOverlay() {
     const overlay = document.getElementById('time-stop-overlay');
     if (overlay) {
@@ -1651,39 +1707,32 @@ document.addEventListener('DOMContentLoaded', function() {
     timeStopDuration = 0;
   }
 
-  // === 그리기 함수들 ===
   function drawPaddle() {
-      // 방어형 캐릭터의 경우 방어 영역 표시
       if (selectedCharacter === 'char4') {
           const shieldX = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
           const shieldY = paddle.y - (paddle.shieldHeight - paddle.height) / 2;
           
-          // 방어 영역 (투명한 파란색)
           ctx.fillStyle = "rgba(0, 100, 255, 0.3)";
           ctx.fillRect(shieldX, shieldY, paddle.shieldWidth, paddle.shieldHeight);
           
-          // 방어 영역 테두리
           ctx.strokeStyle = "#0066FF";
           ctx.lineWidth = 2;
           ctx.strokeRect(shieldX, shieldY, paddle.shieldWidth, paddle.shieldHeight);
       }
       
-      // 플레이어 이미지 (애니메이션 포함)
       const currentImage = player.getCurrentImage();
       if (currentImage) {
-          // 전체 비율을 유지하면서 불투명하게 표시
           ctx.save();
-          ctx.globalAlpha = 1.0; // 완전 불투명
+          ctx.globalAlpha = 1.0;
           ctx.drawImage(currentImage, paddle.x, paddle.y, paddle.width, paddle.height);
           ctx.restore();
       } else {
-          // 기존 방식 (이미지 로드 실패 시) - 캐릭터별 색상 구분
-          let paddleColor = "#4CAF50"; // 기본색
+          let paddleColor = "#4CAF50";
           switch (player.characterType) {
-              case 'char1': paddleColor = "#FF5722"; break; // 공격형 - 빨간색
-              case 'char2': paddleColor = "#2196F3"; break; // 속도형 - 파란색
-              case 'char3': paddleColor = "#9C27B0"; break; // 시간형 - 보라색
-              case 'char4': paddleColor = "#4CAF50"; break; // 방어형 - 초록색
+              case 'char1': paddleColor = "#FF5722"; break;
+              case 'char2': paddleColor = "#2196F3"; break;
+              case 'char3': paddleColor = "#9C27B0"; break;
+              case 'char4': paddleColor = "#4CAF50"; break;
           }
           ctx.fillStyle = paddleColor;
           ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
@@ -1765,7 +1814,6 @@ document.addEventListener('DOMContentLoaded', function() {
           ctx.fillStyle = color;
           ctx.fillRect(proj.x, proj.y, proj.width, proj.height);
           
-          // 투사체 종류별 추가 표시
           ctx.fillStyle = "#FFF";
           ctx.font = "8px Arial";
           ctx.textAlign = "center";
@@ -1775,53 +1823,43 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 
-  // === 게임 업데이트 ===
   function update() {
       if (gameOver) return;
 
-      // 시간정지 처리
       if (timeStopActive) {
           timeStopDuration--;
-          console.log("⏳ 남은 시간정지 프레임:", timeStopDuration);
 
           if (timeStopDuration <= 0) {
-            console.log("🟩 시간 정지 종료");
               timeStopActive = false;
-              document.getElementById('time-stop-overlay').classList.add('hidden');
+              const overlay = document.getElementById('time-stop-overlay');
+              if (overlay) {
+                  overlay.classList.add('hidden');
+              }
           }
-          // 시간정지 중에도 캐릭터와 공은 움직임
       }
 
-      // 시간정지 쿨다운
       if (timeStopCooldown > 0) {
           timeStopCooldown--;
       }
 
-      // 플레이어 애니메이션 업데이트
       player.updateAnimation();
-
-      // 필살기 이펙트 업데이트
       phoenixEffect.update();
 
-      // 패들 이동
       if (leftPressed && paddle.x > 0) {
           paddle.x -= paddle.speed;
       } else if (rightPressed && paddle.x + paddle.width < CANVAS_WIDTH) {
           paddle.x += paddle.speed;
       }
 
-      // 공 이동
       ball.x += ball.dx;
       ball.y += ball.dy;
 
-      // 아이템 이동 (시간정지 중에는 멈춤)
       if (!timeStopActive) {
           items.forEach(item => {
               item.y += ITEM_FALL_SPEED;
           });
       }
 
-      // 벽 충돌
       if (ball.x - ball.radius < 0 || ball.x + ball.radius > CANVAS_WIDTH) {
           ball.dx = -ball.dx;
       }
@@ -1830,70 +1868,58 @@ document.addEventListener('DOMContentLoaded', function() {
           ball.dy = -ball.dy;
       }
 
-      // 바닥 충돌
       if (ball.y + ball.radius > CANVAS_HEIGHT) {
           lives--;
           updateUI();
 
           if (lives <= 0) {
               gameOver = true;
-              showMenu("게임 오버", false, true); // 점수 표시 추가
+              showMenu("게임 오버", false, true);
           } else {
               resetBall();
           }
       }
 
-      // 충돌 감지
       checkPaddleCollision();
       checkBrickCollision();
       checkItemCollision();
       
-      // 보스 투사체 업데이트 (시간정지 중에는 멈춤)
       if (!timeStopActive) {
           updateBossProjectiles();
       }
 
-      // 보스 충돌 체크
       if (boss.checkCollision(ball)) {
-          // 보스 처치됨
           clearInterval(stageTimerInterval);
           clearInterval(bossAttackTimer);
-          clearInterval(brickRowTimer); // 벽돌 줄 추가 타이머 정리
-          forceEndTimeStop(); // 보스 처치 시간 정지 해제
+          clearInterval(brickRowTimer);
+          forceEndTimeStop();
           
-          // 2초 후 다음 스테이지로 자동 진행
           setTimeout(() => {
               nextStage();
           }, 2000);
       }
 
-      // 벽돌이 너무 아래로 내려오면 게임 오버
       for (let i = 0; i < bricks.length; i++) {
           if (bricks[i].visible && bricks[i].y + bricks[i].height >= CANVAS_HEIGHT - PADDLE_HEIGHT - 20) {
               forceEndTimeStop();
               gameOver = true;
-              showMenu("게임 오버", false, true); // 점수 표시 추가
+              showMenu("게임 오버", false, true);
               break;
           }
       }
   }
 
-  // === 그리기 ===
   function draw() {
-      // 배경 색상으로 먼저 클리어
       ctx.fillStyle = "#222";
       ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   
-      // 배경 이미지 그리기 (선택사항)
       const bgImage = new Image();
-      bgImage.src = `background_stage_${stage}.jpg`;
+      bgImage.src = `background_stage_${gameStage}.jpg`;
       
-      // 이미지가 로드되었으면 배경으로 사용, 아니면 기본 배경색 유지
       if (bgImage.complete && bgImage.naturalWidth > 0) {
           ctx.drawImage(bgImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       }
   
-      // 게임 요소들 그리기
       drawBricks();
       drawPaddle();
       drawBall();
@@ -1901,23 +1927,20 @@ document.addEventListener('DOMContentLoaded', function() {
       boss.draw(ctx);
       drawBossProjectiles();
   
-      // 필살기 이펙트
       phoenixEffect.draw(ctx);
   
-      // UI 정보
       ctx.font = "20px Arial";
       ctx.fillStyle = "#FFF";
       ctx.textAlign = "left";
       ctx.fillText(`점수: ${score}`, 10, 30);
   
       ctx.textAlign = "center";
-      ctx.fillText(`스테이지: ${stage}`, CANVAS_WIDTH / 2, 30);
+      ctx.fillText(`스테이지: ${gameStage}`, CANVAS_WIDTH / 2, 30);
   
       ctx.textAlign = "right";
       ctx.fillText(`생명: ${lives}`, CANVAS_WIDTH - 10, 30);
       ctx.fillText(`코인: ${coins}`, CANVAS_WIDTH - 10, 60);
   
-      // 시간정지 쿨다운 표시
       if (selectedCharacter === 'char3' && timeStopCooldown > 0) {
           ctx.textAlign = "left";
           ctx.fillStyle = "#00FFFF";
@@ -1926,7 +1949,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
 
-  // === 게임 루프 ===
   function gameLoop() {
       if (!gameStarted || gameOver) return;
 
@@ -1936,19 +1958,16 @@ document.addEventListener('DOMContentLoaded', function() {
       requestAnimationFrame(gameLoop);
   }
 
-  // === 이벤트 리스너들 ===
-  document.getElementById("start-button").addEventListener("click", startGame);
-  document.getElementById("restart-button").addEventListener("click", restartGame);
-  document.getElementById("quit-button").addEventListener("click", quitGame);
+  const startButton = document.getElementById("start-button");
+  const quitButton = document.getElementById("quit-button");
+  
+  if (startButton) startButton.addEventListener("click", startGame);
+  if (quitButton) quitButton.addEventListener("click", quitGame);
 
-  // 초기화
   updateGaugeUI();
-
-  // 기본 캐릭터 설정 및 UI 초기화
   player.setCharacter(selectedCharacter);
   applyCharacterAbilities();
   updateUI();
   
-  // 게임 시작 메뉴 표시
   showMenu("게임 시작", true);
-});
+}
