@@ -996,19 +996,19 @@ class PhoenixEffect {
 // === 게임 초기화 함수 ===
 function initializeGame() {
   // 게임 상수
-  const CANVAS_WIDTH = 800;
-  const CANVAS_HEIGHT = 500;
+  const CANVAS_WIDTH = 1000;
+  const CANVAS_HEIGHT = 700;
   const PADDLE_WIDTH = 160; // 120에서 160으로 증가
   const PADDLE_HEIGHT = 70; // 40에서 60으로 증가
   const PADDLE_SPEED = 8; // 속도 줄임 (12 -> 8)
   const BALL_RADIUS = 10;
   const BRICK_ROWS = 5;
-  const BRICK_COLUMNS = 12;
-  const BRICK_WIDTH = 78;
-  const BRICK_HEIGHT = 30;
-  const BRICK_PADDING = 5;
+  const BRICK_COLUMNS = 11;
+  const BRICK_WIDTH = 85;
+  const BRICK_HEIGHT = 32;
+  const BRICK_PADDING = 4;
   const BRICK_OFFSET_TOP = 100; // 60에서 100으로 증가 (보스 높이 증가로 인해)
-  const BRICK_OFFSET_LEFT = 15;
+  const BRICK_OFFSET_LEFT = 12;
   let maxLives = maxHeart; // const에서 let으로 변경
   const ITEM_FALL_SPEED = 2;
 
@@ -1045,12 +1045,12 @@ function initializeGame() {
   let brickRowTimer = null; // 벽돌 줄 추가 타이머
 
   // 캐릭터 선택 및 레벨 시스템
-  let selectedCharacter = 'char1'; // 기본값 설정
-  let characterLevels = {
-      char1: 3, // 공격형 레벨
-      char2: 1, // 속도형 레벨
-      char3: 1, // 시간형 레벨
-      char4: 1  // 방어형 레벨
+  let gameSelectedCharacter = selectedCharacter; // 전역 selectedCharacter 변수 사용
+  let gameCharacterLevels = {
+      char1: character1_level, // 전역 character1_level 변수 사용
+      char2: character2_level, // 전역 character2_level 변수 사용
+      char3: character3_level, // 전역 character3_level 변수 사용
+      char4: character4_level  // 전역 character4_level 변수 사용
   };
   
   let characterAbilities = {
@@ -1099,32 +1099,35 @@ function initializeGame() {
   
   // 캐릭터 능력치 적용 함수
   function applyCharacterAbilities() {
-      if (!selectedCharacter) return;
-      
-      const char = characterAbilities[selectedCharacter];
-      const level = characterLevels[selectedCharacter];
-      const stats = char.getLevelStats(level);
-      
-      ball.power = stats.power;
-      paddle.speed = stats.speed;
-      
-      // 시간형 캐릭터 특수 능력
-      if (char.timeStop) {
-          // 시간정지 능력은 useTimeStop 함수에서 레벨을 참조
-      }
-      
-      // 방어형 캐릭터 특수 능력
-      if (char.shield) {
-          paddle.shieldWidth = PADDLE_WIDTH + stats.shieldSize;
-          paddle.shieldHeight = PADDLE_HEIGHT + 10;
-      }
-      
-      // UI 업데이트
-      const characterInfoEl = document.getElementById('character-info');
-      if (characterInfoEl) {
-          characterInfoEl.textContent = `${char.name}: ${stats.description}`;
-      }
-  }
+    if (!gameSelectedCharacter) return;
+    
+    const char = characterAbilities[gameSelectedCharacter];
+    const level = gameCharacterLevels[gameSelectedCharacter];
+    const stats = char.getLevelStats(level);
+    
+    ball.power = stats.power;
+    paddle.speed = stats.speed;
+    
+    // 시간형 캐릭터 특수 능력
+    if (char.timeStop) {
+        // 시간정지 능력은 useTimeStop 함수에서 레벨을 참조
+    }
+    
+    // 방어형 캐릭터 특수 능력
+    if (char.shield) {
+        paddle.shieldWidth = PADDLE_WIDTH + stats.shieldSize;
+        paddle.shieldHeight = PADDLE_HEIGHT + 10;
+    }
+    
+    // UI 업데이트
+    const characterInfoEl = document.getElementById('character-info');
+    if (characterInfoEl) {
+        characterInfoEl.textContent = `${char.name}: ${stats.description}`;
+    }
+    
+    console.log(`캐릭터 적용됨: ${char.name} (레벨 ${level})`);
+    console.log(`능력치 - 공격력: ${stats.power}, 속도: ${stats.speed}`);
+}
 
   // 시간정지 관련
   let timeStopActive = false;
@@ -1277,23 +1280,25 @@ function initializeGame() {
   }
 
   function useTimeStop() {
-      if (selectedCharacter !== 'char3' || timeStopActive || timeStopCooldown > 0) return;
-      
-      const char = characterAbilities[selectedCharacter];
-      const level = characterLevels[selectedCharacter];
-      const stats = char.getLevelStats(level);
-      
-      timeStopActive = true;
-      timeStopDuration = stats.timeStopDuration;
-      timeStopCooldown = stats.timeStopCooldown;
-      
-      boss.projectiles = [];
-      
-      const overlay = document.getElementById('time-stop-overlay');
-      if (overlay) {
-          overlay.classList.remove('hidden');
-      }
-  }
+    if (gameSelectedCharacter !== 'char3' || timeStopActive || timeStopCooldown > 0) return;
+    
+    const char = characterAbilities[gameSelectedCharacter];
+    const level = gameCharacterLevels[gameSelectedCharacter];
+    const stats = char.getLevelStats(level);
+    
+    timeStopActive = true;
+    timeStopDuration = stats.timeStopDuration;
+    timeStopCooldown = stats.timeStopCooldown;
+    
+    boss.projectiles = [];
+    
+    const overlay = document.getElementById('time-stop-overlay');
+    if (overlay) {
+        overlay.classList.remove('hidden');
+    }
+    
+    console.log(`시간정지 사용 - 지속시간: ${stats.timeStopDuration}프레임, 쿨다운: ${stats.timeStopCooldown}프레임`);
+}
 
   function useSkill() {
       if (player.skillReady) {
@@ -1312,14 +1317,28 @@ function initializeGame() {
     gameStarted = true;
     gameOver = false;
     
-    // 전역 stage 변수에서 gameStage로 설정 (village에서 선택한 스테이지 적용)
-    gameStage = stage;
-    console.log("게임 시작 - 선택된 스테이지:", gameStage);
+    // 전역 변수들에서 게임 정보 로드
+    gameStage = stage; // 전역 stage 변수에서 스테이지 정보 가져오기
+    gameSelectedCharacter = selectedCharacter; // 전역 selectedCharacter 변수에서 캐릭터 정보 가져오기
+    gameCharacterLevels = {
+        char1: character1_level,
+        char2: character2_level, 
+        char3: character3_level,
+        char4: character4_level
+    };
+    
+    console.log("게임 시작 정보:");
+    console.log("- 선택된 스테이지:", gameStage);
+    console.log("- 선택된 캐릭터:", gameSelectedCharacter);
+    console.log("- 캐릭터 레벨들:", gameCharacterLevels);
     
     score = 0;
     lives = maxLives;
-    // 게임 내 코인은 0부터 시작
     coins = 0;
+    
+    // 캐릭터 설정 및 능력치 적용
+    player.setCharacter(gameSelectedCharacter);
+    applyCharacterAbilities();
     
     setupBossForStage(gameStage);
     initBricks();
@@ -1562,31 +1581,31 @@ function nextStage() {
   }
 
   function checkPaddleCollision() {
-      if (selectedCharacter === 'char4') {
-          const shieldLeft = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
-          const shieldRight = shieldLeft + paddle.shieldWidth;
-          const shieldTop = paddle.y - (paddle.shieldHeight - paddle.height) / 2;
-          const shieldBottom = shieldTop + paddle.shieldHeight;
-          
-          if (ball.y + ball.radius > shieldTop &&
-              ball.y - ball.radius < shieldBottom &&
-              ball.x + ball.radius > shieldLeft &&
-              ball.x - ball.radius < shieldRight) {
-              
-              player.startAnimation();
-              sounds.paddleHit.play();
-              
-              const hitPos = (ball.x - shieldLeft) / paddle.shieldWidth;
-              const angle = hitPos * Math.PI - Math.PI / 2;
-              const speeds = getStageSpeed(gameStage);
-              const targetSpeed = Math.sqrt(speeds.dx * speeds.dx + speeds.dy * speeds.dy);
-              
-              ball.dx = targetSpeed * Math.cos(angle);
-              ball.dy = -Math.abs(targetSpeed * Math.sin(angle));
-              
-              return;
-          }
-      }
+    if (gameSelectedCharacter === 'char4') {
+        const shieldLeft = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
+        const shieldRight = shieldLeft + paddle.shieldWidth;
+        const shieldTop = paddle.y - (paddle.shieldHeight - paddle.height) / 2;
+        const shieldBottom = shieldTop + paddle.shieldHeight;
+        
+        if (ball.y + ball.radius > shieldTop &&
+            ball.y - ball.radius < shieldBottom &&
+            ball.x + ball.radius > shieldLeft &&
+            ball.x - ball.radius < shieldRight) {
+            
+            player.startAnimation();
+            sounds.paddleHit.play();
+            
+            const hitPos = (ball.x - shieldLeft) / paddle.shieldWidth;
+            const angle = hitPos * Math.PI - Math.PI / 2;
+            const speeds = getStageSpeed(gameStage);
+            const targetSpeed = Math.sqrt(speeds.dx * speeds.dx + speeds.dy * speeds.dy);
+            
+            ball.dx = targetSpeed * Math.cos(angle);
+            ball.dy = -Math.abs(targetSpeed * Math.sin(angle));
+            
+            return;
+        }
+    }
       
       if (ball.y + ball.radius > paddle.y &&
           ball.y + ball.radius < paddle.y + paddle.height &&
@@ -1649,27 +1668,27 @@ function nextStage() {
               return;
           }
 
-          if (selectedCharacter === 'char4') {
-              const shieldLeft = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
-              const shieldRight = shieldLeft + paddle.shieldWidth;
-              const damageLeft = paddle.x;
-              const damageRight = paddle.x + paddle.width;
-              
-              if (proj.y + proj.height >= paddle.y &&
-                  proj.x < shieldRight &&
-                  proj.x + proj.width > shieldLeft) {
-                  
-                  if (proj.x < damageRight && proj.x + proj.width > damageLeft) {
-                      lives = Math.max(0, lives - 1);
-                      updateUI();
-                      if (lives <= 0) {
-                        forceEndTimeStop();
-                          gameOver = true;
-                          showMenu("게임 오버", false, true);
-                      }
-                  }
-                  projectilesToRemove.push(i);
-              }
+          if (gameSelectedCharacter === 'char4') {
+            const shieldLeft = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
+            const shieldRight = shieldLeft + paddle.shieldWidth;
+            const damageLeft = paddle.x;
+            const damageRight = paddle.x + paddle.width;
+            
+            if (proj.y + proj.height >= paddle.y &&
+                proj.x < shieldRight &&
+                proj.x + proj.width > shieldLeft) {
+                
+                if (proj.x < damageRight && proj.x + proj.width > damageLeft) {
+                    lives = Math.max(0, lives - 1);
+                    updateUI();
+                    if (lives <= 0) {
+                      forceEndTimeStop();
+                        gameOver = true;
+                        showMenu("게임 오버", false, true);
+                    }
+                }
+                projectilesToRemove.push(i);
+            }
           } else {
               if (proj.y + proj.height >= paddle.y &&
                   proj.x < paddle.x + paddle.width &&
@@ -1713,36 +1732,36 @@ function nextStage() {
   }
 
   function drawPaddle() {
-      if (selectedCharacter === 'char4') {
-          const shieldX = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
-          const shieldY = paddle.y - (paddle.shieldHeight - paddle.height) / 2;
-          
-          ctx.fillStyle = "rgba(0, 100, 255, 0.3)";
-          ctx.fillRect(shieldX, shieldY, paddle.shieldWidth, paddle.shieldHeight);
-          
-          ctx.strokeStyle = "#0066FF";
-          ctx.lineWidth = 2;
-          ctx.strokeRect(shieldX, shieldY, paddle.shieldWidth, paddle.shieldHeight);
-      }
-      
-      const currentImage = player.getCurrentImage();
-      if (currentImage) {
-          ctx.save();
-          ctx.globalAlpha = 1.0;
-          ctx.drawImage(currentImage, paddle.x, paddle.y, paddle.width, paddle.height);
-          ctx.restore();
-      } else {
-          let paddleColor = "#4CAF50";
-          switch (player.characterType) {
-              case 'char1': paddleColor = "#FF5722"; break;
-              case 'char2': paddleColor = "#2196F3"; break;
-              case 'char3': paddleColor = "#9C27B0"; break;
-              case 'char4': paddleColor = "#4CAF50"; break;
-          }
-          ctx.fillStyle = paddleColor;
-          ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-      }
-  }
+    if (gameSelectedCharacter === 'char4') {
+        const shieldX = paddle.x - (paddle.shieldWidth - paddle.width) / 2;
+        const shieldY = paddle.y - (paddle.shieldHeight - paddle.height) / 2;
+        
+        ctx.fillStyle = "rgba(0, 100, 255, 0.3)";
+        ctx.fillRect(shieldX, shieldY, paddle.shieldWidth, paddle.shieldHeight);
+        
+        ctx.strokeStyle = "#0066FF";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(shieldX, shieldY, paddle.shieldWidth, paddle.shieldHeight);
+    }
+    
+    const currentImage = player.getCurrentImage();
+    if (currentImage) {
+        ctx.save();
+        ctx.globalAlpha = 1.0;
+        ctx.drawImage(currentImage, paddle.x, paddle.y, paddle.width, paddle.height);
+        ctx.restore();
+    } else {
+        let paddleColor = "#4CAF50";
+        switch (player.characterType) {
+            case 'char1': paddleColor = "#FF5722"; break;
+            case 'char2': paddleColor = "#2196F3"; break;
+            case 'char3': paddleColor = "#9C27B0"; break;
+            case 'char4': paddleColor = "#4CAF50"; break;
+        }
+        ctx.fillStyle = paddleColor;
+        ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    }
+}
 
   function drawBall() {
       ctx.beginPath();
@@ -1970,7 +1989,7 @@ function nextStage() {
   if (quitButton) quitButton.addEventListener("click", quitGame);
 
   updateGaugeUI();
-  player.setCharacter(selectedCharacter);
+  player.setCharacter(gameSelectedCharacter);
   applyCharacterAbilities();
   updateUI();
   
