@@ -1,6 +1,6 @@
 let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
 let maxHeart = 2;
-
+let selectedCharacter = 'char1';
 
 /*일단 전역 변수로 저장 하기 전에 해당 값들로 사용한다는걸 알려드리려고 주석으로 저장합니다다
 let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
@@ -118,6 +118,7 @@ function setupCharacterModalEvents() {
       const stat1 = info.querySelectorAll('.stat-line')[0].innerText;
       const stat2 = info.querySelectorAll('.stat-line')[1].innerText;
       const imgEl = info.querySelector('.character-image-small').getAttribute('src');
+      const characterId = info.dataset.character;  // 예: 'char2'
 
       nameEl.textContent = name;
       stat1El.textContent = stat1;
@@ -136,6 +137,10 @@ function setupCharacterModalEvents() {
           leftCard.querySelector('.character-image').src = imgEl;
           leftCard.querySelector('.now-character-name').textContent = name;
           currentCharacter = name;
+
+          selectedCharacter = characterId;
+          console.log("선택된 캐릭터 ID:", selectedCharacter);
+
 
           // 기존 캐릭터 이미지 제거 (필요하다면 먼저 이 작업 진행)
           const rightDisplay = document.getElementById('villageRightDisplay');
