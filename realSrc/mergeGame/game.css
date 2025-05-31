@@ -207,3 +207,21 @@ body {
     color: #00FFFF;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
+
+/*아이템 아이콘 표시*/
+#item-icons {
+  position: absolute;
+  top: 50%;
+  left: -100px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100;
+}
+
+#item-icons img {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+}

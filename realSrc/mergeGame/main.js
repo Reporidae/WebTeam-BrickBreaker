@@ -1310,7 +1310,14 @@ function initializeGame() {
       }
   }
 
+  // === 전역 변수 추가 === ✅ 
+let shieldAvailable = false; // 보호막 아이템 상태 저장
+let vacuumReady = false; // 청소기 아이템 사용 여부
+
   function startGame() {
+    // ✅ 게임 초기화 후 아이콘 표시
+    renderItemIcons();
+
     sounds.bgm1.play();
     hideTimeStopOverlay();
     
@@ -1368,8 +1375,77 @@ function initializeGame() {
     }, boss.attackInterval);
     
     requestAnimationFrame(gameLoop);
+
+    // ✅  아이템 효과 적용 시작
+    if (itemPurchased[0]) {
+      lives = Math.min(maxLives + 1, 5);
+    }
+    if (itemPurchased[1]) {
+      vacuumReady = true; // 청소기 아이템 준비됨
+      /*
+      let maxY = Math.max(...bricks.map(b => b.y));
+      bricks.forEach(b => {
+        if (b.y === maxY && b.visible) {
+          b.visible = false;
+        }
+      });*/
+
+    }
+    if (itemPurchased[2]) {
+      shieldAvailable = true;
+    }
+    if (itemPurchased[3]) {
+      stageTimer += 20;
+      updateTimerDisplay();
+    }
+    // ✅ 아이템 효과 적용 끝
+
 }
 
+// ✅ === D 키로 아이템 사용 처리 ===
+document.addEventListener("keyup", function (e) {
+  if (e.keyCode === 68) { // D 키
+    if (vacuumReady) {
+      let maxY = Math.max(...bricks.map(b => b.y));
+      bricks.forEach(b => {
+        if (b.y === maxY && b.visible) {
+          b.visible = false;
+        }
+      });
+      vacuumReady = false;
+      itemPurchased[3] = false; // 아이템 사용 완료 처리
+      renderItemIcons(); // 아이콘 갱신
+    }
+  }
+});
+// ✅ 아이템 아이콘 표시 함수
+  function renderItemIcons() {
+    const iconContainer = document.getElementById("item-icons");
+    if (!iconContainer) return;
+
+    iconContainer.innerHTML = ""; // 초기화
+
+    const itemIcons = [
+      { index: 0, src: "itemIcon_img1.png", alt: "체력 강화" },
+      { index: 1, src: "itemIcon_img2.png", alt: "보호막" },
+      { index: 2, src: "itemIcon_img3.png", alt: "시간 추가" },
+      { index: 3, src: "itemIcon_img4.png", alt: "청소기" }
+    ];
+
+    itemIcons.forEach(item => {
+      if (itemPurchased[item.index]) {
+        const img = document.createElement("img");
+        img.src = item.src;
+        img.alt = item.alt;
+        img.title = item.alt;
+        img.style.width = "40px";
+        img.style.height = "40px";
+        img.style.marginBottom = "10px";
+        iconContainer.appendChild(img);
+      }
+    });
+  }
+  
   function quitGame() {
     gameStarted = false;
     gameOver = false;
