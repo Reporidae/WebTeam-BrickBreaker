@@ -22,7 +22,7 @@ background-image: url("all_background.jpg");
     padding-left: 10%;
     padding-top: 25px;
 }
-#villageLeftDisplay {
+/* #villageLeftDisplay {
     float: left;
     width: 45%;
     height: 650px;
@@ -32,24 +32,35 @@ background-image: url("all_background.jpg");
     display: flex;
     align-items: center;
     justify-content: center;
-}
+} */
 
-/* background.jpg를 절대 위치로 꽉 채움 */
-#villageLeftDisplay img.stage-image:first-child {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;  /* 영역 꽉 채우면서 비율 유지 */
-    z-index: 1;
-}
-
-/* stage1.png는 원래 크기, 부모 중앙에 배치 */
-#villageLeftDisplay img.stage-image:last-child {
-    position: relative;  /* absolute 말고 relative */
-    z-index: 2;
-    max-width: 100% ;   /* 크기 제한 없음 */
+/* stage1.png 원래 크기 유지하며 부모 중앙 배치 */
+/* #villageLeftDisplay img.stage-image {
+    position: static;
+    max-width: 100%;
     max-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 2;
+} */
+
+#villageLeftDisplay {
+  float: left;
+  width: 45%;
+  height: 650px;
+  background-color: #9E7540;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#villageLeftDisplay img.stage-image {
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* 비율 무시하고 가득 채움 */
+  display: block;
 }
 
 
@@ -73,18 +84,6 @@ background-image: url("all_background.jpg");
     object-fit: cover;
     z-index: 1;
 }
-/* #villageRightDisplay img.stage-image:last-child {
-    position: relative;  
-    z-index: 2;
-    max-width: 100% ;  
-}
-#village-character {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 200px;
-  height: 300px;
-} */
 #village-character {
   position: absolute !important;
   bottom: 0;
@@ -127,4 +126,28 @@ background-image: url("all_background.jpg");
 .shop-button:hover {
 	background-color: #ddd;
 }
+/******************************************************/
+/* 클릭 가능한 영역 hotspot 스타일 */
+
+.hotspot {
+  position: absolute;
+  width: 28%;
+  height: 31%;
+  background-color: rgba(0, 0, 0, 0);  /* 거의 투명 */
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 4;
+  transition: background-color 0.3s;
+  pointer-events: auto;  /* 클릭은 가능 */
+}
+
+.hotspot:hover {
+  background-image: url("stage_badge.png");
+
+  background-position: center;    /* 가운데 정렬 */
+  background-repeat: no-repeat;   /* 반복 안 함 */
+  background-color: transparent;  /* 필요 시 배경색 제거 */
+  background-size: 100% 100%;
+}
+
 
