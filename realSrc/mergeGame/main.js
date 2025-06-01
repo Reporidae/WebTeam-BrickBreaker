@@ -45,6 +45,10 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // 게임 초기화 함수들 추가
   initializeGame();
+
+  storyBoard();
+  storyContent.classList.add('fade-in');
+
 });
 
 let previousScreen = null;  // 이전에 보였던 화면 저장
@@ -56,6 +60,71 @@ let character1_level = 1;
 let character2_level = 1;
 let character3_level = 1;
 let character4_level = 1; //캐릭터 4명의 레벨 정보 -> 레벨이 0이라는 건 캐릭터를 사지 않았다는 말. 구매 후 바로 1레벨로 변경하기
+
+// 스토리 데이터
+const storyScenes = [
+    {
+        image: 'stage1.png',
+        text: '어느 날, 마을에 정체불명의 괴물이 나타났다...'
+    },
+    {
+        image: 'qrslhupr.png',
+        text: '모두가 공포에 떨고 있을 때, 한 영웅이 나타났다.'
+    },
+    {
+        image: 'story3.png',
+        text: '이제, 마을을 구하기 위한 여정이 시작된다...'
+    }
+];
+
+let currentSceneIndex = 0;
+
+function storyBoard(){
+
+  const overlay = document.getElementById('storyOverlay');
+    const storyImage = document.getElementById('storyImage');
+    const storyText = document.getElementById('storyText');
+    const nextBtn = document.getElementById('nextStoryBtn');
+
+    nextBtn.addEventListener('click', () => {
+    const storyContent = document.querySelector('.story-content');
+
+    // 현재 장면을 페이드 아웃
+    storyContent.classList.remove('fade-in');
+    storyContent.classList.add('fade-out');
+
+    // 애니메이션이 끝나면 다음 장면으로 변경
+    storyContent.addEventListener('animationend', function handleFadeOut() {
+        storyContent.removeEventListener('animationend', handleFadeOut);
+
+        currentSceneIndex++;
+
+        if (currentSceneIndex < storyScenes.length) {
+            storyImage.src = storyScenes[currentSceneIndex].image;
+            storyText.textContent = storyScenes[currentSceneIndex].text;
+
+            // 페이드 인으로 새 장면 보여주기
+            storyContent.classList.remove('fade-out');
+            storyContent.classList.add('fade-in');
+        } else {
+            // 마지막 장면이면 오버레이 제거 + 메인 게임 화면 보여주기
+            const overlay = document.getElementById('storyOverlay');
+            overlay.classList.add('fade-out');
+            overlay.addEventListener('animationend', () => {
+                overlay.style.display = 'none';
+                document.querySelector('.village').style.display = 'block';
+            }, { once: true });
+        }
+    });
+});
+
+    // 처음에는 스토리 보여주기 (다른 화면은 숨기기)
+    overlay.style.display = 'flex';
+    document.querySelector('.village').style.display = 'none';
+    document.querySelector('.main-game').style.display = 'none';
+    document.querySelector('.itemShop').style.display = 'none';
+}
+
 
 function chageStageNum() {
   const hotspots = document.querySelectorAll('.hotspot');
