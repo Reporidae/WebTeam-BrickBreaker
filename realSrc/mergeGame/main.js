@@ -65,15 +65,58 @@ let character4_level = 1; //캐릭터 4명의 레벨 정보 -> 레벨이 0이라
 const storyScenes = [
     {
         image: 'stage1.png',
-        text: '어느 날, 마을에 정체불명의 괴물이 나타났다...'
+        text: `도서관, 평소처럼 조용한 오후.<br>
+        책을 고르던 네 명의 학생은 먼지가 뿌옇게 쌓인 아주 낡은 책 한 권을 발견했다.`
     },
     {
         image: 'qrslhupr.png',
-        text: '모두가 공포에 떨고 있을 때, 한 영웅이 나타났다.'
+        text: `그 책은 제목도 없고 표지도 찢겨 있었지만<br>
+        안에는 낡은 손그림 지도가 끼워져 있었다.<br>
+        지도 한 곳에는 붉은 X 표시가 그려져 있었고…`
     },
     {
         image: 'story3.png',
-        text: '이제, 마을을 구하기 위한 여정이 시작된다...'
+        text: `“이건 뭔가 숨겨진 장소 아냐?”<br>
+        호기심이 동한 주인공1은 책을 펼쳐 내용을 확인해보기로 한다.`
+    },
+    {
+        image: 'stage1.png',
+        text: `그 순간—<br>
+        책장이 바람에 휘날리며 책장 뒤 벽이 열리고<br>
+        순간적인 빛과 함께 네 사람은 그 안으로 빨려 들어간다.`
+    },
+    {
+        image: 'qrslhupr.png',
+        text: `눈을 떠보니,<br>
+        그들은 익숙한 도서관이 아닌<br>
+        어딘가 이상한… 조용하고 오래된 마을에 와 있었다.`
+    },
+    {
+        image: 'story3.png',
+        text: `놀란 마음에 주인공들은 다시 책을 펼쳐본다.
+        책 속 한 페이지에는 손글씨로 이렇게 적혀 있다.`
+    },
+    {
+        image: 'stage1.png',
+        text: `“다시 돌아가고 싶다면
+        이 마을 사람들에게 해답을 얻어라.”`
+    },
+    {
+        image: 'qrslhupr.png',
+        text: `“돌아갈 수 있는 방법이 있다는 거네…”<br>
+        그들은 책을 덮고,<br> 
+        각자 마을 안으로 걸어 들어간다.`
+    },
+    {
+        image: 'story3.png',
+        text: `마을 사람들은 모두 어딘가 어색하고,<br>
+        누군가는 아무 말도 하지 않으며,<br>
+        누군가는 무언가를 숨기는 듯 행동한다.`
+    },
+    {
+        image: 'story3.png',
+        text: `현실로 돌아갈 단서는 이 마을 어딘가에 있다.<br>
+        그리고 그 단서는 사람의 말 속, 혹은 무너뜨려야 할 벽 속에 숨겨져 있다.`
     }
 ];
 
@@ -101,7 +144,7 @@ function storyBoard(){
 
         if (currentSceneIndex < storyScenes.length) {
             storyImage.src = storyScenes[currentSceneIndex].image;
-            storyText.textContent = storyScenes[currentSceneIndex].text;
+            storyText.innerHTML = storyScenes[currentSceneIndex].text;
 
             // 페이드 인으로 새 장면 보여주기
             storyContent.classList.remove('fade-out');
