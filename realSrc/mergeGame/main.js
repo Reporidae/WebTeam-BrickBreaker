@@ -1631,6 +1631,7 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     if (itemPurchased[0]) {
       maxLives += 1; // 실제 최대 체력 증가
       lives = Math.min(lives + 1, maxLives);
+      updateUI();
     }
     if (itemPurchased[1]) {
       vacuumReady = true;
