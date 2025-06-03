@@ -1,5 +1,5 @@
 let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
-let maxHeart = 2;
+let maxHeart = 50;
 let selectedCharacter = 'char1';
 
 /*일단 전역 변수로 저장 하기 전에 해당 값들로 사용한다는걸 알려드리려고 주석으로 저장합니다다
@@ -123,13 +123,62 @@ const storyScenes = [
 let currentSceneIndex = 0;
 
 function storyBoard(){
-
   const overlay = document.getElementById('storyOverlay');
-    const storyImage = document.getElementById('storyImage');
-    const storyText = document.getElementById('storyText');
-    const nextBtn = document.getElementById('nextStoryBtn');
+  const storyImage = document.getElementById('storyImage');
+  const storyText = document.getElementById('storyText');
+  const nextBtn = document.getElementById('nextStoryBtn');
+  
+  // 스킵 버튼 생성 및 추가
+  let skipBtn = document.getElementById('skipStoryBtn');
+  if (!skipBtn) {
+    skipBtn = document.createElement('button');
+    skipBtn.id = 'skipStoryBtn';
+    skipBtn.textContent = 'Skip Story';
+    skipBtn.style.cssText = `
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: 2px solid white;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 1001;
+      transition: background-color 0.3s;
+    `;
+    
+    // 호버 효과
+    skipBtn.addEventListener('mouseenter', () => {
+      skipBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+    });
+    skipBtn.addEventListener('mouseleave', () => {
+      skipBtn.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    });
+    
+    // 스킵 기능
+    skipBtn.addEventListener('click', skipStory);
+    
+    overlay.appendChild(skipBtn);
+  }
 
-    nextBtn.addEventListener('click', () => {
+  // 스킵 함수
+  function skipStory() {
+    const storyContent = document.querySelector('.story-content');
+    storyContent.classList.remove('fade-in');
+    storyContent.classList.add('fade-out');
+    
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      overlay.addEventListener('animationend', () => {
+        overlay.style.display = 'none';
+        document.querySelector('.village').style.display = 'block';
+      }, { once: true });
+    }, 300);
+  }
+
+  nextBtn.addEventListener('click', () => {
     const storyContent = document.querySelector('.story-content');
 
     // 현재 장면을 페이드 아웃
@@ -159,13 +208,13 @@ function storyBoard(){
             }, { once: true });
         }
     });
-});
+  });
 
-    // 처음에는 스토리 보여주기 (다른 화면은 숨기기)
-    overlay.style.display = 'flex';
-    document.querySelector('.village').style.display = 'none';
-    document.querySelector('.main-game').style.display = 'none';
-    document.querySelector('.itemShop').style.display = 'none';
+  // 처음에는 스토리 보여주기 (다른 화면은 숨기기)
+  overlay.style.display = 'flex';
+  document.querySelector('.village').style.display = 'none';
+  document.querySelector('.main-game').style.display = 'none';
+  document.querySelector('.itemShop').style.display = 'none';
 }
 
 
@@ -722,20 +771,24 @@ function characterLevelUp() {
 
     let img = selectedWrapper.querySelector("img");
     let src = img.src;
-    let level, name;
+    let level, name, characterId;
 
     if (src.includes("player.png")) {
       level = character1_level;
       name = "OOOOO";
+      characterId = 'char1';
     } else if (src.includes("player_speed.png")) {
       level = character2_level;
       name = "PPPPP";
+      characterId = 'char2';
     } else if (src.includes("player_time.png")) {
       level = character3_level;
       name = "MMMMM";
+      characterId = 'char3';
     } else if (src.includes("player_shield.png")) {
       level = character4_level;
       name = "NNNNN";
+      characterId = 'char4';
     } else {
       alert("캐릭터 이미지를 인식하지 못했습니다.");
       return;
@@ -758,13 +811,34 @@ function characterLevelUp() {
       coin -= cost;
       level++;
 
-      if (src.includes("player.png")) character1_level = level;
-      else if (src.includes("player_speed.png")) character2_level = level;
-      else if (src.includes("player_time.png")) character3_level = level;
-      else if (src.includes("player_shield.png")) character4_level = level;
+      // 전역 변수 업데이트
+      if (src.includes("player.png")) {
+        character1_level = level;
+      } else if (src.includes("player_speed.png")) {
+        character2_level = level;
+      } else if (src.includes("player_time.png")) {
+        character3_level = level;
+      } else if (src.includes("player_shield.png")) {
+        character4_level = level;
+      }
 
+      // UI 업데이트
       const levelText = selectedWrapper.querySelector('.characterLevel');
       levelText.innerText = `${name}[Lv.${level}]`;
+      
+      // 코인 표시 업데이트
+      displayCoin();
+      
+      // 현재 선택된 캐릭터와 레벨업한 캐릭터가 같다면 즉시 능력치 적용
+      if (selectedCharacter === characterId) {
+        console.log(`현재 선택 캐릭터(${characterId})의 레벨이 ${level}로 업그레이드되었습니다.`);
+        // 게임이 실행 중이라면 능력치를 즉시 적용할 수 있도록 이벤트 발생
+        if (typeof applyCharacterAbilities === 'function') {
+          applyCharacterAbilities();
+        }
+      }
+      
+      alert(`${name}이(가) Lv.${level}로 레벨업되었습니다!`);
     }
   });
 }
@@ -1230,6 +1304,14 @@ function initializeGame() {
   function applyCharacterAbilities() {
     if (!gameSelectedCharacter) return;
     
+    // ===== 최신 캐릭터 레벨 정보 실시간 업데이트 =====
+    gameCharacterLevels = {
+        char1: character1_level,
+        char2: character2_level, 
+        char3: character3_level,
+        char4: character4_level
+    };
+    
     const char = characterAbilities[gameSelectedCharacter];
     const level = gameCharacterLevels[gameSelectedCharacter];
     const stats = char.getLevelStats(level);
@@ -1254,9 +1336,17 @@ function initializeGame() {
         characterInfoEl.textContent = `${char.name}: ${stats.description}`;
     }
     
-    console.log(`캐릭터 적용됨: ${char.name} (레벨 ${level})`);
+    console.log(`=== 캐릭터 능력치 적용 ===`);
+    console.log(`캐릭터: ${char.name} (ID: ${gameSelectedCharacter})`);
+    console.log(`레벨: ${level}`);
     console.log(`능력치 - 공격력: ${stats.power}, 속도: ${stats.speed}`);
-}
+    if (char.shield) {
+        console.log(`방어영역 크기: ${stats.shieldSize}`);
+    }
+    if (char.timeStop) {
+        console.log(`시간정지 지속시간: ${stats.timeStopDuration}프레임`);
+    }
+  }
 
   // 시간정지 관련
   let timeStopActive = false;
@@ -1411,9 +1501,11 @@ function initializeGame() {
   function useTimeStop() {
     if (gameSelectedCharacter !== 'char3' || timeStopActive || timeStopCooldown > 0) return;
     
+    // ===== 최신 캐릭터 레벨 정보 실시간 반영 =====
+    const currentLevel = character3_level; // 전역 변수에서 최신 레벨 가져오기
+    
     const char = characterAbilities[gameSelectedCharacter];
-    const level = gameCharacterLevels[gameSelectedCharacter];
-    const stats = char.getLevelStats(level);
+    const stats = char.getLevelStats(currentLevel);
     
     timeStopActive = true;
     timeStopDuration = stats.timeStopDuration;
@@ -1426,8 +1518,11 @@ function initializeGame() {
         overlay.classList.remove('hidden');
     }
     
-    console.log(`시간정지 사용 - 지속시간: ${stats.timeStopDuration}프레임, 쿨다운: ${stats.timeStopCooldown}프레임`);
-}
+    console.log(`=== 시간정지 사용 ===`);
+    console.log(`캐릭터 레벨: ${currentLevel}`);
+    console.log(`지속시간: ${stats.timeStopDuration}프레임 (${(stats.timeStopDuration/60).toFixed(1)}초)`);
+    console.log(`쿨다운: ${stats.timeStopCooldown}프레임 (${(stats.timeStopCooldown/60).toFixed(1)}초)`);
+  }
 
   function useSkill() {
       if (player.skillReady) {
@@ -1456,29 +1551,29 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
 
 
   function startGame() {
-    // ✅ 게임 초기화 후 아이콘 표시
-    //renderItemIcons();
-
     sounds.bgm1.play();
     hideTimeStopOverlay();
     
     gameStarted = true;
     gameOver = false;
     
-    // 전역 변수들에서 게임 정보 로드
+    // ===== 최신 전역 변수들에서 게임 정보 로드 =====
     gameStage = stage; // 전역 stage 변수에서 스테이지 정보 가져오기
     gameSelectedCharacter = selectedCharacter; // 전역 selectedCharacter 변수에서 캐릭터 정보 가져오기
+    
+    // ===== 최신 캐릭터 레벨 정보 실시간 로드 =====
     gameCharacterLevels = {
-        char1: character1_level,
-        char2: character2_level, 
-        char3: character3_level,
-        char4: character4_level
+        char1: character1_level, // 전역 character1_level 변수에서 최신 레벨 가져오기
+        char2: character2_level, // 전역 character2_level 변수에서 최신 레벨 가져오기
+        char3: character3_level, // 전역 character3_level 변수에서 최신 레벨 가져오기
+        char4: character4_level  // 전역 character4_level 변수에서 최신 레벨 가져오기
     };
     
-    console.log("게임 시작 정보:");
+    console.log("=== 게임 시작 정보 ===");
     console.log("- 선택된 스테이지:", gameStage);
     console.log("- 선택된 캐릭터:", gameSelectedCharacter);
-    console.log("- 캐릭터 레벨들:", gameCharacterLevels);
+    console.log("- 현재 캐릭터 레벨들:", gameCharacterLevels);
+    console.log("- 선택된 캐릭터의 레벨:", gameCharacterLevels[gameSelectedCharacter]);
     
     score = 0;
     lives = maxLives;
@@ -1501,7 +1596,7 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     timeStopActive = false;
     timeStopCooldown = 0;
     timeStopDuration = 0;
-
+  
     const gameMenu = document.getElementById("game-menu");
     if (gameMenu) {
         gameMenu.classList.add("hidden");
@@ -1516,14 +1611,14 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     }, boss.attackInterval);
     
     requestAnimationFrame(gameLoop);
-
-    // ✅  아이템 효과 적용 시작
+  
+    // 아이템 효과 적용
     if (itemPurchased[0]) {
       lives = Math.min(maxLives + 1, 5);
     }
     if (itemPurchased[1]) {
-      vacuumReady = true; // 청소기 아이템 준비됨
-      updateVacuumIconDisplay(); // ✅ 아이콘 표시 갱신
+      vacuumReady = true;
+      updateVacuumIconDisplay();
     }
     if (itemPurchased[2]) {
       shieldAvailable = true;
@@ -1532,9 +1627,7 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
       stageTimer += 20;
       updateTimerDisplay();
     }
-    // ✅ 아이템 효과 적용 끝
-
-}
+  }
 
 // ✅ === D 키로 아이템 사용 처리 ===
 document.addEventListener("keyup", function (e) {
