@@ -42,12 +42,12 @@ window.addEventListener('DOMContentLoaded', () => {
   abilityShop_CharacterPopUp();
   characterLevelUp();
   chageStageNum();
+  clickStageNum();
   
   // 게임 초기화 함수들 추가
   initializeGame();
 
   storyBoard();
-  storyContent.classList.add('fade-in');
 
 });
 
@@ -234,6 +234,20 @@ function chageStageNum() {
       }
     });
   });
+}
+
+function clickStageNum(){
+  const hotspots = document.querySelectorAll('.hotspot');
+
+    hotspots.forEach(hotspot => {
+      hotspot.addEventListener('click', () => {
+        // 다른 모든 핫스팟에서 active 제거
+        hotspots.forEach(h => h.classList.remove('active'));
+
+        // 현재 클릭된 것에 active 추가
+        hotspot.classList.add('active');
+      });
+    });
 }
 
 function showScreen(screenId) {
