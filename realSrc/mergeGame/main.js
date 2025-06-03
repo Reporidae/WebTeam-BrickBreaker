@@ -1629,23 +1629,23 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
   
     // 아이템 효과 적용
     if (itemPurchased[0]) {
-      maxLives += 2; // 실제 최대 체력 증가
-      lives = Math.min(lives + 2, maxLives);
+      maxLives += 1; // 실제 최대 체력 증가
+      lives = Math.min(lives + 1, maxLives);
     }
     if (itemPurchased[1]) {
       vacuumReady = true;
       updateVacuumIconDisplay();
     }
     if (itemPurchased[2]) {
-      shieldAvailable = true;
-    }
-    if (itemPurchased[3]) {
       stageTimer += 20;
       updateTimerDisplay();
     }
+    if (itemPurchased[3]) {
+      boss.health = Math.max(0, boss.health - 5);  // 보스 체력 5 감소
+    }
+    
   }
 
-  updateUI();
 
 // ✅ === D 키로 아이템 사용 처리 ===
 document.addEventListener("keyup", function (e) {
@@ -1665,35 +1665,7 @@ document.addEventListener("keyup", function (e) {
     }
   }
 });
-/*
-// ✅ 아이템 아이콘 표시 함수
-  function renderItemIcons() {
-    const iconContainer = document.getElementById("item-icons");
-    if (!iconContainer) return;
 
-    iconContainer.innerHTML = ""; // 초기화
-
-    const itemIcons = [
-      { index: 0, src: "itemIcon_img1.png", alt: "체력 강화" },
-      { index: 1, src: "itemIcon_img2.png", alt: "보호막" },
-      { index: 2, src: "itemIcon_img3.png", alt: "시간 추가" },
-      { index: 3, src: "itemIcon_img4.png", alt: "청소기" }
-    ];
-
-    itemIcons.forEach(item => {
-      if (itemPurchased[item.index]) {
-        const img = document.createElement("img");
-        img.src = item.src;
-        img.alt = item.alt;
-        img.title = item.alt;
-        img.style.width = "40px";
-        img.style.height = "40px";
-        img.style.marginBottom = "10px";
-        iconContainer.appendChild(img);
-      }
-    });
-  }
-*/
   function quitGame() {
     gameStarted = false;
     gameOver = false;
