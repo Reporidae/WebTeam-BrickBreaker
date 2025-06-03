@@ -880,7 +880,8 @@ const sounds = {
   brickHit: new Audio("../../assets/sounds/brick_hit.mp3"),
   bossHit: new Audio("../../assets/sounds/boss_hit.mp3"),
   skill1: new Audio("../../assets/sounds/skill1.mp3"),
-  bgm1: new Audio("../../assets/music/bgm1.mp3")
+  bgm1: new Audio("../../assets/music/bgm1.mp3"),
+  vacuum: new Audio("../../assets/sounds/vacuum_01.mp3")
 };
 sounds.bgm1.loop = true;
 
@@ -1628,7 +1629,8 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
   
     // 아이템 효과 적용
     if (itemPurchased[0]) {
-      lives = Math.min(maxLives + 1, 5);
+      maxLives += 2; // 실제 최대 체력 증가
+      lives = Math.min(lives + 2, maxLives);
     }
     if (itemPurchased[1]) {
       vacuumReady = true;
@@ -1643,10 +1645,13 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     }
   }
 
+  updateUI();
+
 // ✅ === D 키로 아이템 사용 처리 ===
 document.addEventListener("keyup", function (e) {
   if (e.keyCode === 68) { // D 키
     if (vacuumReady) {
+       if (sounds.vacuum) sounds.vacuum.play();
       let maxY = Math.max(...bricks.map(b => b.y));
       bricks.forEach(b => {
         if (b.y === maxY && b.visible) {
