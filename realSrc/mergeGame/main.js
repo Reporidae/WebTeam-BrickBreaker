@@ -676,6 +676,9 @@ function abilityShop_CharacterPopUp(){
   let leftUpperWrapper2 = document.querySelector('.abilityShop #leftUpperWrapper2');
   let leftUpperWrapper3 = document.querySelector('.abilityShop #leftUpperWrapper3');
   let leftUpperWrapper4 = document.querySelector('.abilityShop #leftUpperWrapper4');
+  let descriptionPopUp1 = document.querySelector('.abilityShop #descriptionPopUp1');
+  let descriptionPopUp2 = document.querySelector('.abilityShop #descriptionPopUp2');
+  let descriptionPopUp3 = document.querySelector('.abilityShop #descriptionPopUp3');
   let selectedWrapper;
 
   characterButton.addEventListener("click", ()=>{
@@ -751,14 +754,24 @@ function abilityShop_CharacterPopUp(){
     if(selectedIndex==2){
       leftUpperWrapper2.style.display = "block";
       characterPopUp.style.display = "none";
+      descriptionPopUp1.innerHTML = "체육교육과 출신인 PP는 항상 계주 마지막 주자였다. 날렵한 몸과 정확한 반사신경은 전투에서도 그대로 이어진다. 근접전을 유리하게 이끌 수 있다.";
+      descriptionPopUp2.innerHTML = "신중하지는 않지만 망설임도 없다. 즉흥적으로 뛰어들어 상황을 만들고, 그 안에서 적을 휘젓는다. 이 성격은 위기를 기회로 바꾸기도, 때론 문제를 만들기도 한다.";
+      descriptionPopUp3.innerHTML = "타고난 청각으로, 소리의 방향과 거리를 정확히 감지한다. 눈보다 귀가 먼저 반응하며, 이는 덫을 피하고 매복을 먼저 알아차리는 데 큰 도움이 된다.";
     }
     if(selectedIndex==3){
       leftUpperWrapper3.style.display = "block";
       characterPopUp.style.display = "none";
+      descriptionPopUp1.innerHTML = "물리학과 출신인 QQ는 시간의 흐름에 집착했다. 이세계에서 그는 실제로 시간을 느리게 만들거나 멈추는 능력을 얻었다. 짧은 순간을 늘리고, 누구보다 많은 선택지를 가진다.";
+      descriptionPopUp2.innerHTML = "이세계의 판타지적 상황에도 쉽게 몰입하지 못한다. 생존 확률, 자원 분배, 위험 관리... 그는 모든 것을 수치로 환산해 판단한다. 때론 비정해 보이지만, 가장 믿을 수 있다.";
+      descriptionPopUp3.innerHTML = "이해력과 분석력은 타의 추종을 불허한다. 복잡한 장치나 수수께끼는 그가 한 번 보면 풀린다. 작전이 필요할 땐, 언제나 그의 입을 먼저 본다.";
+
     }
     if(selectedIndex==4){
       leftUpperWrapper4.style.display = "block";
       characterPopUp.style.display = "none";
+      descriptionPopUp1.innerHTML = "넓은 방어영역을 가진 WW는 적의 공격을 몸으로 막는다. 그 범위는 생각보다 넓고, 자신보다 약한 존재가 피해보는 걸 절대 용납하지 않는다.";
+      descriptionPopUp2.innerHTML = "WW는 말수가 적다. 낯선 이들과 어울리기까지 시간이 오래 걸리지만, 일단 마음을 열면 그 어떤 위기에서도 등 뒤를 지켜주는 든든한 존재가 된다..";
+      descriptionPopUp3.innerHTML = "팀원들의 작은 말과 표정도 놓치지 않는다. 누구보다 감정에 민감하고, 이를 토대로 위험을 감지하거나 분위기를 조절한다. 전투보다 회복과 지원에 더 특화되어 있다.";
     }
     abilityHoverForVisibleCharacter();
     return;
@@ -789,19 +802,19 @@ function characterLevelUp() {
 
     if (src.includes("player.png")) {
       level = character1_level;
-      name = "OOOOO";
+      name = "OO";
       characterId = 'char1';
     } else if (src.includes("player_speed.png")) {
       level = character2_level;
-      name = "PPPPP";
+      name = "PP";
       characterId = 'char2';
     } else if (src.includes("player_time.png")) {
       level = character3_level;
-      name = "MMMMM";
+      name = "QQ";
       characterId = 'char3';
     } else if (src.includes("player_shield.png")) {
       level = character4_level;
-      name = "NNNNN";
+      name = "WW";
       characterId = 'char4';
     } else {
       alert("캐릭터 이미지를 인식하지 못했습니다.");
