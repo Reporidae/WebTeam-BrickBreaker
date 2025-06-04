@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 let previousScreen = null;  // 이전에 보였던 화면 저장
 var life = 2; //남은 생명 개수
-var coin = 0;//코인
+var coin = 5000;//코인
 let itemPurchased = [0, 0, 0, 0];//선택된 아이템
 let lifeTimer = null; //시간 측정 변수 - 생명을 5분에 한 번씩 생성하기 위해 필요한 변수임
 let character1_level = 1;
@@ -565,11 +565,12 @@ function itemPurchase() {
     });
   }
 
-  purchaseButton.addEventListener("click", () => {
-    if (selectedIndex2 !== null & coin > 1000) {
+    purchaseButton.addEventListener("click", () => {
+    if (selectedIndex2 !== null && coin >= 1000) {
       itemPurchased[selectedIndex2 - 1] = true;
       alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
       coin -= 1000;
+      displayCoin(); // 구매 후 코인 표시 업데이트
     } else if(coin < 1000){
       alert("코인이 부족합니다");
     }
