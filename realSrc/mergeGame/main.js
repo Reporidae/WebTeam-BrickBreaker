@@ -1,30 +1,6 @@
 let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
-let maxHeart = 50;
+let maxHeart = 3;
 let selectedCharacter = 'char1';
-
-/*일단 전역 변수로 저장 하기 전에 해당 값들로 사용한다는걸 알려드리려고 주석으로 저장합니다다
-let stage = 1;  // 변경 가능 (2, 3, 4) 스테이지 정보보
-let selectedCharacter = 'char1';  // 변경 가능 ('char2', 'char3', 'char4') 4개의 캐릭터중 어떤걸로 선택됐는지지
-let characterLevels = {
-    char1: 1, char2: 1, char3: 1, char4: 1  // 각각 변경 가능
-};
-ex)
-characterLevels.char1 = 3;  // 공격형을 레벨 3으로
-characterLevels.char2 = 2;  // 속도형을 레벨 2로
-characterLevels.char3 = 1;  // 시간형은 레벨 1 유지
-characterLevels.char4 = 2;  // 방어형을 레벨 2로
-변경 후 현재 캐릭터가 해당되면 능력치 재적용
-if (selectedCharacter === 'char1') {
-    applyCharacterAbilities();
-}
-
-let maxLives = 3;  // 변경 가능 게임 내에서 최대 체력력
-let coins = 0;  // 
-주의사항:
-
-1. 설정 후 적용 필요: 변수 변경 후 반드시 player.setCharacter()와 applyCharacterAbilities() 호출
-2. UI 업데이트: updateUI() 호출로 화면에 반영
-3. 게임 시작 전 설정: startGame() 호출 전에 설정해야 함 */
 
 window.addEventListener('DOMContentLoaded', () => {
   setupCharacterModalEvents();
@@ -52,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 let previousScreen = null;  // 이전에 보였던 화면 저장
 var life = 2; //남은 생명 개수
-var coin = 100000;//코인
+var coin = 0;//코인
 let itemPurchased = [0, 0, 0, 0];//선택된 아이템
 let lifeTimer = null; //시간 측정 변수 - 생명을 5분에 한 번씩 생성하기 위해 필요한 변수임
 let character1_level = 1;
@@ -590,10 +566,14 @@ function itemPurchase() {
   }
 
   purchaseButton.addEventListener("click", () => {
-    if (selectedIndex2 !== null) {
+    if (selectedIndex2 !== null & coin > 1000) {
       itemPurchased[selectedIndex2 - 1] = true;
       alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
-    } else {
+      coin -= 1000;
+    } else if(coin < 1000){
+      alert("코인이 부족합니다");
+    }
+    else {
       alert("아이템을 먼저 선택해주세요!");
     }
   });
@@ -792,7 +772,7 @@ function characterLevelUp() {
       return;
     }
 
-    let cost = level * 10000;
+    let cost = level * 1000;
 
     if (coin < cost) {
       alert(`현재 남은 코인은 ${coin}원입니다. 코인 부족으로 레벨업이 불가합니다.`);
@@ -991,7 +971,7 @@ class Boss {
 }
 
 class Player {
-  constructor(maxGauge = 3) {
+  constructor(maxGauge = 5) {
       this.skillGauge = 0;
       this.maxGauge = maxGauge;
       this.skillReady = false;
@@ -1080,7 +1060,7 @@ class Player {
       }
   }
 
-  useSkill(bricks, damage = 3) {
+  useSkill(bricks, damage = 2) {
       if (!this.skillReady) return 0;
       let scoreGained = 0;
       bricks.forEach(brick => {
@@ -1213,7 +1193,7 @@ function initializeGame() {
   const BASE_BALL_SPEED = { dx: 2.5, dy: 2.5 }; // 기본 속도 줄임 (3.5 -> 2.5)
   
   function getStageSpeed(stageNum) {
-      const multiplier = 1 + (stageNum - 1) * 0.1; // 각 스테이지마다 10% 증가
+      const multiplier = 1 + (stageNum - 1) * 0.2; // 각 스테이지마다 10% 증가
       return {
           dx: BASE_BALL_SPEED.dx * multiplier,
           dy: BASE_BALL_SPEED.dy * multiplier
@@ -1608,17 +1588,17 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
   
     // 아이템 효과 적용
     if (itemPurchased[0]) {
-      maxLives += 1; // 실제 최대 체력 증가
-      lives = Math.min(lives + 1, maxLives);
-      updateUI();
-    }
-    if (itemPurchased[1]) {
       vacuumReady = true;
       updateVacuumIconDisplay();
     }
-    if (itemPurchased[2]) {
+    if (itemPurchased[1]) {
       stageTimer += 20;
       updateTimerDisplay();
+    }
+    if (itemPurchased[2]) {
+      maxLives += 1; // 실제 최대 체력 증가
+      lives = Math.min(lives + 1, maxLives);
+      updateUI();
     }
     if (itemPurchased[3]) {
       boss.health = Math.max(0, boss.health - 5);  // 보스 체력 5 감소
@@ -1792,7 +1772,7 @@ function nextStage() {
             lives = Math.min(lives + 1, maxLives);
             break;
         case "coin":
-            coins++; // 게임 내 코인 증가 (0부터 시작)
+            coins+= 1000; // 게임 내 코인 증가 (0부터 시작)
             // 전역 코인은 실시간으로 증가시키지 않고, 게임 종료/나가기/스테이지 클리어 시에만 누적
             score += 10;
             break;
