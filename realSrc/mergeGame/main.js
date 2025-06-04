@@ -33,7 +33,6 @@ window.addEventListener('DOMContentLoaded', () => {
   setsupStartButtons();
   itemPurchase();
   abilityHoverForVisibleCharacter();
-  itemPurchase();
   displayCoin();
   startLifeTimer();
   displayLife();
@@ -499,46 +498,6 @@ function displayCoin(){
 }
 
 let selectedIndex1 = null;
-/*
-function abilityHover() {
-  let abilities = document.querySelectorAll(`.abilityShop .abilityDisplay .abilityView1, 
-    .abilityShop .abilityDisplay .abilityView2, 
-    .abilityShop .abilityDisplay .abilityView3`);
-  for (let i = 0; i < abilities.length; i++) {
-    let index = i+1;
-    let ability = abilities[i];
-    // Hover 시 설명 표시 (단, 고정된 게 없을 때만)
-    ability.addEventListener("mouseenter", () => {
-      if (selectedIndex1 === null) {
-        let popup = document.querySelector(`.abilityShop #descriptionPopUp${index}`);
-        if (popup) popup.style.display = "block";
-      }
-    });
-
-    ability.addEventListener("mouseleave", () => {
-      if (selectedIndex1 === null) {
-        let popup = document.querySelector(`.abilityShop #descriptionPopUp${index}`);
-        if (popup) popup.style.display = "none";
-      }
-    });
-
-    // 클릭 시 고정
-    ability.addEventListener("click", () => {
-      // 이전 선택 해제
-      if (selectedIndex1 !== null) {
-        document.querySelector(`.abilityShop .abilityView${selectedIndex1}`).style.border = "none";
-        let prevPopup = document.querySelector(`.abilityShop #descriptionPopUp${selectedIndex1}`);
-        if (prevPopup) prevPopup.style.display = "none";
-      }
-
-      ability.style.border = "3px solid black";
-      let popup = document.querySelector(`.abilityShop #descriptionPopUp${index}`);
-      if (popup) popup.style.display = "block";
-      selectedIndex1 = index;
-    });
-  }
-}
-*/
 function abilityHoverForVisibleCharacter() {
   let visibleWrapper = null;
   for (let i = 1; i <= 4; i++) {
