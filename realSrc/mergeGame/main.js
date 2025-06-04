@@ -566,12 +566,12 @@ function itemPurchase() {
   }
 
     purchaseButton.addEventListener("click", () => {
-    if (selectedIndex2 !== null && coin >= 1000) {
-      itemPurchased[selectedIndex2 - 1] = true;
-      alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
-      coin -= 1000;
-      displayCoin(); // 구매 후 코인 표시 업데이트
-    } else if(coin < 1000){
+  if (selectedIndex2 !== null && coin >= 1000) {
+    itemPurchased[selectedIndex2 - 1] = true;
+    alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+    coin -= 1000;
+    displayCoin(); // 구매 후 코인 표시 업데이트
+  } else if(coin < 1000){
       alert("코인이 부족합니다");
     }
     else {
@@ -830,7 +830,7 @@ function startLifeTimer() {
         lifeTimer = null;
       }
     }
-  }, 5 * 60 * 1000); // 5분
+  }, 1 * 60 * 1000); // 5분
 }
 
 // GAME.JS 합치기-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1528,6 +1528,17 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
   function startGame() {
     sounds.bgm1.play();
     hideTimeStopOverlay();
+
+    if (life <= 0) {
+      alert("생명이 부족합니다! 잠시 뒤 다시 시도해주세요.");
+      return; // 생명이 없으면 게임 시작하지 않음
+    }
+    displayLife(); // life 표시 업데이트
+    decreaseLife();
+
+    startLifeTimer();
+
+  
     
     gameStarted = true;
     gameOver = false;
