@@ -6,7 +6,10 @@
 	width: 700px;
 	height: 100px;
 	margin: 0 auto;
-    line-height: 100px;
+  line-height: 100px;
+}
+.village{
+  background-image: url("all_background.jpg");
 }
 #villageDisplay{
 		width: 100%;

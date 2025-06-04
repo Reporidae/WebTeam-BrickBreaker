@@ -8,7 +8,9 @@ height: 100px;
 margin: 0 auto;
 line-height: 100px;
 }
-
+.characterShop{
+  background-image: url("all_background.jpg");
+}
 #characterShopleftDisplay{
 float: left;
 width: 40%;

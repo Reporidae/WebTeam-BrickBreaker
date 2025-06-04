@@ -19,6 +19,7 @@ header {
   height: 7vh;
   margin: 1vh 0;
   background-color: rgb(125, 192, 255);
+  background-image: url("all_background.jpg");
 }
 
 /* 상태 바 */
@@ -157,6 +158,7 @@ footer {
     background-color: #BD9354;
     padding-left: 10%;
     padding-top: 25px;
+    background-image: url("all_background.jpg");
 }
 
 /************************* story *************************/
