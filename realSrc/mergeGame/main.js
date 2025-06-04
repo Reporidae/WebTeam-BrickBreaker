@@ -205,6 +205,13 @@ function storyBoard(){
             overlay.addEventListener('animationend', () => {
                 overlay.style.display = 'none';
                 document.querySelector('.village').style.display = 'block';
+
+                // 음악 재생 추가
+                const bgm = document.getElementById('bgmAudio'); // 오디오 요소 id 맞게 변경
+                if (bgm) {
+                    bgm.volume = 0.5;
+                    bgm.play().catch(err => console.error('BGM play failed:', err));
+                }
             }, { once: true });
         }
     });
