@@ -860,7 +860,7 @@ function startLifeTimer() {
   }, 1 * 60 * 1000); // 5분
 }
 
-// GAME.JS 합치기-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// GAME.JS 합치기----------------------------------------------------------------------
 
 const sounds = {
   paddleHit: new Audio("../../assets/sounds/paddle_hit.mp3"),
@@ -1536,7 +1536,6 @@ function initializeGame() {
       }
   }
 
-  // === 전역 변수 추가 === ✅ 
 let shieldAvailable = false; // 보호막 아이템 상태 저장
 let vacuumReady = false; // 청소기 아이템 사용 여부
 
@@ -1645,8 +1644,6 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     
   }
 
-
-// ✅ === D 키로 아이템 사용 처리 ===
 document.addEventListener("keyup", function (e) {
   if (e.keyCode === 68) { // D 키
     if (vacuumReady) {
@@ -1660,7 +1657,7 @@ document.addEventListener("keyup", function (e) {
       vacuumReady = false;
       //itemPurchased[3] = false; // 아이템 사용 완료 처리
       //renderItemIcons(); // 아이콘 갱신
-      updateVacuumIconDisplay(); // ✅ 아이콘 제거
+      updateVacuumIconDisplay();
     }
   }
 });
