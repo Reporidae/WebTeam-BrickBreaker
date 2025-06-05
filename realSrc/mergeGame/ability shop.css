@@ -59,15 +59,10 @@
     font-size: 1.3vw;
     line-height: 2vw;
 }
-.abilityShop #leftUpperWrapper2,.abilityShop #leftUpperWrapper3, .abilityShop #leftUpperWrapper4{
+.abilityShop #leftUpperWrapper1, .abilityShop #leftUpperWrapper2,.abilityShop #leftUpperWrapper3, .abilityShop #leftUpperWrapper4{
     width: 100%;
     height: auto;
     display: none;
-}
-.abilityShop #leftUpperWrapper1{
-    width: 100%;
-    height: auto;
-    display: block;
 }
 .abilityShop #buttonDisplay {
     width: 100%;

@@ -359,6 +359,7 @@ function setupShopPopupEvents() {
   });
 
   abilityBtn.addEventListener('click', () => {
+    abilitieShopNew();
     characterShop.style.display = 'none';
     abilityShop.style.display = 'block';
     if(itemShop) itemShop.style.display = 'none';
@@ -608,7 +609,33 @@ function initDefaultPopupSelection() {
     document.querySelector(`.abilityShop  #character_hold4`).style.display = "block";
   }
 }
-
+function abilitieShopNew(){
+  let displayBlock1 = document.querySelector('.abilityShop #leftUpperWrapper1');
+  let displayBlock2 = document.querySelector('.abilityShop #leftUpperWrapper2');
+  let displayBlock3 = document.querySelector('.abilityShop #leftUpperWrapper3');
+  let displayBlock4 = document.querySelector('.abilityShop #leftUpperWrapper4');
+  if(selectedCharacter=='char1'){
+    displayBlock1.style.display="block";
+    displayBlock2.style.display="none";
+    displayBlock3.style.display="none";
+    displayBlock4.style.display="none";
+  }else if(selectedCharacter=='char2'){
+    displayBlock2.style.display="block";
+    displayBlock1.style.display="none";
+    displayBlock3.style.display="none";
+    displayBlock4.style.display="none";
+  }else if(selectedCharacter=='char3'){
+    displayBlock3.style.display="block";
+    displayBlock2.style.display="none";
+    displayBlock1.style.display="none";
+    displayBlock4.style.display="none";
+  }else if(selectedCharacter=='char4'){
+    displayBlock4.style.display="block";
+    displayBlock2.style.display="none";
+    displayBlock3.style.display="none";
+    displayBlock1.style.display="none";
+  }
+}
 function abilityShop_CharacterPopUp(){
   let selectedIndex=null;
   let characterPopUp = document.getElementById('character_popup');
