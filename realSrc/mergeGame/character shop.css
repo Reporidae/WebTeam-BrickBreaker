@@ -2,13 +2,11 @@
 font-size: 70px;
 font-weight: bold;
 text-align: center;
-background-color: blanchedalmond;
 width: 700px;
 height: 100px;
 margin: 0 auto;
 line-height: 100px;
-background-image: url("namu_title.jpg");
-  border-bottom: 10px solid black;
+background-image: url("newTitleImg.png");
 }
 .characterShop{
   background-image: url("all_background.jpg");
@@ -16,53 +14,48 @@ background-image: url("namu_title.jpg");
 #characterShopDisplay{
   width: 100%;
   height: 700px;
-  background-color: #BD9354;
-  padding-left: 15%;
+  padding-left: 10%;
   padding-top: 25px;
   background-image: url("all_background.jpg");
 }
 #characterShopleftDisplay{
 float: left;
-width: 40%;
+width: 45%;
 height: 650px;
-background-color: rgb(145, 99, 40);
+background-color: rgba(90, 48, 9, 0.558);
 color: black;
 overflow: hidden;
 }
 #descriptionPopUp{
 width: 75%;
 height: 400px;
-background-color:brown;
 margin-left: 80px;
 margin-top: 120px;
 }
 /**********************character shop 추가 코드 **********************/
 #characterShoprightDisplay {
 float: left;
-width: 40%;
+width: 45%;
 height: 650px;
-background-color:  rgb(145, 99, 40);
+background-color: rgba(90, 48, 9, 0.558);
 color: black;
-overflow-y: auto; /* 스크롤 적용 */
-padding-right: 10px; /* 스크롤 여유 공간 */
+overflow-y: auto;
+padding-right: 10px;
+box-shadow:10px 10px 10px rgba(85, 60, 40, 0.4);
 }
-
 .character-card {
-width: 80%;
-height: 80%;
+width: 70%;
+height: 600px;
 margin: 5% auto;
-background-color: white;
 border-radius: 10px;
 padding: 20px;
+box-shadow: 10px 10px 15px rgba(85, 60, 40, 0.4);
 }
-
 .character-image {
 width: 100%;
 height: 70%;
-background-color: lightgray;
 margin-bottom: 10px;
 }
-
 .character-name {
 height: 20%;
 text-align: center;
@@ -75,46 +68,42 @@ margin-bottom: 0px;
     text-align: center;
     font-size: 30px;
     line-height: 50px;
-    margin-bottom: 0px;
-}
+    padding-top: 40px;
 
+}
 .now-character-level{
     height: 20%;
     text-align: center;
     font-size: 30px;
     line-height: 30px;
-}
 
+}
 .character-info {
 display: flex;
 width: 90%;
-height: 200px;  /* 고정 높이 or auto로도 가능 */
+height: 400px;
 margin: 20px auto;
-background-color: white;
+background-color: rgba(197, 171, 147, 0.523);
 border-radius: 10px;
 padding: 20px;
+box-shadow: 10px 10px 20px rgba(0,0,0,0.2);
 }
-
 .character-image-small {
 width: 50%;
 height: 100%;
-background-color: lightgray;
 margin-right: 10px;
 }
-
 .character-stats {
 flex: 1;
 display: flex;
 flex-direction: column;
 justify-content: space-around;
 }
-
 .stat-line {
-background-color: #eee;
-padding: 10px;
-margin-bottom: 10px;
+background-color: rgba(87, 59, 32, 0.243);
 border-radius: 5px;
 text-align: center;
+padding: 10px;
 }
 
 .description-box {
@@ -144,7 +133,7 @@ line-height: 30px;
 
 /* 모달 콘텐츠 박스 */
 .modal-content {
-  background-color: blanchedalmond;
+  background-color: rgba(210, 187, 166, 0.913);
   margin: 15% auto;
   padding: 20px;
   width: 40%;
@@ -160,53 +149,68 @@ line-height: 30px;
   margin-top: 20px; 
 }
 #modalStat2 {
-  margin-bottom: 20px; /* 아래 공간 20px */
+  margin-bottom: 20px;
 }
 #modalActionButton {
-  padding: 12px 27px;  /* 위아래 12px, 좌우 30px */
-  font-size: 18px;     /* 글자 크기 키움 */
-  border-radius: 8px;  /* 모서리 둥글게 (선택사항) */
+  padding: 12px 27px;
+  font-size: 18px;
+  border-radius: 20px;
   cursor: pointer;
+  border: none;
+  background-color: rgba(91, 61, 33, 0.504);
 }
-
-
+#modalActionButton:hover{
+  transform: scale(1.07);
+}
 /* 닫기 버튼 */
 .close-button {
   float: right;
   font-size: 28px;
   cursor: pointer;
 }
-
-
-/*팝업창*/
 .shop-popup {
-  position: fixed;
-  top: 50px; 
+  position: absolute;
+  top: 150px;
   left: 50%;
-  transform: translateX(-50%);
-  background-color: #fff;
-  border: 2px solid #333;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  z-index: 1000;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
 }
-
 .shop-popup-content {
   display: flex;
-  gap: 10px;
+  gap: 14px;
   align-items: center;
+  background: linear-gradient(145deg, #f1e0c5, #c9a879);
+  padding: 20px 26px;
+  border-radius: 20px;
+  border: 3px solid #6b4226;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
-
 .shop-popup-btn {
-  padding: 8px 12px;
-  cursor: pointer;
+  background-color: #7b4c2a;
+  color: #fff3e0;
   font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
 }
-
+.shop-popup-btn:hover {
+  background-color: #996641;
+  transform: scale(1.08);
+}
 .shop-popup-close {
-  margin-left: auto;
-  font-size: 20px;
   background: none;
   border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #4a2a15;
   cursor: pointer;
+  transition: all 0.3s;
+}
+.shop-popup-close:hover {
+  transform: rotate(90deg);
+  color: #7b4c2a;
 }

@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="game.css" />
 
     <audio id="bgmAudio" src="Impact 3.mp3" preload="auto"></audio>
+    <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/nanummyeongjo.css" rel="stylesheet">
 
 </head>
 <body>
@@ -31,27 +33,26 @@
     <!--------------------------- story --------------------------->
     <header>
         <div id = "logo" class = "topBar">
-
+            《The Village Beyond the Book》
         </div>
         <div id = "lifeBar" class="topBar">
             <div id = "lifeIcon" class="topBarIcon">
-                <img id = "lifeIcon_img0" src = "lifeIcon1_img.png" width="35" height="35">
+                <img id = "lifeIcon_img0" src = "lifeIcon.png" width="40" height="40">
             </div>
             <div id = "lifeView" class = "barView">
-                <img id = "lifeIcon_img1" src = "lifeIcon1_img.png" width="35" height="35">
-                <img id = "lifeIcon_img2" src = "lifeIcon1_img.png" width="35" height="35">
-                <img id = "lifeIcon_img3" src = "lifeIcon1_img.png" width="35" height="35">
-                <img id = "lifeIcon_img4" src = "lifeIcon1_img.png" width="35" height="35">
-                <img id = "lifeIcon_img5" src = "lifeIcon1_img.png" width="35" height="35">
+                <img id = "lifeIcon_img1" src = "newLifeIcon1.png" width="40" height="40">
+                <img id = "lifeIcon_img2" src = "newLifeIcon1.png" width="40" height="40">
+                <img id = "lifeIcon_img3" src = "newLifeIcon1.png" width="40" height="40">
+                <img id = "lifeIcon_img4" src = "newLifeIcon1.png" width="40" height="40">
+                <img id = "lifeIcon_img5" src = "newLifeIcon1.png" width="40" height="40">
             </div>
         </div>
         <div id = "coinBar" class="topBar">
             <div id = "coinIcon" class="topBarIcon">
-                <img id = "coinIcon_img1" src = "coinIcon1_img.png" width="35" height="35">
+                <img id = "coinIcon_img1" src = "newCoinIcon.png" width="45" height="45">
             </div>
             <div id = "coinView" class = "barView"></div>
         </div>
-        <div id = "settingButton" class="topBar"></div>
     </header>
     <div id = "main">
         <!--------------------------- game --------------------------->
@@ -69,9 +70,13 @@
                 <!-- 게임 메뉴 -->
                 <div id="game-menu" class="hidden">
                     <h2 id="menu-message" class="menu-title" style="white-space: pre-line;">게임 시작</h2>
-                    <button id="start-button" class="menu-button">시작하기</button>
-                    <button id="quit-button" class="menu-button">나가기</button>
-                </div>
+                  
+                    <div class="button-row">
+                      <button id="start-button" class="menu-button">시작하기</button>
+                      <button id="quit-button" class="menu-button">나가기</button>
+                    </div>
+                  </div>
+                  
     
                 <!-- 필살기 게이지 -->
                 <div id="skill-gauge-wrapper">
@@ -119,7 +124,7 @@
                     <div class="hotspot" data-stage="4" style="position: absolute; top: 20px; right: 25px;"></div> <!--stage 4-->
                 </div>
                 <div id="villageRightDisplay">
-                    <img class="stage-image" src="qrslhupr.png"/>
+                    <img class="stage-image" src="newRightImg.png"/>
                     <img id="village-character" src="real_character1.png" alt="캐릭터 이미지" />
                 </div>
             </div>
@@ -141,32 +146,39 @@
             <div id = "characterShopDisplay">
                 <div id="characterShopleftDisplay">
                     <div class="character-card">
-                        <img class="character-image" src="real_character1.png" alt="캐릭터 이미지" />
-                        <div class="now-character-name">엘리</div>
+                        <img class="character-image" src="real_character1.png" alt="캐릭터 이미지" width="300" height="400">
+                        <div class="now-character-name">지훈</div>
                         <div class="now-character-level">공격력 증가</div>
                     </div>
                 </div>
                 <div id="characterShoprightDisplay">
-                    <div class="character-info"  data-character="char2">
-                        <img class="character-image-small" src="real_character2.png" alt="캐릭터 이미지" />
+                    <div class="character-info"  data-character="char1">
+                        <img class="character-image-small" src="real_character1.png" alt="캐릭터 이미지" width="240" height="320">
                         <div class="character-stats">
-                            <div class="character-name">엘로이</div>
+                            <div class="character-name">지훈</div>
+                            <div class="stat-line">공격력 증가</div>
+                        </div>
+                    </div>
+                    <div class="character-info"  data-character="char2">
+                        <img class="character-image-small" src="real_character2.png" alt="캐릭터 이미지" width="240" height="320">
+                        <div class="character-stats">
+                            <div class="character-name">세연</div>
                             <div class="stat-line">[Lv1] 패들 크기 5 증가</div>
                             <div class="stat-line">[Lv2] 패들 크기 10 증가</div>
                         </div>
                     </div>
                     <div class="character-info"  data-character="char3">
-                        <img class="character-image-small" src="player_time.png" alt="캐릭터 이미지" />
+                        <img class="character-image-small" src="player_time.png" alt="캐릭터 이미지" width="240" height="320">
                         <div class="character-stats">
-                            <div class="character-name">바일</div>
+                            <div class="character-name">준오</div>
                             <div class="stat-line">[Lv1] 시간 멈추기 3초</div>
                             <div class="stat-line">[Lv2] 시간 멈추기 5초</div>
                         </div>
                     </div>
                     <div class="character-info"  data-character="char4">
-                        <img class="character-image-small" src="player_shield.png" alt="캐릭터 이미지" />
+                        <img class="character-image-small" src="player_shield.png" alt="캐릭터 이미지" width="240" height="320">
                         <div class="character-stats">
-                            <div class="character-name">아르벨론</div>
+                            <div class="character-name">유나</div>
                             <div class="stat-line">[Lv1] 속도 3 증가</div>
                             <div class="stat-line">[Lv2] 속도 5 증가</div>
                         </div>
@@ -184,11 +196,11 @@
                             <div class = "characterView">
                                 <img id = "characterImg1" src = "player.png" width="300" height="400">
                             </div>
-                            <div class = "characterLevel">OO[Lv.1]</div>
+                            <div class = "characterLevel">지훈[Lv.1]</div>
                         </div>
                         <div class = "abilityDisplay">
-                            <div class="abilityView1">"상대가 누구든, 내 주먹 앞에선 다 똑같아."</div>
-                            <div class="abilityView2">"겁먹을 시간에 움직여. 난 그게 익숙하니까."</div>
+                            <div class="abilityView1">"상대가 누구든,<br> 내 주먹 앞에선 다 똑같아."</div>
+                            <div class="abilityView2">"겁먹을 시간에 움직여. <br>난 그게 익숙하니까."</div>
                             <div class="abilityView3">"머리보다 몸이 먼저 반응하지… 그게 나야."</div>
                         </div>
                     </div>
@@ -197,12 +209,12 @@
                             <div class = "characterView">
                                 <img id = "characterImg2" src = "player_speed.png" width="300" height="400">
                             </div>
-                            <div class = "characterLevel">PP[Lv.1]</div>
+                            <div class = "characterLevel">세연[Lv.1]</div>
                         </div>
                         <div class = "abilityDisplay">
-                            <div class="abilityView1">"움직임이 느린 자에겐, 이 세계는 너무 빠르지."</div>
-                            <div class="abilityView2">"생각은 짧게, 반응은 빠르게. 그게 생존이야."</div>
-                            <div class="abilityView3">"소리는 거짓말을 안 해. 조용히… 들려?"</div>
+                            <div class="abilityView1">"움직임이 느린 자에겐, <br>이 세계는 너무 빠르지."</div>
+                            <div class="abilityView2">"생각은 짧게, 반응은 빠르게. <br>그게 생존이야."</div>
+                            <div class="abilityView3">"소리는 거짓말을 안 해.<br> 조용히… 들려?"</div>
                         </div>
                     </div>
                     <div id = "leftUpperWrapper3">
@@ -210,12 +222,12 @@
                             <div class = "characterView">
                                 <img id = "characterImg3" src = "player_time.png" width="300" height="400">
                             </div>
-                            <div class = "characterLevel">QQ[Lv.1]</div>
+                            <div class = "characterLevel">준오[Lv.1]</div>
                         </div>
                         <div class = "abilityDisplay">
-                            <div class="abilityView1">"시간은 흐르지 않아. 적어도 내 손 안에선."</div>
-                            <div class="abilityView2">"현실을 받아들이는 자만이, 끝까지 살아남는다."</div>
-                            <div class="abilityView3">"계획은 곧 생존이다. 예외는 없어."</div>
+                            <div class="abilityView1">"시간은 흐르지 않아. <br>적어도 내 손 안에선."</div>
+                            <div class="abilityView2">"현실을 받아들이는 자만이, <br>끝까지 살아남는다."</div>
+                            <div class="abilityView3">"계획은 곧 생존이다. <br>예외는 없어."</div>
                         </div>
                     </div>
                     <div id = "leftUpperWrapper4">
@@ -223,12 +235,12 @@
                             <div class = "characterView">
                                 <img id = "characterImg4" src = "player_shield.png" width="300" height="400">
                             </div>
-                            <div class = "characterLevel">WW[Lv.1]</div>
+                            <div class = "characterLevel">유나[Lv.1]</div>
                         </div>
                         <div class = "abilityDisplay">
-                            <div class="abilityView1">"누군가는 앞에 서야 하니까… 내가 그 역할을 할게."</div>
-                            <div class="abilityView2">"말은 없어도, 마음은 누구보다 깊어."</div>
-                            <div class="abilityView3">"내 곁에 있는 한, 당신은 무너지지 않아."</div>
+                            <div class="abilityView1">"누군가는 앞에 서야 하니까… <br>내가 그 역할을 할게."</div>
+                            <div class="abilityView2">"말은 없어도, <br>음은 누구보다 깊어."</div>
+                            <div class="abilityView3">"내 곁에 있는 한, <br>당신은 무너지지 않아."</div>
                         </div>
                     </div>
                     <div id = "buttonDisplay">
@@ -237,27 +249,35 @@
                     </div>
                 </div>
                 <div id = "rightDisplay">
-                    <div id = "descriptionPopUp1">과거 체대 준비생이었던 OO는 훈련된 몸으로 어떤 무기든 빠르게 다룬다. 공격을 멈추지 않고 이어가는 스타일로, 전투에서 먼저 움직이는 쪽이 이긴다는 철학을 가졌다.</div>
-                    <div id = "descriptionPopUp2">위험한 상황에서도 물러서지 않는 성격. 도서관의 이세계로 빨려 들어왔을 때도 가장 먼저 몸을 일으킨 사람은 OO였다. 앞장서서 길을 뚫고 나가는 본능형 리더.</div>
+                    <div id = "descriptionPopUp1">과거 체대 준비생이었던 지훈은 훈련된 몸으로 어떤 무기든 빠르게 다룬다. 공격을 멈추지 않고 이어가는 스타일로, 전투에서 먼저 움직이는 쪽이 이긴다는 철학을 가졌다.</div>
+                    <div id = "descriptionPopUp2">위험한 상황에서도 물러서지 않는 성격. 도서관의 이세계로 빨려 들어왔을 때도 가장 먼저 몸을 일으킨 사람은 지훈이였다. 앞장서서 길을 뚫고 나가는 본능형 리더.</div>
                     <div id = "descriptionPopUp3">생각은 느리지만 움직임은 빠르다. 본인은 나중에서야 상황을 이해하지만, 이미 적은 쓰러져 있다. 이 본능적인 움직임이 오히려 팀을 여러 번 위기에서 구했다.</div>
                 </div>
                 <div id = "character_popup">
                     <div id="popup_content">
                         <div id = "character_hold1" class = "character_hold">
-                            <div id = "character_hold1_view"></div>
-                            <div id = "character_hold1_name"></div>
+                            <div id = "character_hold1_view" class="character_hold_view">
+                                <img id = "characterImg1" src = "player.png" width="90" height="130">
+                            </div>
+                            <div class = "characterLevel">지훈[Lv.1]</div>
                         </div>
                         <div id = "character_hold2" class = "character_hold">
-                            <div id = "character_hold2_view"></div>
-                            <div id = "character_hold2_name"></div>
+                            <div id = "character_hold2_view" class="character_hold_view">
+                                <img id = "characterImg2" src = "player_speed.png" width="90" height="130">
+                            </div>
+                            <div class = "characterLevel">세연[Lv.1]</div>
                         </div>
                         <div id = "character_hold3" class = "character_hold">
-                            <div id = "character_hold3_view"></div>
-                            <div id = "character_hold3_name"></div>
+                            <div id = "character_hold3_view" class="character_hold_view">
+                                <img id = "characterImg3" src = "player_time.png" width="90" height="130">
+                            </div>
+                            <div class = "characterLevel">준오[Lv.1]</div>
                         </div>
                         <div id = "character_hold4" class = "character_hold">
-                            <div id = "character_hold4_view"></div>
-                            <div id = "character_hold4_name"></div>
+                            <div id = "character_hold4_view" class="character_hold_view">
+                                <img id = "characterImg4" src = "player_shield.png" width="90" height="130">
+                            </div>
+                            <div class = "characterLevel">유나[Lv.1]</div>
                         </div>
                     </div>
                     <button id="saveAndCloseBtn">저장하고 닫기</button>
@@ -276,13 +296,13 @@
                                 <div class  = "itemImgView">
                                     <img id = "itemImg1" src = "itemIcon1.png" width="130" height="130">
                                 </div>
-                                <div class = "itemNameView">청소기[1000Gold]</div>
+                                <div class = "itemNameView">청소기</div>
                             </div>
                             <div id = "item2" class = "item">
                                 <div class = "itemImgView">
                                     <img id = "itemImg2" src = "itemIcon2.png" width="130" height="130">
                                 </div>
-                                <div class = "itemNameView">시간 연장[1000Gold]</div>
+                                <div class = "itemNameView">시간 연장</div>
                             </div>
                         </div>
                         <div id = "leftUpperWrapper2">
@@ -290,13 +310,13 @@
                                 <div class = "itemImgView">
                                     <img id = "itemImg3" src = "itemIcon3.png" width="130" height="130">
                                 </div>
-                                <div class = "itemNameView">체력 증가[1000Gold]</div>
+                                <div class = "itemNameView">체력 증가</div>
                             </div>
                             <div id = "item4" class = "item">
                                 <div class  = "itemImgView">
                                     <img id = "itemImg4" src = "itemIcon4.png" width="130" height="130">
                                 </div>
-                                <div class = "itemNameView">보스 데미지[1000Gold]</div>
+                                <div class = "itemNameView">보스 데미지</div>
                             </div>
                         </div>
                     </div>
@@ -305,14 +325,14 @@
                     </div>
                 </div>
                 <div id = "rightDisplay">
-                    <div id = "descriptionPopUp1">철제 몸체에 이름조차 지워진 이 기계는 오랫동안 마을 지하 창고에 봉인되어 있었다. 고대의 기술로 만들어진 이 장치는 하단의 모든 장애물을 지워버린다. 마치 존재조차 없었던 것처럼.
-                        <br>“지운다는 건… 흔적을 남기지 않는다는 뜻이다.”</div>
+                    <div id = "descriptionPopUp1">철제 몸체에 이름조차 지워진 이 기계는 오랫동안 마을 지하 창고에 있었다. 고대의 기술로 만들어진 이 장치는 하단의 모든 장애물을 지워버린다. 마치 존재조차 없었던 것처럼.
+                        <br><br>[1000 Coin]</div>
                     <div id = "descriptionPopUp2">이 시계는 이미 오래전에 멈췄다. 그런데 이상하게도, 들고만 있어도 주위의 공기가 느리게 흐른다. 시간은 멈추지 않지만, 무언가를 억지로 늦추는 기이한 기운이 있다.
-                        <br>“시간을 훔친다. 그것이 허락된 유일한 방식이다.”</div>
-                    <div id = "descriptionPopUp3">누구도 그 원료를 알지 못한다. 단지, 이 액체를 마신 이들은 일정 시간 동안 극도의 활력을 얻는다. 피부 아래로 퍼지는 열기와 팽창하는 근육. 그러나 시간이 지나면, 기묘한 울렁거림이 몸을 잠식한다.
-                        <br>“한 번 더, 움직일 수 있다. 대가가 따른다 해도.”</div>
+                        <br><br>[1500 Coin]</div>
+                    <div id = "descriptionPopUp3">이 액체를 마신 이들은 일정 시간 동안 극도의 활력을 얻는다. 피부 아래로 퍼지는 열기와 팽창하는 근육.
+                        <br><br>[2000 Coin]</div>
                     <div id = "descriptionPopUp4">이 물건은 마을 폐허에서 발견되었다. 무표정한 인형의 유리 눈. 누군가의 기억이 봉인된 이 눈은 특정 존재에게 강한 불안을 불러일으킨다. 전투 시작과 동시에, 그 존재는 흔들린다.
-                        <br>“기억은 힘이다. 그러나, 그 힘은 항상 축복이 아니다.”</div>
+                        <br><br>[3000 Coin]</div>
                 </div>
             </div>
         </div>
@@ -328,9 +348,10 @@
     </div>
 
     <footer>
-        <div id = "backButton" class="bottomButton">Back</div>
-        <div id = "startButton" class="bottomButton">START</div>
-        <div id = "backVillageButton" class="bottomButton">Go to Shop</div>
+        <div id="backButton" class="bottomButton">Back</div>
+        <div id="startButton" class="bottomButton">START</div>
+        <div id="backVillageButton" class="bottomButton">Go to Shop</div>
+        <div id="backGotoShopButton" class="bottomButton" style="display: none;">Village</div>
     </footer>
 </body>
 </html>

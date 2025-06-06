@@ -33,8 +33,8 @@ let itemPurchased = [0, 0, 0, 0];//선택된 아이템
 let lifeTimer = null; //시간 측정 변수 - 생명을 5분에 한 번씩 생성하기 위해 필요한 변수임
 let character1_level = 1;
 let character2_level = 1;
-let character3_level = 1;
-let character4_level = 1; //캐릭터 4명의 레벨 정보 -> 레벨이 0이라는 건 캐릭터를 사지 않았다는 말. 구매 후 바로 1레벨로 변경하기
+let character3_level = 0;
+let character4_level = 0; //캐릭터 4명의 레벨 정보 -> 레벨이 0이라는 건 캐릭터를 사지 않았다는 말. 구매 후 바로 1레벨로 변경하기
 
 // 스토리 데이터
 const storyScenes = [
@@ -198,8 +198,6 @@ function storyBoard(){
   document.querySelector('.main-game').style.display = 'none';
   document.querySelector('.itemShop').style.display = 'none';
 }
-
-
 function chageStageNum() {
   const hotspots = document.querySelectorAll('.hotspot');
 
@@ -217,7 +215,6 @@ function chageStageNum() {
     });
   });
 }
-
 function clickStageNum(){
   const hotspots = document.querySelectorAll('.hotspot');
 
@@ -230,10 +227,8 @@ function clickStageNum(){
         hotspot.classList.add('active');
       });
     });
-}
-
+}// 화면 전환 함수
 function showScreen(screenId) {
-  // 화면 목록
   const screens = ['village', 'characterShop', 'abilityShop', 'itemShop', 'shopPopup'];
   screens.forEach(id => {
     const el = id === 'shopPopup' ? document.getElementById('shopPopup') : document.querySelector('.' + id);
@@ -241,21 +236,52 @@ function showScreen(screenId) {
   });
 
   let screenElement;
-  if(screenId === 'shopPopup') {
+  if (screenId === 'shopPopup') {
     screenElement = document.getElementById('shopPopup');
   } else {
     screenElement = document.querySelector('.' + screenId);
   }
-  if(screenElement) screenElement.style.display = (screenId === 'shopPopup') ? 'flex' : 'block';
 
-  // 여기서 backVillageButton 텍스트 조절
-  const backVillageBtn = document.getElementById("backVillageButton");
-  if (screenId === 'village') {
-    backVillageBtn.textContent = "Go to Shop";
-  } else {
-    backVillageBtn.textContent = "village";
+  if (screenElement) {
+    screenElement.style.display = (screenId === 'shopPopup') ? 'flex' : 'block';
   }
+
+  const toggleBtn = document.getElementById("backVillageButton");
+  if (screenId === 'village') {
+    toggleBtn.textContent = "Go to Shop";
+  } else {
+    toggleBtn.textContent = "Village";
+  }
+
+  previousScreen = screenId;
 }
+
+function setupBackButtons() {
+  const backVillageBtn = document.getElementById("backVillageButton");
+  const village = document.querySelector('.village');
+  const gameDiv = document.querySelector(".main-game");
+
+  backVillageBtn.addEventListener("click", () => {
+    if (previousScreen === 'village') {
+      showScreen('shopPopup');
+      village.style.display = 'none';
+      gameDiv.style.display = 'none';
+    } else {
+      showScreen('village');
+      village.style.display = 'block';
+      gameDiv.style.display = 'none';
+    }
+  });
+
+  document.getElementById("backButton").addEventListener("click", () => {
+    if (previousScreen !== 'village') {
+      showScreen('village');
+      village.style.display = 'block';
+      gameDiv.style.display = 'none';
+    }
+  });
+}
+
 
 function setupCharacterModalEvents() {
   const infos = document.querySelectorAll('.character-info');
@@ -265,22 +291,28 @@ function setupCharacterModalEvents() {
   const stat1El = document.getElementById('modalStat1');
   const stat2El = document.getElementById('modalStat2');
   const actionBtn = document.getElementById('modalActionButton');
+  const shopRightDisplay = document.getElementById('characterShoprightDisplay');
+  const leftCard = document.querySelector('.character-card');
+  const rightDisplay = document.getElementById('villageRightDisplay');
 
-  const purchasedCharacters = {};
-  let currentCharacter = null;
+  const purchasedCharacters = { "엘리": true }; // 엘리는 기본 구매됨
+  let currentCharacterInfo = null;
+
+  // 처음에 char1(엘리)은 오른쪽에서 숨겨줌
+  const defaultInfo = [...infos].find(info => info.dataset.character === "char1");
+  if (defaultInfo) defaultInfo.style.display = "none";
 
   infos.forEach(info => {
     info.addEventListener('click', () => {
       const name = info.querySelector('.character-name').innerText;
-      const stat1 = info.querySelectorAll('.stat-line')[0].innerText;
-      const stat2 = info.querySelectorAll('.stat-line')[1].innerText;
+      const stat1 = info.querySelectorAll('.stat-line')[0]?.innerText ?? '';
+      const stat2 = info.querySelectorAll('.stat-line')[1]?.innerText ?? '';
       const imgEl = info.querySelector('.character-image-small').getAttribute('src');
-      const characterId = info.dataset.character;  // 예: 'char2'
+      const characterId = info.dataset.character;
 
       nameEl.textContent = name;
       stat1El.textContent = stat1;
       stat2El.textContent = stat2;
-
       actionBtn.textContent = purchasedCharacters[name] ? '적용' : '구매';
 
       actionBtn.onclick = () => {
@@ -289,41 +321,39 @@ function setupCharacterModalEvents() {
           actionBtn.textContent = '적용';
           alert(`${name}을(를) 구매했습니다!`);
         } else {
-          // 기존 캐릭터 카드 업데이트
-          const leftCard = document.querySelector('.character-card');
+          // 기존 캐릭터 왼쪽 → 오른쪽에 다시 넣기
+          if (currentCharacterInfo) {
+            const clone = currentCharacterInfo.cloneNode(true);
+            shopRightDisplay.appendChild(clone);
+            setupCharacterModalEvents(); // 이벤트 재설정
+          }
+
+          // 왼쪽 카드 갱신
           leftCard.querySelector('.character-image').src = imgEl;
           leftCard.querySelector('.now-character-name').textContent = name;
-          currentCharacter = name;
+          leftCard.querySelector('.now-character-level').textContent = stat1;
 
-          selectedCharacter = characterId;
-          console.log("선택된 캐릭터 ID:", selectedCharacter);
-
-
-          // 기존 캐릭터 이미지 제거 (필요하다면 먼저 이 작업 진행)
-          const rightDisplay = document.getElementById('villageRightDisplay');
-
+          // village 오른쪽도 갱신
           const existingImage = rightDisplay.querySelector('#village-character');
-          if (existingImage) {
-            rightDisplay.removeChild(existingImage);
+          if (existingImage) rightDisplay.removeChild(existingImage);
+          const newImage = document.createElement('img');
+          newImage.id = 'village-character';
+          newImage.src = imgEl;
+          newImage.alt = '캐릭터 이미지';
+          newImage.style.marginTop = 'auto';
+          rightDisplay.appendChild(newImage);
+
+          // 현재 캐릭터는 목록에서 제거
+          currentCharacterInfo = info;
+          info.remove();
+
+          modal.style.display = 'none';
         }
+      };
 
-        // 새로운 이미지 엘리먼트 생성
-        const newImage = document.createElement('img');
-        newImage.id = 'village-character';
-        newImage.src = imgEl;
-        newImage.alt = '캐릭터 이미지';
-        newImage.style.marginTop = 'auto'; // 하단 정렬 (필요시)
-
-        // 이미지만 추가
-        rightDisplay.appendChild(newImage);
-
-        modal.style.display = 'none';
-      }
-    };
-
-    modal.style.display = 'block';
+      modal.style.display = 'block';
+    });
   });
-});
 
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
@@ -335,7 +365,6 @@ function setupCharacterModalEvents() {
     }
   });
 }
-
 function setupShopPopupEvents() {
   const shopPopup = document.getElementById('shopPopup');
   const characterBtn = document.getElementById('characterBtn');
@@ -379,34 +408,6 @@ function setupShopPopupEvents() {
 
   closeShopPopup.addEventListener('click', () => {
     shopPopup.style.display = 'none';
-  });
-}
-
-function setupBackButtons() {
-  const backVillageBtn = document.getElementById("backVillageButton");
-  const village = document.querySelector('.village');
-  const gameDiv = document.querySelector(".main-game");
-
-  backVillageBtn.addEventListener("click", () => {
-    previousScreen = null;  // 마을로 이동하므로 이전 화면 초기화
-    showScreen('shopPopup');
-    village.style.display = 'block';
-  });
-
-  document.getElementById("backButton").addEventListener("click", () => {
-    if (previousScreen) {
-      showScreen(previousScreen);
-      if (previousScreen === 'shopPopup') {
-        village.style.display = 'none';
-      }
-      previousScreen = null;  // 한번 뒤로가면 초기화
-    } else {
-      // 이전 화면 없으면 기본 동작: 마을 보여주기
-      showScreen('village');
-      village.style.display = 'block';
-      gameDiv.style.display = 'none';
-
-    }
   });
 }
 
@@ -515,12 +516,12 @@ function abilityHoverForVisibleCharacter() {
       // 기존 선택 해제
       if (selectedIndex1 !== null) {
         const prevAbility = abilities[selectedIndex1];
-        prevAbility.style.border = "none";
+        prevAbility.style.transform = "none";
         const prevPopup = document.querySelector(`#descriptionPopUp${selectedIndex1 + 1}`);
         if (prevPopup) prevPopup.style.display = "none";
       }
-
-      ability.style.border = "3px solid black";
+      ability.style.transform = "scale(1.05)";
+      ability.style.transition = "transform 0.2s ease";
       if (popup) popup.style.display = "block";
       selectedIndex1 = index;
     });
@@ -553,13 +554,15 @@ function itemPurchase() {
     item.addEventListener("click", () => {
       // 이전 선택 해제
       if (selectedIndex2 !== null) {
-        document.getElementById(`item${selectedIndex2}`).style.border = "none";
+        document.getElementById(`item${selectedIndex2}`).style.transform = "none";
+        document.getElementById(`item${selectedIndex2}`).style.transition = "none";
         let prevPopup = document.querySelector(`.itemShop #descriptionPopUp${selectedIndex2}`);
         if (prevPopup) prevPopup.style.display = "none";
       }
 
       // 현재 선택 표시
-      item.style.border = "0.3vw solid black";
+      item.style.transform = "scale(1.05)";
+      item.style.transition = "transform 0.2s ease";
       let popup = document.querySelector(`.itemShop #descriptionPopUp${i}`);
       if (popup) popup.style.display = "block";
       selectedIndex2 = i;
@@ -567,17 +570,49 @@ function itemPurchase() {
   }
 
     purchaseButton.addEventListener("click", () => {
-  if (selectedIndex2 !== null && coin >= 1000) {
-    itemPurchased[selectedIndex2 - 1] = true;
-    alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
-    coin -= 1000;
-    displayCoin(); // 구매 후 코인 표시 업데이트
-  } else if(coin < 1000){
-      alert("코인이 부족합니다");
-    }
-    else {
-      alert("아이템을 먼저 선택해주세요!");
-    }
+      if(selectedIndex2==1){
+        if(coin>=1000){
+          itemPurchased[selectedIndex2 - 1] += 1;
+          alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+          coin -= 1000;
+          displayCoin();
+        }
+        else{
+          alert("코인이 부족합니다");
+        }
+      }else if(selectedIndex2==2){
+        if(coin>=1500){
+          itemPurchased[selectedIndex2 - 1] += 1;
+          alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+          coin -= 1500;
+          displayCoin();
+        }
+        else{
+          alert("코인이 부족합니다");
+        }
+      }else if(selectedIndex2==3){
+        if(coin>=2000){
+          itemPurchased[selectedIndex2 - 1] += 1;
+          alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+          coin -= 2000;
+          displayCoin();
+        }
+        else{
+          alert("코인이 부족합니다");
+        }
+      }else if(selectedIndex2==4){
+        if(coin>=3000){
+          itemPurchased[selectedIndex2 - 1] += 1;
+          alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+          coin -= 3000;
+          displayCoin();
+        }
+        else{
+          alert("코인이 부족합니다");
+        }
+      }else if(selectedIndex2 == null){
+        alert("아이템을 먼저 선택해주세요!");
+      }
   });
 }
 
@@ -728,14 +763,14 @@ function abilityShop_CharacterPopUp(){
     if(selectedIndex==2){
       leftUpperWrapper2.style.display = "block";
       characterPopUp.style.display = "none";
-      descriptionPopUp1.innerHTML = "체육교육과 출신인 PP는 항상 계주 마지막 주자였다. 날렵한 몸과 정확한 반사신경은 전투에서도 그대로 이어진다. 근접전을 유리하게 이끌 수 있다.";
+      descriptionPopUp1.innerHTML = "체육교육과 출신인 세연은 항상 계주 마지막 주자였다. 날렵한 몸과 정확한 반사신경은 전투에서도 그대로 이어진다. 근접전을 유리하게 이끌 수 있다.";
       descriptionPopUp2.innerHTML = "신중하지는 않지만 망설임도 없다. 즉흥적으로 뛰어들어 상황을 만들고, 그 안에서 적을 휘젓는다. 이 성격은 위기를 기회로 바꾸기도, 때론 문제를 만들기도 한다.";
       descriptionPopUp3.innerHTML = "타고난 청각으로, 소리의 방향과 거리를 정확히 감지한다. 눈보다 귀가 먼저 반응하며, 이는 덫을 피하고 매복을 먼저 알아차리는 데 큰 도움이 된다.";
     }
     if(selectedIndex==3){
       leftUpperWrapper3.style.display = "block";
       characterPopUp.style.display = "none";
-      descriptionPopUp1.innerHTML = "물리학과 출신인 QQ는 시간의 흐름에 집착했다. 이세계에서 그는 실제로 시간을 느리게 만들거나 멈추는 능력을 얻었다. 짧은 순간을 늘리고, 누구보다 많은 선택지를 가진다.";
+      descriptionPopUp1.innerHTML = "물리학과 출신인 준오는 시간의 흐름에 집착했다. 이세계에서 그는 실제로 시간을 느리게 만들거나 멈추는 능력을 얻었다. 짧은 순간을 늘리고, 누구보다 많은 선택지를 가진다.";
       descriptionPopUp2.innerHTML = "이세계의 판타지적 상황에도 쉽게 몰입하지 못한다. 생존 확률, 자원 분배, 위험 관리... 그는 모든 것을 수치로 환산해 판단한다. 때론 비정해 보이지만, 가장 믿을 수 있다.";
       descriptionPopUp3.innerHTML = "이해력과 분석력은 타의 추종을 불허한다. 복잡한 장치나 수수께끼는 그가 한 번 보면 풀린다. 작전이 필요할 땐, 언제나 그의 입을 먼저 본다.";
 
@@ -743,8 +778,8 @@ function abilityShop_CharacterPopUp(){
     if(selectedIndex==4){
       leftUpperWrapper4.style.display = "block";
       characterPopUp.style.display = "none";
-      descriptionPopUp1.innerHTML = "넓은 방어영역을 가진 WW는 적의 공격을 몸으로 막는다. 그 범위는 생각보다 넓고, 자신보다 약한 존재가 피해보는 걸 절대 용납하지 않는다.";
-      descriptionPopUp2.innerHTML = "WW는 말수가 적다. 낯선 이들과 어울리기까지 시간이 오래 걸리지만, 일단 마음을 열면 그 어떤 위기에서도 등 뒤를 지켜주는 든든한 존재가 된다..";
+      descriptionPopUp1.innerHTML = "넓은 방어영역을 가진 유나는 적의 공격을 몸으로 막는다. 그 범위는 생각보다 넓고, 자신보다 약한 존재가 피해보는 걸 절대 용납하지 않는다.";
+      descriptionPopUp2.innerHTML = "유나는 말수가 적다. 낯선 이들과 어울리기까지 시간이 오래 걸리지만, 일단 마음을 열면 그 어떤 위기에서도 등 뒤를 지켜주는 든든한 존재가 된다..";
       descriptionPopUp3.innerHTML = "팀원들의 작은 말과 표정도 놓치지 않는다. 누구보다 감정에 민감하고, 이를 토대로 위험을 감지하거나 분위기를 조절한다. 전투보다 회복과 지원에 더 특화되어 있다.";
     }
     abilityHoverForVisibleCharacter();
@@ -860,7 +895,7 @@ function startLifeTimer() {
   }, 1 * 60 * 1000); // 5분
 }
 
-// GAME.JS 합치기----------------------------------------------------------------------
+// GAME.JS 합치기------------------------
 
 const sounds = {
   paddleHit: new Audio("../../assets/sounds/paddle_hit.mp3"),

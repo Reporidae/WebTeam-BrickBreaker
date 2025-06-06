@@ -27,7 +27,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.9);
-    border: 2px solid #4CAF50;
+    border: 2px solid #FFD700;
     border-radius: 10px;
     padding: 30px;
     text-align: center;
@@ -42,15 +42,15 @@ body {
 .menu-title {
     font-size: 24px;
     margin-bottom: 20px;
-    color: #4CAF50;
+    color: #FFD700;
 }
 
 .menu-button {
-    background-color: #4CAF50;
+    background-color: #FFD700;
     border: none;
     color: white;
     padding: 12px 24px;
-    margin: 10px;
+    margin: 10px auto;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -59,10 +59,15 @@ body {
     cursor: pointer;
     transition: all 0.3s;
 }
-
+.button-row {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  
 .menu-button:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
+    background-color: #FFD700;
+    transform: scale(1.07);
 }
 
 .character-grid {
@@ -74,7 +79,7 @@ body {
 
 .character-button {
     background-color: #333;
-    border: 2px solid #4CAF50;
+    border: 2px solid #FFD700;
     color: white;
     padding: 20px;
     border-radius: 10px;
@@ -84,13 +89,13 @@ body {
 }
 
 .character-button:hover {
-    background-color: #4CAF50;
+    background-color: #FFD700;
     transform: scale(1.05);
 }
 
 .character-button.selected {
-    background-color: #4CAF50;
-    box-shadow: 0 0 20px #4CAF50;
+    background-color: #FFD700;
+    box-shadow: 0 0 20px #FFD700;
 }
 
 .character-button small {
@@ -109,11 +114,18 @@ body {
 
 .game-info div {
     padding: 8px 12px;
-    border-radius: 5px;
-    background-color: #333;
+    border-radius: 10px;
+    background-color: #4d260983;
     font-weight: bold;
+    margin-top: 20px;
+}
+.game-info > div:first-child {
+    margin-left: 40px;
 }
 
+.game-info > div:last-child {
+    margin-right: 40px;
+}
 .control-button {
     background-color: #555;
     border: none;
@@ -166,7 +178,7 @@ body {
 
 #timer-container {
     position: absolute;
-    top: 10px;
+    top: 110px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
