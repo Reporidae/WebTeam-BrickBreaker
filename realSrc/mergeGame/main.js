@@ -884,15 +884,15 @@ function startLifeTimer() {
   if (lifeTimer || life >= 5) return;
 
   lifeTimer = setInterval(() => {
-    if (life < 5) {
+    if (life <= 5) {
       increaseLife();  // 이미 정의된 함수라고 가정
 
-      if (life === 5) {
+      if (life > 5) {
         clearInterval(lifeTimer);
         lifeTimer = null;
       }
     }
-  }, 1 * 60 * 1000); // 5분
+  }, 0.1 * 60 * 1000);
 }
 
 // GAME.JS 합치기------------------------
