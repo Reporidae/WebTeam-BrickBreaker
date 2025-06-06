@@ -906,7 +906,7 @@ function startLifeTimer() {
         lifeTimer = null;
       }
     }
-  }, 0.1 * 1 * 1000);
+  }, 1 * 60 * 1000);
 }
 
 // GAME.JS 합치기------------------------
