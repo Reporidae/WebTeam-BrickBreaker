@@ -343,6 +343,8 @@ function setupCharacterModalEvents() {
           newImage.style.marginTop = 'auto';
           rightDisplay.appendChild(newImage);
 
+          selectedCharacter = characterId;  // 전역 selectedCharacter 변수 업데이트
+
           // 현재 캐릭터는 목록에서 제거
           currentCharacterInfo = info;
           info.remove();
@@ -459,9 +461,9 @@ function decreaseLife(){
   life--;
 }
 function increaseLife(){
+  life++;
   let lifeIcon = document.getElementById(`lifeIcon_img${life}`);
   lifeIcon.style.display = "inline";
-  life++;
 }
 function decreaseCoin(decreCoin){
   coin -= decreCoin;
@@ -569,50 +571,62 @@ function itemPurchase() {
     });
   }
 
-    purchaseButton.addEventListener("click", () => {
-      if(selectedIndex2==1){
-        if(coin>=1000){
-          itemPurchased[selectedIndex2 - 1] += 1;
-          alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
-          coin -= 1000;
-          displayCoin();
-        }
-        else{
-          alert("코인이 부족합니다");
-        }
-      }else if(selectedIndex2==2){
-        if(coin>=1500){
-          itemPurchased[selectedIndex2 - 1] += 1;
-          alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
-          coin -= 1500;
-          displayCoin();
-        }
-        else{
-          alert("코인이 부족합니다");
-        }
-      }else if(selectedIndex2==3){
-        if(coin>=2000){
-          itemPurchased[selectedIndex2 - 1] += 1;
-          alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
-          coin -= 2000;
-          displayCoin();
-        }
-        else{
-          alert("코인이 부족합니다");
-        }
-      }else if(selectedIndex2==4){
-        if(coin>=3000){
-          itemPurchased[selectedIndex2 - 1] += 1;
-          alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
-          coin -= 3000;
-          displayCoin();
-        }
-        else{
-          alert("코인이 부족합니다");
-        }
-      }else if(selectedIndex2 == null){
-        alert("아이템을 먼저 선택해주세요!");
+  purchaseButton.addEventListener("click", () => {
+    if(selectedIndex2==1){
+      if(itemPurchased[0] >= 1){
+        alert("청소기 아이템은 최대 1개까지만 구매할 수 있습니다.");
+        return;
       }
+      if(coin>=1000){
+        itemPurchased[selectedIndex2 - 1] += 1;
+        alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+        coin -= 1000;
+        displayCoin();
+      }
+      else{
+        alert("코인이 부족합니다");
+      }
+    }else if(selectedIndex2==2){
+      if(itemPurchased[1] >= 1){
+        alert("시간 연장 아이템은 최대 1개까지만 구매할 수 있습니다.");
+        return;
+      }
+      if(coin>=1500){
+        itemPurchased[selectedIndex2 - 1] += 1;
+        alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+        coin -= 1500;
+        displayCoin();
+      }
+      else{
+        alert("코인이 부족합니다");
+      }
+    }else if(selectedIndex2==3){
+      if(coin>=2000){
+        itemPurchased[selectedIndex2 - 1] += 1;
+        alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+        coin -= 2000;
+        displayCoin();
+      }
+      else{
+        alert("코인이 부족합니다");
+      }
+    }else if(selectedIndex2==4){
+      if(itemPurchased[3] >= 1){
+        alert("보스 체력 감소 아이템은 최대 1개까지만 구매할 수 있습니다.");
+        return;
+      }
+      if(coin>=3000){
+        itemPurchased[selectedIndex2 - 1] += 1;
+        alert(`아이템 ${selectedIndex2}번을 구매했습니다!`);
+        coin -= 3000;
+        displayCoin();
+      }
+      else{
+        alert("코인이 부족합니다");
+      }
+    }else if(selectedIndex2 == null){
+      alert("아이템을 먼저 선택해주세요!");
+    }
   });
 }
 
@@ -884,15 +898,15 @@ function startLifeTimer() {
   if (lifeTimer || life >= 5) return;
 
   lifeTimer = setInterval(() => {
-    if (life <= 5) {
+    if (life < 5) {
       increaseLife();  // 이미 정의된 함수라고 가정
 
-      if (life > 5) {
+      if (life >= 5) {
         clearInterval(lifeTimer);
         lifeTimer = null;
       }
     }
-  }, 0.1 * 60 * 1000);
+  }, 0.1 * 1 * 1000);
 }
 
 // GAME.JS 합치기------------------------
@@ -1498,7 +1512,6 @@ function initializeGame() {
 
   function startStageTimer() {
       clearInterval(stageTimerInterval);
-      stageTimer = 60;
       updateTimerDisplay();
       
       stageTimerInterval = setInterval(() => {
@@ -1589,31 +1602,28 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
   function startGame() {
     sounds.bgm1.play();
     hideTimeStopOverlay();
-
+   
     if (life <= 0) {
       alert("생명이 부족합니다! 잠시 뒤 다시 시도해주세요.");
-      return; // 생명이 없으면 게임 시작하지 않음
+      return;
     }
-    displayLife(); // life 표시 업데이트
+    displayLife();
     decreaseLife();
-
     startLifeTimer();
-
-  
-    
+   
     gameStarted = true;
     gameOver = false;
     
     // ===== 최신 전역 변수들에서 게임 정보 로드 =====
-    gameStage = stage; // 전역 stage 변수에서 스테이지 정보 가져오기
-    gameSelectedCharacter = selectedCharacter; // 전역 selectedCharacter 변수에서 캐릭터 정보 가져오기
+    gameStage = stage;
+    gameSelectedCharacter = selectedCharacter;
     
     // ===== 최신 캐릭터 레벨 정보 실시간 로드 =====
     gameCharacterLevels = {
-        char1: character1_level, // 전역 character1_level 변수에서 최신 레벨 가져오기
-        char2: character2_level, // 전역 character2_level 변수에서 최신 레벨 가져오기
-        char3: character3_level, // 전역 character3_level 변수에서 최신 레벨 가져오기
-        char4: character4_level  // 전역 character4_level 변수에서 최신 레벨 가져오기
+        char1: character1_level,
+        char2: character2_level,
+        char3: character3_level,
+        char4: character4_level
     };
     
     console.log("=== 게임 시작 정보 ===");
@@ -1623,14 +1633,49 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     console.log("- 선택된 캐릭터의 레벨:", gameCharacterLevels[gameSelectedCharacter]);
     
     score = 0;
-    lives = maxLives;
     coins = 0;
+    
+    // 🟢 아이템 효과를 기본값에서 계산
+    let gameMaxLives = maxHeart; // 기본 최대 체력
+    let gameStageTimer = 60; // 기본 스테이지 시간
+    let gameVacuumReady = false;
+    
+    // 🟢 일회성 아이템 사용 (배열에서 차감)
+    if (itemPurchased[0] > 0) {
+      gameVacuumReady = true;
+      itemPurchased[0]--; // 청소기 아이템 하나 차감
+      console.log("청소기 아이템 사용됨, 남은 개수:", itemPurchased[0]);
+    }
+    if (itemPurchased[1] > 0) {
+      gameStageTimer += 20; // 기본 시간에 추가
+      itemPurchased[1]--; // 시간 증가 아이템 하나 차감
+      console.log("시간 증가 아이템 사용됨, 남은 개수:", itemPurchased[1]);
+    }
+    
+    // 🟢 최대 체력 아이템은 영구적 (차감하지 않음)
+    if (itemPurchased[2] > 0) {
+      gameMaxLives += itemPurchased[2]; // 구매한 개수만큼 추가
+    }
+    
+    // 계산된 값들 적용
+    maxLives = gameMaxLives;
+    lives = maxLives;
+    stageTimer = gameStageTimer;
+    vacuumReady = gameVacuumReady;
     
     // 캐릭터 설정 및 능력치 적용
     player.setCharacter(gameSelectedCharacter);
     applyCharacterAbilities();
     
     setupBossForStage(gameStage);
+    
+    // 🟢 보스 체력 감소 아이템 사용 (일회성)
+    if (itemPurchased[3] > 0) {
+      boss.health = Math.max(0, boss.health - 5);
+      itemPurchased[3]--; // 보스 체력 감소 아이템 하나 차감
+      console.log("보스 체력 감소 아이템 사용됨, 남은 개수:", itemPurchased[3]);
+    }
+    
     initBricks();
     resetBall();
     setBallSpeedForStage(gameStage);
@@ -1643,11 +1688,12 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     timeStopActive = false;
     timeStopCooldown = 0;
     timeStopDuration = 0;
-  
+   
     const gameMenu = document.getElementById("game-menu");
     if (gameMenu) {
         gameMenu.classList.add("hidden");
     }
+    
     startStageTimer();
     startBrickRowTimer();
     
@@ -1658,26 +1704,12 @@ let vacuumReady = false; // 청소기 아이템 사용 여부
     }, boss.attackInterval);
     
     requestAnimationFrame(gameLoop);
-  
-    // 아이템 효과 적용
-    if (itemPurchased[0]) {
-      vacuumReady = true;
+   
+    // 청소기 아이템 아이콘 업데이트
+    if (gameVacuumReady) {
       updateVacuumIconDisplay();
     }
-    if (itemPurchased[1]) {
-      stageTimer += 20;
-      updateTimerDisplay();
-    }
-    if (itemPurchased[2]) {
-      maxLives += 1; // 실제 최대 체력 증가
-      lives = Math.min(lives + 1, maxLives);
-      updateUI();
-    }
-    if (itemPurchased[3]) {
-      boss.health = Math.max(0, boss.health - 5);  // 보스 체력 5 감소
-    }
-    
-  }
+   }
 
 document.addEventListener("keyup", function (e) {
   if (e.keyCode === 68) { // D 키
@@ -1747,7 +1779,6 @@ document.addEventListener("keyup", function (e) {
 function showMenu(message, isStart = false, showScore = false) {
   // 게임 오버 시 코인을 전역 변수에 누적 저장
   if (showScore && !isStart) {
-      coin += coins; // 게임에서 모은 코인을 전역 coin에 더하기
       displayCoin(); // 헤더 코인 표시 업데이트
   }
   
