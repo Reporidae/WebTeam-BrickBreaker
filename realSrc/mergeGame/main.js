@@ -32,7 +32,7 @@ var coin = 5000;//코인
 let itemPurchased = [0, 0, 0, 0];//선택된 아이템
 let lifeTimer = null; //시간 측정 변수 - 생명을 5분에 한 번씩 생성하기 위해 필요한 변수임
 let character1_level = 1;
-let character2_level = 1;
+let character2_level = 0;
 let character3_level = 0;
 let character4_level = 0; //캐릭터 4명의 레벨 정보 -> 레벨이 0이라는 건 캐릭터를 사지 않았다는 말. 구매 후 바로 1레벨로 변경하기
 
@@ -293,8 +293,6 @@ function setupCharacterModalEvents() {
   const stat2El = document.getElementById('modalStat2');
   const actionBtn = document.getElementById('modalActionButton');
 
-  let currentCharacter = null;
-
   infos.forEach(info => {
     info.addEventListener('click', () => {
       const name = info.querySelector('.character-name').innerText;
@@ -315,6 +313,8 @@ function setupCharacterModalEvents() {
           console.log("[구매된 캐릭터 목록]", purchasedCharacters);
 
           actionBtn.textContent = '적용';
+          updateCharacter();
+          initDefaultCharacterSelection();
           alert(`${name}을(를) 구매했습니다!`);
         } else {
           // 기존 캐릭터 카드 업데이트
@@ -325,7 +325,6 @@ function setupCharacterModalEvents() {
 
           selectedCharacter = characterId;
           console.log("선택된 캐릭터 ID:", selectedCharacter);
-
 
           // 기존 캐릭터 이미지 제거 (필요하다면 먼저 이 작업 진행)
           const rightDisplay = document.getElementById('villageRightDisplay');
@@ -445,6 +444,24 @@ function setsupStartButtons(){
 }
 
 //----------header
+function updateCharacter() {
+  if (purchasedCharacters['지훈']) character1_level = 1;
+  if (purchasedCharacters['세연']) character2_level = 1;
+  if (purchasedCharacters['준오']) character3_level = 1;
+  if (purchasedCharacters['유나']) character4_level = 1;
+}
+function filterPurchasedPopupCharacters() {
+  const charPopup1 = document.getElementById('character_hold1');
+  const charPopup2 = document.getElementById('character_hold2');
+  const charPopup3 = document.getElementById('character_hold3');
+  const charPopup4 = document.getElementById('character_hold4');
+
+  charPopup1.style.display = (character1_level > 0) ? 'block' : 'none';
+  charPopup2.style.display = (character2_level > 0) ? 'block' : 'none';
+  charPopup3.style.display = (character3_level > 0) ? 'block' : 'none';
+  charPopup4.style.display = (character4_level > 0) ? 'block' : 'none';
+}
+
 function displayLife(){
   for(let i = 1; i<=5; i++){
     document.getElementById(`lifeIcon_img${i}`).style.display ="none";
@@ -682,6 +699,7 @@ function abilitieShopNew(){
     displayBlock3.style.display="none";
     displayBlock1.style.display="none";
   }
+  abilityHoverForVisibleCharacter();
 }
 function abilityShop_CharacterPopUp(){
   let selectedIndex=null;
@@ -703,6 +721,7 @@ function abilityShop_CharacterPopUp(){
   let selectedWrapper;
 
   characterButton.addEventListener("click", ()=>{
+    filterPurchasedPopupCharacters();
     characterPopUp.style.display = "block";
   });
   closePopupBtn.addEventListener("click", ()=>{
@@ -823,19 +842,19 @@ function characterLevelUp() {
 
     if (src.includes("player.png")) {
       level = character1_level;
-      name = "OO";
+      name = "지훈";
       characterId = 'char1';
     } else if (src.includes("player_speed.png")) {
       level = character2_level;
-      name = "PP";
+      name = "세연";
       characterId = 'char2';
     } else if (src.includes("player_time.png")) {
       level = character3_level;
-      name = "QQ";
+      name = "준오";
       characterId = 'char3';
     } else if (src.includes("player_shield.png")) {
       level = character4_level;
-      name = "WW";
+      name = "유나";
       characterId = 'char4';
     } else {
       alert("캐릭터 이미지를 인식하지 못했습니다.");
