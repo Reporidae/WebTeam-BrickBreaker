@@ -44,7 +44,7 @@ const storyScenes = [
         책을 고르던 네 명의 학생은 먼지가 뿌옇게 쌓인 아주 낡은 책 한 권을 발견했다.`
     },
     {
-        image: 'stage2.png',
+        image: 'story2.png',
         text: `그 책은 제목도 없고 표지도 찢겨 있었지만<br>
         안에는 낡은 손그림 지도가 끼워져 있었다.<br>
         지도 한 곳에는 붉은 X 표시가 그려져 있었고…`
@@ -55,7 +55,7 @@ const storyScenes = [
         호기심이 동한 주인공1은 책을 펼쳐 내용을 확인해보기로 한다.`
     },
     {
-        image: 'stage4.png',
+        image: 'story4.png',
         text: `그 순간—<br>
         책장이 바람에 휘날리며 책장 뒤 벽이 열리고<br>
         순간적인 빛과 함께 네 사람은 그 안으로 빨려 들어간다.`
@@ -67,12 +67,12 @@ const storyScenes = [
         어딘가 이상한… 조용하고 오래된 마을에 와 있었다.`
     },
     {
-        image: 'stage6.png',
+        image: 'story6.png',
         text: `놀란 마음에 주인공들은 책을 다시 펴보고 거기엔 이렇게 적혀있었다.<br>
         “시험을 통과하라. 돌아갈 수 있을 것이다.”`
     },
     {
-        image: 'stage7.png',
+        image: 'story7.png',
         text: `“돌아갈 수 있는 방법이 있다는 거네…”<br>
         그들은 책을 덮고,<br> 
         각자 마을 안으로 걸어 들어간다.`
