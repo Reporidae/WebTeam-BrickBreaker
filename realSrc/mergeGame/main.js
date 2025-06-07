@@ -1718,8 +1718,8 @@ function initializeGame() {
 
 
   function startGame() {
-    //sounds.bgm1.play();
-    playStageBGM(1); // ✅ 스테이지 번호에 따라
+    
+    //playStageBGM(1); // ✅ 스테이지 번호에 따라
     hideTimeStopOverlay();
 
     if (life <= 0) {
@@ -1736,7 +1736,7 @@ function initializeGame() {
     // ===== 최신 전역 변수들에서 게임 정보 로드 =====
     gameStage = stage;
     gameSelectedCharacter = selectedCharacter;
-
+    playStageBGM(gameStage);
     // ===== 최신 캐릭터 레벨 정보 실시간 로드 =====
     gameCharacterLevels = {
       char1: character1_level,
