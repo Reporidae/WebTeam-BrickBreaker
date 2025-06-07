@@ -1267,6 +1267,8 @@ function initializeGame() {
   let maxLives = maxHeart; // const에서 let으로 변경
   const ITEM_FALL_SPEED = 2;
 
+  let godMode = false; // G 키로 켜고 끌 수 있음
+
   // 스테이지별 공 속도 설정 (전체적으로 속도 줄임)
   const BASE_BALL_SPEED = { dx: 2.5, dy: 2.5 }; // 기본 속도 줄임 (3.5 -> 2.5)
   
@@ -1447,6 +1449,19 @@ function initializeGame() {
       else if (e.keyCode === 39) rightPressed = false;
       else if (e.keyCode === 70) useSkill(); // F키
       else if (e.keyCode === 81) useTimeStop(); // Q키
+      else if (e.keyCode === 71) { // G 키: God Mode 활성화
+        godMode = !godMode;
+        if (godMode) {
+          lives = 99;
+          player.skillGauge = player.maxGauge;
+          player.skillReady = true;
+          alert("GOD 모드 활성화: 필살기 무제한 + 체력 99");
+        } else {
+          alert("GOD 모드 비활성화");
+        }
+        updateUI();
+}
+
   });
 
   // === 게임 함수들 ===
@@ -1576,13 +1591,31 @@ function initializeGame() {
   }
 
   function useSkill() {
-      if (player.skillReady) {
-          phoenixEffect.activate();
-          const gainedScore = player.useSkill(bricks);
-          score += gainedScore;
-          updateUI();
-          sounds.skill1.play();
+    if (player.skillReady) {
+      phoenixEffect.activate();
+
+      const gainedScore = player.useSkill(bricks);
+      score += gainedScore;
+
+      // 💥 보스에게도 데미지
+      const bossDamage = 3;
+      if (boss.visible) {
+        boss.health -= bossDamage;
+        if (boss.health <= 0) {
+          boss.visible = false;
+          clearInterval(stageTimerInterval);
+          clearInterval(bossAttackTimer);
+          clearInterval(brickRowTimer);
+          forceEndTimeStop();
+          setTimeout(() => {
+            nextStage();
+          }, 2000);
+        }
       }
+
+      updateUI();
+      sounds.skill1.play();
+    }
   }
 
 let shieldAvailable = false; // 보호막 아이템 상태 저장
@@ -2207,89 +2240,96 @@ function nextStage() {
   }
 
   function update() {
-      if (gameOver) return;
+    if (gameOver) return;
 
-      if (timeStopActive) {
-          timeStopDuration--;
+    // 💥 GOD 모드일 때 필살기 게이지 자동 MAX 유지
+    if (godMode) {
+        player.skillGauge = player.maxGauge;
+        player.skillReady = true;
+        updateGaugeUI();  // 게이지 UI도 갱신해줘야 시각적으로 반영됨
+    }
 
-          if (timeStopDuration <= 0) {
-              timeStopActive = false;
-              const overlay = document.getElementById('time-stop-overlay');
-              if (overlay) {
-                  overlay.classList.add('hidden');
-              }
-          }
+    if (timeStopActive) {
+      timeStopDuration--;
+
+      if (timeStopDuration <= 0) {
+        timeStopActive = false;
+        const overlay = document.getElementById('time-stop-overlay');
+        if (overlay) {
+          overlay.classList.add('hidden');
+        }
       }
+    }
 
-      if (timeStopCooldown > 0) {
-          timeStopCooldown--;
+    if (timeStopCooldown > 0) {
+      timeStopCooldown--;
+    }
+
+    player.updateAnimation();
+    phoenixEffect.update();
+
+    if (leftPressed && paddle.x > 0) {
+      paddle.x -= paddle.speed;
+    } else if (rightPressed && paddle.x + paddle.width < CANVAS_WIDTH) {
+      paddle.x += paddle.speed;
+    }
+
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+
+    if (!timeStopActive) {
+      items.forEach(item => {
+        item.y += ITEM_FALL_SPEED;
+      });
+    }
+
+    if (ball.x - ball.radius < 0 || ball.x + ball.radius > CANVAS_WIDTH) {
+      ball.dx = -ball.dx;
+    }
+
+    if (ball.y - ball.radius < 0) {
+      ball.dy = -ball.dy;
+    }
+
+    if (ball.y + ball.radius > CANVAS_HEIGHT) {
+      lives--;
+      updateUI();
+
+      if (lives <= 0) {
+        gameOver = true;
+        showMenu("게임 오버", false, true);
+      } else {
+        resetBall();
       }
+    }
 
-      player.updateAnimation();
-      phoenixEffect.update();
+    checkPaddleCollision();
+    checkBrickCollision();
+    checkItemCollision();
 
-      if (leftPressed && paddle.x > 0) {
-          paddle.x -= paddle.speed;
-      } else if (rightPressed && paddle.x + paddle.width < CANVAS_WIDTH) {
-          paddle.x += paddle.speed;
+    if (!timeStopActive) {
+      updateBossProjectiles();
+    }
+
+    if (boss.checkCollision(ball)) {
+      clearInterval(stageTimerInterval);
+      clearInterval(bossAttackTimer);
+      clearInterval(brickRowTimer);
+      forceEndTimeStop();
+
+      setTimeout(() => {
+        nextStage();
+      }, 2000);
+    }
+
+    for (let i = 0; i < bricks.length; i++) {
+      if (bricks[i].visible && bricks[i].y + bricks[i].height >= CANVAS_HEIGHT - PADDLE_HEIGHT - 20) {
+        forceEndTimeStop();
+        gameOver = true;
+        showMenu("게임 오버", false, true);
+        break;
       }
-
-      ball.x += ball.dx;
-      ball.y += ball.dy;
-
-      if (!timeStopActive) {
-          items.forEach(item => {
-              item.y += ITEM_FALL_SPEED;
-          });
-      }
-
-      if (ball.x - ball.radius < 0 || ball.x + ball.radius > CANVAS_WIDTH) {
-          ball.dx = -ball.dx;
-      }
-
-      if (ball.y - ball.radius < 0) {
-          ball.dy = -ball.dy;
-      }
-
-      if (ball.y + ball.radius > CANVAS_HEIGHT) {
-          lives--;
-          updateUI();
-
-          if (lives <= 0) {
-              gameOver = true;
-              showMenu("게임 오버", false, true);
-          } else {
-              resetBall();
-          }
-      }
-
-      checkPaddleCollision();
-      checkBrickCollision();
-      checkItemCollision();
-      
-      if (!timeStopActive) {
-          updateBossProjectiles();
-      }
-
-      if (boss.checkCollision(ball)) {
-          clearInterval(stageTimerInterval);
-          clearInterval(bossAttackTimer);
-          clearInterval(brickRowTimer);
-          forceEndTimeStop();
-          
-          setTimeout(() => {
-              nextStage();
-          }, 2000);
-      }
-
-      for (let i = 0; i < bricks.length; i++) {
-          if (bricks[i].visible && bricks[i].y + bricks[i].height >= CANVAS_HEIGHT - PADDLE_HEIGHT - 20) {
-              forceEndTimeStop();
-              gameOver = true;
-              showMenu("게임 오버", false, true);
-              break;
-          }
-      }
+    }
   }
 
   function draw() {
