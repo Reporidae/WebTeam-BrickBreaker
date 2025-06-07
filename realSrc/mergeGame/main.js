@@ -44,7 +44,7 @@ const storyScenes = [
         책을 고르던 네 명의 학생은 먼지가 뿌옇게 쌓인 아주 낡은 책 한 권을 발견했다.`
     },
     {
-        image: 'qrslhupr.png',
+        image: 'stage2.png',
         text: `그 책은 제목도 없고 표지도 찢겨 있었지만<br>
         안에는 낡은 손그림 지도가 끼워져 있었다.<br>
         지도 한 곳에는 붉은 X 표시가 그려져 있었고…`
@@ -55,44 +55,28 @@ const storyScenes = [
         호기심이 동한 주인공1은 책을 펼쳐 내용을 확인해보기로 한다.`
     },
     {
-        image: 'stage1.png',
+        image: 'stage4.png',
         text: `그 순간—<br>
         책장이 바람에 휘날리며 책장 뒤 벽이 열리고<br>
         순간적인 빛과 함께 네 사람은 그 안으로 빨려 들어간다.`
     },
     {
-        image: 'qrslhupr.png',
+        image: 'newRightImg.png',
         text: `눈을 떠보니,<br>
         그들은 익숙한 도서관이 아닌<br>
         어딘가 이상한… 조용하고 오래된 마을에 와 있었다.`
     },
     {
-        image: 'story3.png',
-        text: `놀란 마음에 주인공들은 다시 책을 펼쳐본다.
-        책 속 한 페이지에는 손글씨로 이렇게 적혀 있다.`
+        image: 'stage6.png',
+        text: `놀란 마음에 주인공들은 책을 다시 펴보고 거기엔 이렇게 적혀있었다.<br>
+        “시험을 통과하라. 돌아갈 수 있을 것이다.”`
     },
     {
-        image: 'stage1.png',
-        text: `“다시 돌아가고 싶다면
-        이 마을 사람들에게 해답을 얻어라.”`
-    },
-    {
-        image: 'qrslhupr.png',
+        image: 'stage7.png',
         text: `“돌아갈 수 있는 방법이 있다는 거네…”<br>
         그들은 책을 덮고,<br> 
         각자 마을 안으로 걸어 들어간다.`
     },
-    {
-        image: 'story3.png',
-        text: `마을 사람들은 모두 어딘가 어색하고,<br>
-        누군가는 아무 말도 하지 않으며,<br>
-        누군가는 무언가를 숨기는 듯 행동한다.`
-    },
-    {
-        image: 'story3.png',
-        text: `현실로 돌아갈 단서는 이 마을 어딘가에 있다.<br>
-        그리고 그 단서는 사람의 말 속, 혹은 무너뜨려야 할 벽 속에 숨겨져 있다.`
-    }
 ];
 
 let currentSceneIndex = 0;
@@ -794,9 +778,9 @@ function abilityShop_CharacterPopUp(){
     if(selectedIndex==2){
       leftUpperWrapper2.style.display = "block";
       characterPopUp.style.display = "none";
-      descriptionPopUp1.innerHTML = "체육교육과 출신인 세연은 항상 계주 마지막 주자였다. 날렵한 몸과 정확한 반사신경은 전투에서도 그대로 이어진다. 근접전을 유리하게 이끌 수 있다.";
-      descriptionPopUp2.innerHTML = "신중하지는 않지만 망설임도 없다. 즉흥적으로 뛰어들어 상황을 만들고, 그 안에서 적을 휘젓는다. 이 성격은 위기를 기회로 바꾸기도, 때론 문제를 만들기도 한다.";
-      descriptionPopUp3.innerHTML = "타고난 청각으로, 소리의 방향과 거리를 정확히 감지한다. 눈보다 귀가 먼저 반응하며, 이는 덫을 피하고 매복을 먼저 알아차리는 데 큰 도움이 된다.";
+      descriptionPopUp1.innerHTML = "넓은 방어영역을 가진 세연는 적의 공격을 몸으로 막는다. 그 범위는 생각보다 넓고, 자신보다 약한 존재가 피해보는 걸 절대 용납하지 않는다.";
+      descriptionPopUp2.innerHTML = "세연은 말수가 적다. 낯선 이들과 어울리기까지 시간이 오래 걸리지만, 일단 마음을 열면 그 어떤 위기에서도 등 뒤를 지켜주는 든든한 존재가 된다..";
+      descriptionPopUp3.innerHTML = "팀원들의 작은 말과 표정도 놓치지 않는다. 누구보다 감정에 민감하고, 이를 토대로 위험을 감지하거나 분위기를 조절한다. 전투보다 회복과 지원에 더 특화되어 있다.";
     }
     if(selectedIndex==3){
       leftUpperWrapper3.style.display = "block";
@@ -809,9 +793,9 @@ function abilityShop_CharacterPopUp(){
     if(selectedIndex==4){
       leftUpperWrapper4.style.display = "block";
       characterPopUp.style.display = "none";
-      descriptionPopUp1.innerHTML = "넓은 방어영역을 가진 유나는 적의 공격을 몸으로 막는다. 그 범위는 생각보다 넓고, 자신보다 약한 존재가 피해보는 걸 절대 용납하지 않는다.";
-      descriptionPopUp2.innerHTML = "유나는 말수가 적다. 낯선 이들과 어울리기까지 시간이 오래 걸리지만, 일단 마음을 열면 그 어떤 위기에서도 등 뒤를 지켜주는 든든한 존재가 된다..";
-      descriptionPopUp3.innerHTML = "팀원들의 작은 말과 표정도 놓치지 않는다. 누구보다 감정에 민감하고, 이를 토대로 위험을 감지하거나 분위기를 조절한다. 전투보다 회복과 지원에 더 특화되어 있다.";
+      descriptionPopUp1.innerHTML = "체육교육과 출신인 유나은 항상 계주 마지막 주자였다. 날렵한 몸과 정확한 반사신경은 전투에서도 그대로 이어진다. 근접전을 유리하게 이끌 수 있다.";
+      descriptionPopUp2.innerHTML = "신중하지는 않지만 망설임도 없다. 즉흥적으로 뛰어들어 상황을 만들고, 그 안에서 적을 휘젓는다. 이 성격은 위기를 기회로 바꾸기도, 때론 문제를 만들기도 한다.";
+      descriptionPopUp3.innerHTML = "타고난 청각으로, 소리의 방향과 거리를 정확히 감지한다. 눈보다 귀가 먼저 반응하며, 이는 덫을 피하고 매복을 먼저 알아차리는 데 큰 도움이 된다.";
     }
     abilityHoverForVisibleCharacter();
     return;
