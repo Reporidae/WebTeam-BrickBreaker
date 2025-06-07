@@ -39,7 +39,7 @@ let character4_level = 0; //캐릭터 4명의 레벨 정보 -> 레벨이 0이라
 // 스토리 데이터
 const storyScenes = [
     {
-        image: 'stage1.png',
+        image: 'story1.png',
         text: `도서관, 평소처럼 조용한 오후.<br>
         책을 고르던 네 명의 학생은 먼지가 뿌옇게 쌓인 아주 낡은 책 한 권을 발견했다.`
     },
