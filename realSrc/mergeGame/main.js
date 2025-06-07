@@ -282,6 +282,7 @@ function setupBackButtons() {
   });
 }
 
+const purchasedCharacters = {};
 
 function setupCharacterModalEvents() {
   const infos = document.querySelectorAll('.character-info');
@@ -291,71 +292,66 @@ function setupCharacterModalEvents() {
   const stat1El = document.getElementById('modalStat1');
   const stat2El = document.getElementById('modalStat2');
   const actionBtn = document.getElementById('modalActionButton');
-  const shopRightDisplay = document.getElementById('characterShoprightDisplay');
-  const leftCard = document.querySelector('.character-card');
-  const rightDisplay = document.getElementById('villageRightDisplay');
 
-  const purchasedCharacters = { "엘리": true }; // 엘리는 기본 구매됨
-  let currentCharacterInfo = null;
-
-  // 처음에 char1(엘리)은 오른쪽에서 숨겨줌
-  const defaultInfo = [...infos].find(info => info.dataset.character === "char1");
-  if (defaultInfo) defaultInfo.style.display = "none";
+  let currentCharacter = null;
 
   infos.forEach(info => {
     info.addEventListener('click', () => {
       const name = info.querySelector('.character-name').innerText;
-      const stat1 = info.querySelectorAll('.stat-line')[0]?.innerText ?? '';
-      const stat2 = info.querySelectorAll('.stat-line')[1]?.innerText ?? '';
+      const stat1 = info.querySelectorAll('.stat-line')[0].innerText;
+      const stat2 = info.querySelectorAll('.stat-line')[1].innerText;
       const imgEl = info.querySelector('.character-image-small').getAttribute('src');
-      const characterId = info.dataset.character;
+      const characterId = info.dataset.character;  // 예: 'char2'
 
       nameEl.textContent = name;
       stat1El.textContent = stat1;
       stat2El.textContent = stat2;
+
       actionBtn.textContent = purchasedCharacters[name] ? '적용' : '구매';
 
       actionBtn.onclick = () => {
         if (!purchasedCharacters[name]) {
           purchasedCharacters[name] = true;
+          console.log("[구매된 캐릭터 목록]", purchasedCharacters);
+
           actionBtn.textContent = '적용';
           alert(`${name}을(를) 구매했습니다!`);
         } else {
-          // 기존 캐릭터 왼쪽 → 오른쪽에 다시 넣기
-          if (currentCharacterInfo) {
-            const clone = currentCharacterInfo.cloneNode(true);
-            shopRightDisplay.appendChild(clone);
-            setupCharacterModalEvents(); // 이벤트 재설정
-          }
-
-          // 왼쪽 카드 갱신
+          // 기존 캐릭터 카드 업데이트
+          const leftCard = document.querySelector('.character-card');
           leftCard.querySelector('.character-image').src = imgEl;
           leftCard.querySelector('.now-character-name').textContent = name;
-          leftCard.querySelector('.now-character-level').textContent = stat1;
+          currentCharacter = name;
 
-          // village 오른쪽도 갱신
+          selectedCharacter = characterId;
+          console.log("선택된 캐릭터 ID:", selectedCharacter);
+
+
+          // 기존 캐릭터 이미지 제거 (필요하다면 먼저 이 작업 진행)
+          const rightDisplay = document.getElementById('villageRightDisplay');
+
           const existingImage = rightDisplay.querySelector('#village-character');
-          if (existingImage) rightDisplay.removeChild(existingImage);
-          const newImage = document.createElement('img');
-          newImage.id = 'village-character';
-          newImage.src = imgEl;
-          newImage.alt = '캐릭터 이미지';
-          newImage.style.marginTop = 'auto';
-          rightDisplay.appendChild(newImage);
-
-          selectedCharacter = characterId;  // 전역 selectedCharacter 변수 업데이트
-
-          // 현재 캐릭터는 목록에서 제거
-          currentCharacterInfo = info;
-          info.remove();
-
-          modal.style.display = 'none';
+          if (existingImage) {
+            rightDisplay.removeChild(existingImage);
         }
-      };
 
-      modal.style.display = 'block';
-    });
+        // 새로운 이미지 엘리먼트 생성
+        const newImage = document.createElement('img');
+        newImage.id = 'village-character';
+        newImage.src = imgEl;
+        newImage.alt = '캐릭터 이미지';
+        newImage.style.marginTop = 'auto'; // 하단 정렬 (필요시)
+
+        // 이미지만 추가
+        rightDisplay.appendChild(newImage);
+
+        modal.style.display = 'none';
+      }
+    };
+
+    modal.style.display = 'block';
   });
+});
 
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
@@ -367,6 +363,8 @@ function setupCharacterModalEvents() {
     }
   });
 }
+
+
 function setupShopPopupEvents() {
   const shopPopup = document.getElementById('shopPopup');
   const characterBtn = document.getElementById('characterBtn');
